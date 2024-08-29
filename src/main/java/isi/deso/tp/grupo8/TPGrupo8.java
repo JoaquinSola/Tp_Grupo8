@@ -106,7 +106,7 @@ public class TPGrupo8 {
         vendedores[0] = v1;
         vendedores[1] = v2;
         vendedores[2] = v3;
-        
+     /*   
         //busqueda por nombre o id
         //buscarVendedor(vendedores,"Marcelo");
         buscarVendedor(vendedores, "Florencia");
@@ -131,6 +131,8 @@ public class TPGrupo8 {
         System.out.println("\n");
         //busqueda por id
         clientes= eliminarCliente(clientes,buscarCliente(clientes,"c00001"));
+        */
+       System.out.println("Probando Pull desde VsCode");
     }
    
 }
