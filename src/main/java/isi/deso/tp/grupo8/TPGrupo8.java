@@ -130,7 +130,7 @@ public class TPGrupo8 {
         System.out.println("\n");
         //busqueda por id
         clientes= eliminarCliente(clientes,buscarCliente(clientes,"c00001"));
-        System.out.println("jes");
+        System.out.println("je");
     }
    
 }
