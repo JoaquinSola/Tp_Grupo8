@@ -33,4 +33,24 @@ public class Vendedor {
     public Coordenada getCoor(){
         return coordenadas;
     }
+    
+    public double distancia(Cliente cliente){
+        Coordenada coordVend = this.coordenadas; //ESTAS SON COORDENADAS EN GRADOS
+        Coordenada coordClient = cliente.getCoor(); //ESTAS SON COORDENADAS EN GRADOS
+        double phi1 = Math.toRadians(coordVend.getLatitud()); //ESTAS SON COORDENADAS EN RADIANES
+        double lamb1 = Math.toRadians(coordVend.getLongitud()); //ESTAS SON COORDENADAS EN RADIANES
+        double phi2 = Math.toRadians(coordClient.getLatitud()); //ESTAS SON COORDENADAS EN RADIANES
+        double lamb2 = Math.toRadians(coordClient.getLongitud()); //ESTAS SON COORDENADAS EN RADIANES
+        //System.out.println("phi1: "+phi1+" ,phi2: "+phi2+" ,lam1: "+lamb1+" ,lamb2:"+lamb2);
+        double r = 6371;
+        double deltaPhi = (phi2 - phi1);
+        double deltaLam = (lamb2 - lamb1);
+        double distancia;
+        double a = Math.pow(Math.sin(deltaPhi / 2), 2) +
+                   Math.cos(phi1) * Math.cos(phi2) * Math.pow(Math.sin(deltaLam / 2), 2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        // Calcular distancia Total en KM.
+        distancia = r * c;
+        return distancia;
+    }
 }

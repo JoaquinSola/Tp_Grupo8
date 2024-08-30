@@ -38,4 +38,5 @@ public class Cliente {
      public Coordenada getCoor(){
         return coordenadas;
     }
+     
 }
