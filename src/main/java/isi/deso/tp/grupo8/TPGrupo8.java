@@ -92,10 +92,10 @@ public class TPGrupo8 {
     }
     public static void main(String[] args) {
 
-//VENDEDOR----------------------   
+//-----------------------------VENDEDOR----------------------   
         //coordenadas vendedor
         Coordenada coorV1 = new Coordenada (3.18f,7.47f);
-        Coordenada coorV2 = new Coordenada (1.25f,4.89f);
+        Coordenada coorV2 = new Coordenada (1.25f,4.89f); //LATITUD LONGITUD
         Coordenada coorV3 = new Coordenada (6.59f,12.1f);
         //vendedores
         Vendedor v1 = new Vendedor ("v00001", "Horacio", "Iriondo 1582", coorV1);
@@ -111,7 +111,7 @@ public class TPGrupo8 {
         buscarVendedor(vendedores, "Florencia");
         System.out.println("\n");
         vendedores = eliminarVendedor(vendedores, buscarVendedor(vendedores,"Marcelo"));
-        //CLIENTE----------------------        
+        //---------------------------------------------CLIENTE----------------------      -------------------------  
         //coordenadas cliente
         Coordenada coorC1 = new Coordenada (45.3f,99.3f);
         Coordenada coorC2 = new Coordenada (18.9f,78.6f);
@@ -126,11 +126,13 @@ public class TPGrupo8 {
         clientes[1] = c2;
         clientes[2] = c3;
         System.out.println("\n");
+        //buscar clientes
         buscarCliente(clientes, "c00003");
         System.out.println("\n");
-        //busqueda por id
+        //eliminar cliente por id
         clientes= eliminarCliente(clientes,buscarCliente(clientes,"c00001"));
-        System.out.println("Notebook Joa desde VsCode");
+        //imprimir distancia en km
+        System.out.println("La distancia es de: "+v2.distancia(c2)+"Km");
     }
    
 }
