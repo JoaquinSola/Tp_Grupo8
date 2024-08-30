@@ -132,7 +132,7 @@ public class TPGrupo8 {
         //eliminar cliente por id
         clientes= eliminarCliente(clientes,buscarCliente(clientes,"c00001"));
         //imprimir distancia en km
-        System.out.println("La distancia es xxxxxxxde: "+v2.distancia(c2)+"Km");
+        System.out.println("La distancia es de: "+v2.distancia(c2)+"Km");
     }
    
 }
