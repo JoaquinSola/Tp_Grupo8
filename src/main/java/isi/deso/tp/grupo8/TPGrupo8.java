@@ -133,6 +133,12 @@ public class TPGrupo8 {
         clientes= eliminarCliente(clientes,buscarCliente(clientes,"c00001"));
         //imprimir distancia en km
         System.out.println("La distancia es de: "+v2.distancia(c2)+"Km");
+
+        Plato plato1 = new Plato(15,true,true);
+        System.err.println("El peso del plato es: "+plato1.peso(15));
+        System.err.println("El plato es apto para veganos ? "+plato1.aptoVegano());
+            
+        
     }
    
 }
