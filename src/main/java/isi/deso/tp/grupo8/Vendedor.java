@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package isi.deso.tp.grupo8;
+import java.util.Set;
+import java.util.HashSet;
 
 
 public class Vendedor {
@@ -10,6 +12,7 @@ public class Vendedor {
     private String nombre;
     private String direccion;
     private Coordenada coordenadas;
+    private Set<ItemMenu> listaProductos;
     
     public Vendedor (String id, String nombre, String direc, Coordenada coor){
         this.id = id;
@@ -53,4 +56,25 @@ public class Vendedor {
         distancia = r * c;
         return distancia;
     }
+    
+    public Set getComidas(){
+        Set<ItemMenu> comidas = new HashSet<>();
+        for(ItemMenu producto: this.listaProductos){
+            if(producto.esComida()){
+                comidas.add(producto);
+            }
+        }
+        return comidas;
+    }
+       
+      public Set getBebidas(){
+        Set<ItemMenu> bebidas = new HashSet<>();
+        for(ItemMenu producto: this.listaProductos){
+            if(producto.esBebida()){
+                bebidas.add(producto);
+            }
+        }
+        return bebidas;
+    }
+    
 }
