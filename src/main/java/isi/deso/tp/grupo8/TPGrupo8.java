@@ -135,8 +135,14 @@ public class TPGrupo8 {
         System.out.println("La distancia es de: "+v2.distancia(c2)+"Km");
 
         Plato plato1 = new Plato(15,true,true);
-        System.err.println("El peso del plato es: "+plato1.peso(15));
-        System.err.println("El plato es apto para veganos ? "+plato1.aptoVegano());
+        Bebida bebida1 = new Bebida(15, 450);
+        System.out.println("El peso del plato es: "+plato1.peso(15));
+        plato1.esComida();
+        plato1.esBebida();
+        System.out.println("El peso de la bebidao es: "+bebida1.peso(15));
+        bebida1.esComida();
+        bebida1.esBebida();
+
             
         
     }

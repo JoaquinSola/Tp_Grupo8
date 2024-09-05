@@ -28,6 +28,12 @@ public class Plato extends ItemMenu {
 
     @Override
     public boolean esComida() {
+        boolean veg = this.aptoVegano();
+        if(veg == true){
+            System.out.println("Es comida vegana");
+        }else{
+            System.out.println("Es comida no vegana");
+        }
         return true;
     }
 

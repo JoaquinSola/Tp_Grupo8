@@ -5,8 +5,13 @@ public class Bebida extends ItemMenu {
     private double volumen;
     private double graduacionAlcoholica;
 
+    public Bebida(double alc, double tam){
+        this.graduacionAlcoholica = alc;
+        this.volumen = tam;
+    }
+
     @Override
-    public double peso(double p) {
+    public double peso(double p) {              //NO VENDRIA A SER EL VOLUMEN ? 
         if (this.graduacionAlcoholica !=  0){
         volumen = (p*0.99) + p*0.2;
         }else{
@@ -17,17 +22,17 @@ public class Bebida extends ItemMenu {
 
     @Override
     public boolean esComida() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return false;
     }
 
     @Override
     public boolean esBebida() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return true;
     }
 
     @Override
     public boolean aptoVegano() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return false;
     }
 
 }
