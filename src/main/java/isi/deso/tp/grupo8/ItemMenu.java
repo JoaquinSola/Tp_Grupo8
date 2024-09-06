@@ -2,7 +2,7 @@ package isi.deso.tp.grupo8;
 
 public abstract class ItemMenu {
     private int id;
-    private String nombre;
+    public String nombre;
     private String descripcion;
     private double precio;
     private Categoria categoria;
@@ -10,6 +10,6 @@ public abstract class ItemMenu {
     public abstract boolean esComida();
     public abstract boolean esBebida();
     public abstract boolean aptoVegano();
-        
+    public abstract boolean esAlcoholica();
     
 }

@@ -4,6 +4,10 @@
 
 package isi.deso.tp.grupo8;
 
+
+import java.util.HashSet;
+import java.util.Set;
+
 public class TPGrupo8 {
     public static Vendedor [] eliminarVendedor(Vendedor [] v, Vendedor vAEliminar){
         int i = 0;
@@ -90,6 +94,12 @@ public class TPGrupo8 {
              return null;
         
     }
+
+   /*  public void nombreProductosLista(Set<ItemMenu> lista){
+        for(ItemMenu elemento: lista ){
+            System.out.println(elemento.nombre);
+        }
+    }*/
     public static void main(String[] args) {
 
 //-----------------------------VENDEDOR----------------------   
@@ -97,10 +107,14 @@ public class TPGrupo8 {
         Coordenada coorV1 = new Coordenada (3.18f,7.47f);
         Coordenada coorV2 = new Coordenada (1.25f,4.89f); //LATITUD LONGITUD
         Coordenada coorV3 = new Coordenada (6.59f,12.1f);
+        //Lista
+        Set<ItemMenu> productos = new HashSet<>();
+        Set<ItemMenu> productos2 = new HashSet<>();
+        Set<ItemMenu> productos3 = new HashSet<>();
         //vendedores
-        Vendedor v1 = new Vendedor ("v00001", "Horacio", "Iriondo 1582", coorV1);
-        Vendedor v2 = new Vendedor ("v00002", "Marcelo", "Misiones 492", coorV2);
-        Vendedor v3 = new Vendedor ("v00003", "Florencia", "Santa Fe 2123", coorV3);
+        Vendedor v1 = new Vendedor ("v00001", "Horacio", "Iriondo 1582", coorV1,productos2);
+        Vendedor v2 = new Vendedor ("v00002", "Marcelo", "Misiones 492", coorV2,productos);
+        Vendedor v3 = new Vendedor ("v00003", "Florencia", "Santa Fe 2123", coorV3,productos3);
         //vector de vendedores
         Vendedor[] vendedores = new Vendedor[3];
         vendedores[0] = v1;
@@ -134,17 +148,27 @@ public class TPGrupo8 {
         //imprimir distancia en km
         System.out.println("La distancia es de: "+v2.distancia(c2)+"Km");
 
-        Plato plato1 = new Plato(15,true,true);
-        Bebida bebida1 = new Bebida(15, 450);
+        Plato plato1 = new Plato(15,false,false,"Bife");
+        Plato plato2 = new Plato(15,true,true,"Lechuga");
+        Bebida bebida1 = new Bebida(0, 450,"Vodka");
+        Bebida bebida2 = new Bebida(0, 450,"Manaos");
+        productos.add(bebida1);
+        productos.add(bebida2);
+        productos.add(plato1);
         System.out.println("El peso del plato es: "+plato1.peso(15));
         plato1.esComida();
         plato1.esBebida();
         System.out.println("El peso de la bebidao es: "+bebida1.peso(15));
         bebida1.esComida();
         bebida1.esBebida();
+        v2.mostrarProductos();
+        System.out.println(v2.getBebidasSinAlcohol());
+        System.out.println(v2.getComidasVegana());
 
-            
-        
+        for(ItemMenu elemento: v2.getBebidasSinAlcohol() ){
+            System.out.println(elemento.nombre);
+        }
+      //  nombreProductosLista(v2.getBebidasSinAlcohol());
     }
    
 }

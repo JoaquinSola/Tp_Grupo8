@@ -4,24 +4,26 @@ public class Plato extends ItemMenu {
     private double calorias;
     private boolean aptoCeliacos;
     private boolean aptoVegetariano;
+    private double peso;
 
     public Plato(){
         this.calorias = 0;
         this.aptoCeliacos = false;
         this.aptoVegetariano = false;
+        this.nombre=null;
     }
 
 
-    public Plato(double c, boolean aC, boolean aV){
+    public Plato(double c, boolean aC, boolean aV, String nom){
         this.calorias = c;
         this.aptoCeliacos = aC;
         this.aptoVegetariano = aV;
+        this.nombre = nom;
 
     }
 
     @Override
     public double peso(double p) {
-        double peso;
         peso = p + (p*0.1);
         return peso;
     }
@@ -50,5 +52,11 @@ public class Plato extends ItemMenu {
             return false;
         }
     }
+
+    @Override
+    public boolean esAlcoholica(){
+        return false;
+    }
+
 
 }

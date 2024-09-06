@@ -5,19 +5,21 @@ public class Bebida extends ItemMenu {
     private double volumen;
     private double graduacionAlcoholica;
 
-    public Bebida(double alc, double tam){
+    public Bebida(double alc, double tam,String nom){
         this.graduacionAlcoholica = alc;
         this.volumen = tam;
+        this.nombre = nom;
     }
 
     @Override
-    public double peso(double p) {              //NO VENDRIA A SER EL VOLUMEN ? 
+    public double peso(double p) {    
+        double peso;          
         if (this.graduacionAlcoholica !=  0){
-        volumen = (p*0.99) + p*0.2;
+        peso = (p*0.99) + p*0.2;
         }else{
-        volumen = (p*1.04) + p*0.2;
+        peso = (p*1.04) + p*0.2;
         }
-    return volumen;
+    return peso;
     }
 
     @Override
@@ -33,6 +35,16 @@ public class Bebida extends ItemMenu {
     @Override
     public boolean aptoVegano() {
         return false;
+    }
+
+    public boolean esAlcoholica(){
+        boolean k;
+        if(this.graduacionAlcoholica != 0){
+            k = true;
+        }else{
+            k = false;
+        }
+        return k;
     }
 
 }

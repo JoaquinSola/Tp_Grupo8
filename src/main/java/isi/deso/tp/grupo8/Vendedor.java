@@ -3,8 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package isi.deso.tp.grupo8;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 
 public class Vendedor {
@@ -14,11 +14,13 @@ public class Vendedor {
     private Coordenada coordenadas;
     private Set<ItemMenu> listaProductos;
     
-    public Vendedor (String id, String nombre, String direc, Coordenada coor){
+    public Vendedor (String id, String nombre, String direc, Coordenada coor,  Set<ItemMenu> lista){
+        this.listaProductos = lista;
         this.id = id;
         this.nombre = nombre;
         this.direccion = direc;
         this.coordenadas = coor;
+        this.listaProductos = lista;
     }
     
     public String getId(){
@@ -36,6 +38,7 @@ public class Vendedor {
     public Coordenada getCoor(){
         return coordenadas;
     }
+
     
     public double distancia(Cliente cliente){
         Coordenada coordVend = this.coordenadas; //ESTAS SON COORDENADAS EN GRADOS
@@ -56,6 +59,8 @@ public class Vendedor {
         distancia = r * c;
         return distancia;
     }
+
+
     
     public Set getComidas(){
         Set<ItemMenu> comidas = new HashSet<>();
@@ -76,5 +81,36 @@ public class Vendedor {
         }
         return bebidas;
     }
+
+    public Set getComidasVegana(){
+        Set<ItemMenu> comidaVegana = new HashSet<>();
+        for(ItemMenu producto: this.listaProductos){
+            if(producto.aptoVegano()){
+                comidaVegana.add(producto);
+            }
+        }
+        return comidaVegana;
+    }
+
+    public Set<ItemMenu> getBebidasSinAlcohol() {
+        Set<ItemMenu> BebidasSinAlcohol = new HashSet<>();
+        for (ItemMenu producto : this.listaProductos) {
+            if (producto instanceof Bebida && !producto.esAlcoholica()) {
+                BebidasSinAlcohol.add(producto);
+            }
+        }
+        return BebidasSinAlcohol;
+    }
+    
+    
+
+    public void mostrarProductos() {
+        System.out.println("Lista de Productos:");
+        for (ItemMenu item : listaProductos) {
+            item.toString();
+            System.out.println(item.nombre); // Asumiendo que ItemMenu tiene un método toString() sobrescrito
+        }
+    }
+
     
 }
