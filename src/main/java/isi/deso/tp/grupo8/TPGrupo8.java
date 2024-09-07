@@ -162,12 +162,9 @@ public class TPGrupo8 {
         bebida1.esComida();
         bebida1.esBebida();
         v2.mostrarProductos();
-        System.out.println(v2.getBebidasSinAlcohol());
+        System.out.println(v2.bebidaSinAlcohol());
         System.out.println(v2.getComidasVegana());
-
-        for(ItemMenu elemento: v2.getBebidasSinAlcohol() ){
-            System.out.println(elemento.nombre);
-        }
+        
       //  nombreProductosLista(v2.getBebidasSinAlcohol());
     }
    

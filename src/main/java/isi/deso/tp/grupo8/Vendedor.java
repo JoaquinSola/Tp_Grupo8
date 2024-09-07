@@ -60,7 +60,6 @@ public class Vendedor {
         return distancia;
     }
 
-
     
     public Set getComidas(){
         Set<ItemMenu> comidas = new HashSet<>();
@@ -72,15 +71,32 @@ public class Vendedor {
         return comidas;
     }
        
-      public Set getBebidas(){
-        Set<ItemMenu> bebidas = new HashSet<>();
-        for(ItemMenu producto: this.listaProductos){
-            if(producto.esBebida()){
-                bebidas.add(producto);
-            }
+    public boolean bebidaSinAlcohol() {
+        // Obtenemos el conjunto de bebidas sin alcohol
+        Set<ItemMenu> bebidasSinAlcohol = this.getBebidasSinAlcohol();
+        
+        // Usamos StringBuilder para armar la cadena de salida
+        StringBuilder resultado = new StringBuilder("Bebidas sin Alcohol: [");
+    
+        // Iteramos sobre el conjunto usando un bucle for-each
+        for (ItemMenu bebida : bebidasSinAlcohol) {
+            resultado.append(bebida.nombre).append(", ");
         }
-        return bebidas;
+    
+        // Eliminamos la última coma y el espacio adicional
+        if (resultado.length() > 21) { // 21 es la longitud de "Bebidas sin Alcohol: ["
+            resultado.setLength(resultado.length() - 2);
+        }
+    
+        // Cerramos el formato de la lista con corchete
+        resultado.append("]");
+    
+        // Mostramos el resultado final
+        System.out.println(resultado.toString());
+    
+        return true;
     }
+    
 
     public Set getComidasVegana(){
         Set<ItemMenu> comidaVegana = new HashSet<>();
@@ -105,12 +121,25 @@ public class Vendedor {
     
 
     public void mostrarProductos() {
-        System.out.println("Lista de Productos:");
+        StringBuilder resultado = new StringBuilder("Lista de Productos asociados a este vendodr: [");
+    
         for (ItemMenu item : listaProductos) {
-            item.toString();
-            System.out.println(item.nombre); // Asumiendo que ItemMenu tiene un método toString() sobrescrito
+            resultado.append(item.nombre).append(", ");
         }
+ 
+        if (resultado.length() > 20) { 
+            resultado.setLength(resultado.length() - 2);
+        }
+    
+        resultado.append("]");
+    
+        System.out.println(resultado.toString());
     }
+    
+    
+
+ 
+    
 
     
 }
