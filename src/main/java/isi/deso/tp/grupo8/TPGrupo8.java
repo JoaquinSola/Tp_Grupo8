@@ -94,12 +94,6 @@ public class TPGrupo8 {
              return null;
         
     }
-
-   /*  public void nombreProductosLista(Set<ItemMenu> lista){
-        for(ItemMenu elemento: lista ){
-            System.out.println(elemento.nombre);
-        }
-    }*/
     public static void main(String[] args) {
 
         //-----------------------------VENDEDOR------------------------------------------------------
@@ -150,20 +144,28 @@ public class TPGrupo8 {
 
         Plato plato1 = new Plato(15,false,false,"Bife");
         Plato plato2 = new Plato(15,true,true,"Lechuga");
-        Bebida bebida1 = new Bebida(0, 450,"Vodka");
+        Plato plato3 = new Plato(23,true,false,"Pizza");
+        Plato plato4 = new Plato(18,false,true,"Wok de verduras");
+        Bebida bebida1 = new Bebida(40, 450,"Vodka");
         Bebida bebida2 = new Bebida(0, 450,"Manaos");
+        Bebida bebida3 = new Bebida(0, 500,"Limonada");
+        Bebida bebida4 = new Bebida(39,750,"Fernet con Coca");
         productos.add(bebida1);
         productos.add(bebida2);
+        productos.add(bebida3);
+        productos.add(bebida4);
         productos.add(plato1);
         productos.add(plato2);
+        productos.add(plato3);
+        productos.add(plato4);
         System.out.println("El peso del plato es: "+plato1.peso(15));
         plato1.esComida();
         plato1.esBebida();
         System.out.println("El peso de la bebida es: "+bebida1.peso(15));
         bebida1.esComida();
         bebida1.esBebida();
-        System.out.println("Comidas asociadas al vendedor "+v2.getNombre()+" es: "+v2.getComidas()); //IMPRIME LISTA DE COMIDAS QUE VENDE ESE VENDEDOR
-        System.out.println("Bebibdas asociadas al vendedor "+v2.getNombre()+" es: "+v2.getBebidas()); //IMPRIME LISTA DE BEBIDAS QUE VENDE ESE VENDEDOR
+        System.out.println("Comidas asociadas al vendedor "+v2.getNombre()+": "+v2.getComidas()); //IMPRIME LISTA DE COMIDAS QUE VENDE ESE VENDEDOR
+        System.out.println("Bebibdas asociadas al vendedor "+v2.getNombre()+": "+v2.getBebidas()); //IMPRIME LISTA DE BEBIDAS QUE VENDE ESE VENDEDOR
         v2.mostrarProductos();                                                      //IMPRIME LISTA TOTAL QUE VENDE ESE VENDEDOR
         v2.bebidaSinAlcohol();                                                      //IMPRIME LISTA DE BEBIDAS SIN ALCOHOL QUE VENDE ESE VENDEDOR
         v2.comidaVegana();                                                          //IMPRIME LISTA DE COMIDA VEGANA QUE VENDE ESE VENDEDOR
