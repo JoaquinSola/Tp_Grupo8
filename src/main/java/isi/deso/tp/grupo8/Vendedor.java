@@ -86,7 +86,7 @@ public class Vendedor {
         Set<ItemMenu> bebidasSinAlcohol = this.getBebidasSinAlcohol();
         
         // Usamos StringBuilder para armar la cadena de salida
-        StringBuilder resultado = new StringBuilder("Bebidas sin Alcohol: [");
+        StringBuilder resultado = new StringBuilder("Lista de Bebidas sin Alcohol asociados al vendedor "+this.getNombre()+" es: [");
     
         // Iteramos sobre el conjunto usando un bucle for-each
         for (ItemMenu bebida : bebidasSinAlcohol) {
@@ -110,7 +110,7 @@ public class Vendedor {
     public void comidaVegana() {
         Set<ItemMenu> comidasVeganas = this.getComidasVegana();
     
-        StringBuilder resultado = new StringBuilder("Comidas veganas: [");
+        StringBuilder resultado = new StringBuilder("Lista de Comida vegana asociados al vendedor "+this.getNombre()+" es: [");
         for (ItemMenu plato : comidasVeganas) {
             resultado.append(plato).append(", "); 
         }
@@ -149,7 +149,7 @@ public class Vendedor {
     
 
     public void mostrarProductos() {
-        StringBuilder resultado = new StringBuilder("Lista de Productos asociados a este vendedor: [");
+        StringBuilder resultado = new StringBuilder("Lista de Productos asociados al vendedor "+this.getNombre()+" es: [");
     
         for (ItemMenu item : listaProductos) {
             resultado.append(item.nombre).append(", ");

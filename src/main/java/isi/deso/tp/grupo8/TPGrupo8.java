@@ -102,7 +102,7 @@ public class TPGrupo8 {
     }*/
     public static void main(String[] args) {
 
-//-----------------------------VENDEDOR----------------------   
+        //-----------------------------VENDEDOR------------------------------------------------------
         //coordenadas vendedor
         Coordenada coorV1 = new Coordenada (3.18f,7.47f);
         Coordenada coorV2 = new Coordenada (1.25f,4.89f); //LATITUD LONGITUD
@@ -112,7 +112,7 @@ public class TPGrupo8 {
         Set<ItemMenu> productos2 = new HashSet<>();
         Set<ItemMenu> productos3 = new HashSet<>();
         //vendedores
-        Vendedor v1 = new Vendedor ("v00001", "Horacio", "Iriondo 1582", coorV1,productos2);
+        Vendedor v1 = new Vendedor ("v00001", "Horacio", "Iriondo 1582", coorV1,productos2);  //EL ULTIMO ATRUBUTO ES LA LISTA DE PRODUCTOS ASOCIADO A ESE VENDEDOR
         Vendedor v2 = new Vendedor ("v00002", "Marcelo", "Misiones 492", coorV2,productos);
         Vendedor v3 = new Vendedor ("v00003", "Florencia", "Santa Fe 2123", coorV3,productos3);
         //vector de vendedores
@@ -125,7 +125,7 @@ public class TPGrupo8 {
         buscarVendedor(vendedores, "Florencia");
         System.out.println("\n");
         vendedores = eliminarVendedor(vendedores, buscarVendedor(vendedores,"Marcelo"));
-        //---------------------------------------------CLIENTE----------------------      -------------------------  
+        //---------------------------------------------CLIENTE----------------------------------------------  
         //coordenadas cliente
         Coordenada coorC1 = new Coordenada (45.3f,99.3f);
         Coordenada coorC2 = new Coordenada (18.9f,78.6f);
@@ -162,8 +162,8 @@ public class TPGrupo8 {
         System.out.println("El peso de la bebida es: "+bebida1.peso(15));
         bebida1.esComida();
         bebida1.esBebida();
-        System.out.println("Comidas asociadas a este vendedor: "+v2.getComidas()); //IMPRIME LISTA DE COMIDAS QUE VENDE ESE VENDEDOR
-        System.out.println("Bebibdas asociadas a este vendedor: "+v2.getBebidas()); //IMPRIME LISTA DE BEBIDAS QUE VENDE ESE VENDEDOR
+        System.out.println("Comidas asociadas al vendedor "+v2.getNombre()+" es: "+v2.getComidas()); //IMPRIME LISTA DE COMIDAS QUE VENDE ESE VENDEDOR
+        System.out.println("Bebibdas asociadas al vendedor "+v2.getNombre()+" es: "+v2.getBebidas()); //IMPRIME LISTA DE BEBIDAS QUE VENDE ESE VENDEDOR
         v2.mostrarProductos();                                                      //IMPRIME LISTA TOTAL QUE VENDE ESE VENDEDOR
         v2.bebidaSinAlcohol();                                                      //IMPRIME LISTA DE BEBIDAS SIN ALCOHOL QUE VENDE ESE VENDEDOR
         v2.comidaVegana();                                                          //IMPRIME LISTA DE COMIDA VEGANA QUE VENDE ESE VENDEDOR
