@@ -70,6 +70,16 @@ public class Vendedor {
         }
         return comidas;
     }
+
+    public Set getBebidas(){
+        Set<ItemMenu> bebidas = new HashSet<>();
+        for(ItemMenu producto: this.listaProductos){
+            if(producto.esBebida()){
+                bebidas.add(producto);
+            }
+        }
+        return bebidas;
+    }
        
     public boolean bebidaSinAlcohol() {
         // Obtenemos el conjunto de bebidas sin alcohol
@@ -96,17 +106,35 @@ public class Vendedor {
     
         return true;
     }
-    
 
-    public Set getComidasVegana(){
-        Set<ItemMenu> comidaVegana = new HashSet<>();
-        for(ItemMenu producto: this.listaProductos){
-            if(producto.aptoVegano()){
-                comidaVegana.add(producto);
-            }
+    public void comidaVegana() {
+        Set<ItemMenu> comidasVeganas = this.getComidasVegana();
+    
+        StringBuilder resultado = new StringBuilder("Comidas veganas: [");
+        for (ItemMenu plato : comidasVeganas) {
+            resultado.append(plato).append(", "); 
         }
-        return comidaVegana;
+    
+        if (resultado.length() > 17) { // 17 es la longitud de "Comidas veganas: ["
+            resultado.setLength(resultado.length() - 2);
+        }
+        resultado.append("]");
+        System.out.println(resultado.toString());
     }
+    
+    
+    
+        
+    
+        public Set getComidasVegana(){
+            Set<ItemMenu> comidaVegana = new HashSet<>();
+            for(ItemMenu producto: this.listaProductos){
+                if(producto.aptoVegano()){
+                    comidaVegana.add(producto);
+                }
+            }
+            return comidaVegana;
+        }
 
     public Set<ItemMenu> getBebidasSinAlcohol() {
         Set<ItemMenu> BebidasSinAlcohol = new HashSet<>();
@@ -121,7 +149,7 @@ public class Vendedor {
     
 
     public void mostrarProductos() {
-        StringBuilder resultado = new StringBuilder("Lista de Productos asociados a este vendodr: [");
+        StringBuilder resultado = new StringBuilder("Lista de Productos asociados a este vendedor: [");
     
         for (ItemMenu item : listaProductos) {
             resultado.append(item.nombre).append(", ");

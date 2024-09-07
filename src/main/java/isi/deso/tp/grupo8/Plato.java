@@ -58,5 +58,10 @@ public class Plato extends ItemMenu {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return this.nombre;
+    }
+
 
 }

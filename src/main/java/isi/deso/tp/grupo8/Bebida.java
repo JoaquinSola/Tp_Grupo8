@@ -47,4 +47,9 @@ public class Bebida extends ItemMenu {
         return k;
     }
 
+    @Override
+    public String toString() {
+        return this.nombre;
+    }
+
 }

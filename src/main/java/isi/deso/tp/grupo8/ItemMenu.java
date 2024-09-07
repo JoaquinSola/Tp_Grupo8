@@ -11,5 +11,6 @@ public abstract class ItemMenu {
     public abstract boolean esBebida();
     public abstract boolean aptoVegano();
     public abstract boolean esAlcoholica();
+    public abstract String toString();
     
 }

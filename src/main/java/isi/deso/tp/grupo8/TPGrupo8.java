@@ -155,17 +155,18 @@ public class TPGrupo8 {
         productos.add(bebida1);
         productos.add(bebida2);
         productos.add(plato1);
+        productos.add(plato2);
         System.out.println("El peso del plato es: "+plato1.peso(15));
         plato1.esComida();
         plato1.esBebida();
-        System.out.println("El peso de la bebidao es: "+bebida1.peso(15));
+        System.out.println("El peso de la bebida es: "+bebida1.peso(15));
         bebida1.esComida();
         bebida1.esBebida();
-        v2.mostrarProductos();
-        System.out.println(v2.bebidaSinAlcohol());
-        System.out.println(v2.getComidasVegana());
-        
-      //  nombreProductosLista(v2.getBebidasSinAlcohol());
-    }
+        System.out.println("Comidas asociadas a este vendedor: "+v2.getComidas()); //IMPRIME LISTA DE COMIDAS QUE VENDE ESE VENDEDOR
+        System.out.println("Bebibdas asociadas a este vendedor: "+v2.getBebidas()); //IMPRIME LISTA DE BEBIDAS QUE VENDE ESE VENDEDOR
+        v2.mostrarProductos();                                                      //IMPRIME LISTA TOTAL QUE VENDE ESE VENDEDOR
+        v2.bebidaSinAlcohol();                                                      //IMPRIME LISTA DE BEBIDAS SIN ALCOHOL QUE VENDE ESE VENDEDOR
+        v2.comidaVegana();                                                          //IMPRIME LISTA DE COMIDA VEGANA QUE VENDE ESE VENDEDOR
+    }   
    
 }
