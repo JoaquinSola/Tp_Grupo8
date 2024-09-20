@@ -142,10 +142,10 @@ public class TPGrupo8 {
         //imprimir distancia en km
         System.out.println("La distancia es de: "+v2.distancia(c2)+"Km");
 
-        Plato plato1 = new Plato(15,false,false,"Bife");
-        Plato plato2 = new Plato(15,true,true,"Lechuga");
-        Plato plato3 = new Plato(23,true,false,"Pizza");
-        Plato plato4 = new Plato(18,false,true,"Wok de verduras");
+        Plato plato1 = new Plato(15,false,false,"Bife",15);
+        Plato plato2 = new Plato(15,true,true,"Lechuga",69);
+        Plato plato3 = new Plato(23,true,false,"Pizza",12);
+        Plato plato4 = new Plato(18,false,true,"Wok de verduras",225.5);
         Bebida bebida1 = new Bebida(40, 450,"Vodka");
         Bebida bebida2 = new Bebida(0, 450,"Manaos");
         Bebida bebida3 = new Bebida(0, 500,"Limonada");

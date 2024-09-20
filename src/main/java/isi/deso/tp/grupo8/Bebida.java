@@ -51,5 +51,9 @@ public class Bebida extends ItemMenu {
     public String toString() {
         return this.nombre;
     }
-
+    
+    @Override
+    public double getPrecio(){
+        return this.precio;
+    }
 }

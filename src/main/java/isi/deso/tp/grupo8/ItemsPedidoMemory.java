@@ -27,9 +27,15 @@ public class ItemsPedidoMemory implements ItemsPedidoDao{
     //}
     //void ordenarPorCriterio(){   
     //}
-    //void busquedaPorRangodePecios(double min, double max, ItemsPedidoMemory ip){    
-    //}
-  
+    
+    public Set<ItemPedido> busquedaPorRangodePecios(double min, double max) throws ItemNoEncontradoException {  
+        Set<ItemPedido> setAux = this.listaItems.stream().filter(item -> item.getItemPedido().getPrecio() > min && item.getItemPedido().getPrecio() < max).collect(Collectors.toSet());
+        if(setAux.isEmpty()){
+            throw new ItemNoEncontradoException("Item No encontrado");
+        }
+        return setAux;
+    } 
+    
     public Set<ItemPedido> buscarPorRestaurante(Vendedor v) throws ItemNoEncontradoException {
        Set<ItemPedido> set1 = this.listaItems.stream().filter(items -> v.getList().contains(items.getItemPedido())).collect(Collectors.toSet());
        if(set1.isEmpty()){

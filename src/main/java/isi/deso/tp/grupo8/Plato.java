@@ -14,12 +14,12 @@ public class Plato extends ItemMenu {
     }
 
 
-    public Plato(double c, boolean aC, boolean aV, String nom){
+    public Plato(double c, boolean aC, boolean aV, String nom, double p){
         this.calorias = c;
         this.aptoCeliacos = aC;
         this.aptoVegetariano = aV;
         this.nombre = nom;
-
+        this.precio = p;
     }
 
     @Override
@@ -62,6 +62,10 @@ public class Plato extends ItemMenu {
     public String toString() {
         return this.nombre;
     }
-
+    
+    @Override
+    public double getPrecio(){
+        return this.precio;
+    }
 
 }
