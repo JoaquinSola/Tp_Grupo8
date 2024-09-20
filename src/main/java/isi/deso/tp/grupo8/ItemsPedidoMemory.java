@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package isi.deso.tp.grupo8;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ItemsPedidoMemory implements ItemsPedidoDao{
      private Set<ItemPedido> listaPedidos;
