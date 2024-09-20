@@ -20,7 +20,6 @@ public class Vendedor {
         this.nombre = nombre;
         this.direccion = direc;
         this.coordenadas = coor;
-        this.listaProductos = lista;
     }
     
     public String getId(){

@@ -5,7 +5,7 @@
 package isi.deso.tp.grupo8;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Iterator;
+import java.util.stream.Collectors;
 
 public class ItemsPedidoMemory implements ItemsPedidoDao{
      private Set<ItemPedido> listaItems;
@@ -30,17 +30,12 @@ public class ItemsPedidoMemory implements ItemsPedidoDao{
     //void busquedaPorRangodePecios(double min, double max, ItemsPedidoMemory ip){    
     //}
   
-    public Set<ItemPedido> buscarPorRestaurante(Vendedor v){
-        Set<ItemPedido> listab = new HashSet<>();
-        Iterator<ItemPedido> iterator = this.getLista().iterator();
-        Set listaM = v.getList();
-        while (iterator.hasNext()) {
-            if(listaM.contains(iterator.next())){
-               listab.add(iterator.next());
-            }
-           
-        }
-        return listab;
+    public Set<ItemPedido> buscarPorRestaurante(Vendedor v) throws ItemNoEncontradoException {
+       Set<ItemPedido> set1 = this.listaItems.stream().filter(items -> v.getList().contains(items.getItemPedido())).collect(Collectors.toSet());
+       if(set1.isEmpty()){
+           throw new ItemNoEncontradoException("Item No encontrado");
+       }
+       return set1;
     }
 }
 // clase Pedido la cual tiene una lista de Items Pedido
