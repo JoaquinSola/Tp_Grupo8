@@ -38,6 +38,9 @@ public class Vendedor {
     public Coordenada getCoor(){
         return coordenadas;
     }
+    public Set<ItemMenu> getList(){
+        return listaProductos;
+    }
 
     
     public double distancia(Cliente cliente){
