@@ -95,7 +95,7 @@ public class TPGrupo8 {
         
     }
     public static void main(String[] args) {
-
+        // INSTANCIA 1
         //-----------------------------VENDEDOR------------------------------------------------------
         //coordenadas vendedor
         Coordenada coorV1 = new Coordenada (3.18f,7.47f);
@@ -142,6 +142,7 @@ public class TPGrupo8 {
         //imprimir distancia en km
         System.out.println("La distancia es de: "+v2.distancia(c2)+"Km");
 
+        //INSTANCIA 2
         Plato plato1 = new Plato(15,false,false,"Bife",15);
         Plato plato2 = new Plato(15,true,true,"Lechuga",69);
         Plato plato3 = new Plato(23,true,false,"Pizza",12);
@@ -169,6 +170,31 @@ public class TPGrupo8 {
         v2.mostrarProductos();                                                      //IMPRIME LISTA TOTAL QUE VENDE ESE VENDEDOR
         v2.bebidaSinAlcohol();                                                      //IMPRIME LISTA DE BEBIDAS SIN ALCOHOL QUE VENDE ESE VENDEDOR
         v2.comidaVegana();                                                          //IMPRIME LISTA DE COMIDA VEGANA QUE VENDE ESE VENDEDOR
+
+        //INSTANCIA 3
+        ItemPedido p1 = new ItemPedido(plato1);
+        ItemPedido p2 = new ItemPedido(plato2);
+        ItemPedido p3 = new ItemPedido(plato3);
+        ItemPedido p4 = new ItemPedido(plato4);
+        ItemPedido b1 = new ItemPedido(bebida1);
+        ItemPedido b2 = new ItemPedido(bebida2);
+        ItemPedido b3 = new ItemPedido(bebida3);
+        ItemPedido b4 = new ItemPedido(bebida4);
+        ItemsPedidoMemory ipm1 = new ItemsPedidoMemory();
+        ipm1.agregarItem(p1);
+        ipm1.agregarItem(p4);
+        ipm1.agregarItem(b3);
+        ItemsPedidoMemory ipm2 = new ItemsPedidoMemory();
+        ipm2.agregarItem(p2);
+        ipm2.agregarItem(p3);
+        ipm2.agregarItem(b1);
+        ItemsPedidoMemory ipm3 = new ItemsPedidoMemory();
+        ipm2.agregarItem(b2);
+        ipm2.agregarItem(b4);
+        Pedido ped1 = new Pedido("1",c1, ipm1);
+        Pedido ped2 = new Pedido("2",c2, ipm2);
+        Pedido ped3 = new Pedido("3",c3, ipm3);
+        
     }   
    
 }
