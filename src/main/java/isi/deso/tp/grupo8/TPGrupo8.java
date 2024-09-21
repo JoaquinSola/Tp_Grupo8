@@ -202,10 +202,10 @@ public class TPGrupo8 {
         Pedido ped1 = new Pedido("1",c1, ipm1);
         Pedido ped2 = new Pedido("2",c2, ipm2);
         Pedido ped3 = new Pedido("3",c3, ipm3);
-        //ipm1.busquedaPorRangodePecios(0, 1);
+        ipm1.busquedaPorRangodePecios(0, 700);
         //v2.mostrarProductos(); // EJEMPLO, ESTE VENDEDOR TIENE MUCHOS ITEMS A SU VENTA
-        //ipm2.ordenarPorCriterio(); // ORDENA ALFABETICAMENTE
-        //ipm2.buscarPorRestaurante(v2); // BUSCA QUE VENDEDOR, CUMPLE CON TODOS LOS ITEMS A PROVEER , ESTOS ITEMS SON LOS QUE ESTAN DENTRO DE DE LA INSTANCIA DE ItemsPedidosMemory
+        ipm2.ordenarPorCriterio(); // ORDENA ALFABETICAMENTE
+        ipm2.buscarPorRestaurante(v2); // BUSCA QUE VENDEDOR, CUMPLE CON TODOS LOS ITEMS A PROVEER , ESTOS ITEMS SON LOS QUE ESTAN DENTRO DE DE LA INSTANCIA DE ItemsPedidosMemory
     }   
    
 }

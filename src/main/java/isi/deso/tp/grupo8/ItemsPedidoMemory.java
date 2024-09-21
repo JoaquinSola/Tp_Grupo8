@@ -49,7 +49,7 @@ public class ItemsPedidoMemory implements ItemsPedidoDao{
         if(setAux.isEmpty()){
             throw new ItemNoEncontradoException("Item No encontrado");
         }else{
-            StringBuilder resultado = new StringBuilder("El/Lost item que cumplen la condicion: [");
+            StringBuilder resultado = new StringBuilder("El/Lost item que cumplen la condicion de min "+ min +" a "+ max+" : [");
             for (ItemPedido item : setAux) {
             resultado.append(item.getItemPedido()).append(", ");
         }
