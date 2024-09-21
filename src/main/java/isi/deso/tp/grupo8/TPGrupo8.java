@@ -205,6 +205,11 @@ public class TPGrupo8 {
         ipm1.busquedaPorRangodePecios(0, 700);
         //v2.mostrarProductos(); // EJEMPLO, ESTE VENDEDOR TIENE MUCHOS ITEMS A SU VENTA
         ipm2.ordenarPorCriterio(); // ORDENA ALFABETICAMENTE
+         //en el argumento se coloca el tipo de plato (Comida, Bebida, Comida Vegetariana y bebidas Alcoholicas), y filtra por aquellas que cumplen la condicion
+        ipm2.filtrado('C');  // filtra por COMIDAS
+        ipm2.filtrado('A'); //filtra por BEBIDAS ALCOHOLICAS
+        ipm2.filtrado('B'); //filtra por BEBIDAS
+        ipm2.filtrado('V'); //filtra por COMIDA VEGANA
         ipm2.buscarPorRestaurante(v2); // BUSCA QUE VENDEDOR, CUMPLE CON TODOS LOS ITEMS A PROVEER , ESTOS ITEMS SON LOS QUE ESTAN DENTRO DE DE LA INSTANCIA DE ItemsPedidosMemory
     }   
    
