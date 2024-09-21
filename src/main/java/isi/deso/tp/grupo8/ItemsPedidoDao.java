@@ -4,9 +4,11 @@
  */
 package isi.deso.tp.grupo8;
 
+import java.util.Set;
+
 public interface ItemsPedidoDao {
     void filtrado();
-    void ordenarPorCriterio();
-    void busquedaPorRangodePecios();
-    void buscarPorRestaurante();
+    Set<ItemPedido> ordenarPorCriterio();
+    Set<ItemPedido> busquedaPorRangodePecios(double min, double max) throws ItemNoEncontradoException ;
+    Set<ItemPedido> buscarPorRestaurante(Vendedor v) throws ItemNoEncontradoException;
 }

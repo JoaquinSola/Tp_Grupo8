@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package isi.deso.tp.grupo8;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,16 +19,20 @@ public class ItemsPedidoMemory implements ItemsPedidoDao{
       return listaItems;
   }
   
-  //REVISARRRRRRRRRRRRRRRRRRRRRR
+ 
   public Set<ItemPedido> agregarItem(ItemPedido ip ){
       this.listaItems.add(ip);
       return listaItems;
   }
-    //void filtrado(){
-    //}
-    //void ordenarPorCriterio(){   
-    //}
-    
+
+
+     @Override
+    public Set<ItemPedido> ordenarPorCriterio(){
+    Set<ItemPedido> setAux = this.listaItems.stream()
+        .sorted(Comparator.comparing(item -> item.getItemPedido().toString())).collect(Collectors.toSet());
+    return setAux;
+    }
+     @Override
     public Set<ItemPedido> busquedaPorRangodePecios(double min, double max) throws ItemNoEncontradoException {  
         Set<ItemPedido> setAux = this.listaItems.stream().filter(item -> item.getItemPedido().getPrecio() > min && item.getItemPedido().getPrecio() < max).collect(Collectors.toSet());
         if(setAux.isEmpty()){
@@ -36,6 +41,7 @@ public class ItemsPedidoMemory implements ItemsPedidoDao{
         return setAux;
     } 
     
+     @Override
     public Set<ItemPedido> buscarPorRestaurante(Vendedor v) throws ItemNoEncontradoException {
        Set<ItemPedido> set1 = this.listaItems.stream().filter(items -> v.getList().contains(items.getItemPedido())).collect(Collectors.toSet());
        if(set1.isEmpty()){
