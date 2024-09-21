@@ -22,7 +22,32 @@ public class ItemsPedidoMemory implements ItemsPedidoDao{
       this.listaItems.add(ip);
       return listaItems;
   }
-
+      public Set<ItemPedido> filtrado(char i) throws ItemNoEncontradoException{
+       Set<ItemPedido> aux = new HashSet();
+     switch(i){
+         case 'V': aux = this.listaItems.stream().filter(item -> item.getItemPedido().aptoVegano() == true).collect(Collectors.toSet());
+         break;
+         case 'B': aux = this.listaItems.stream().filter(item -> item.getItemPedido().esBebida() == true).collect(Collectors.toSet());
+         break;
+         case 'C': aux = this.listaItems.stream().filter(item -> item.getItemPedido().esComida() == true).collect(Collectors.toSet());
+         break;
+         case 'A': aux = this.listaItems.stream().filter(item -> item.getItemPedido().esAlcoholica() == true).collect(Collectors.toSet());
+         break;
+     }
+       if(aux.isEmpty()){
+        throw new ItemNoEncontradoException("Item No encontrado");
+       }else{
+          StringBuilder mensaje = new StringBuilder("Los resultados son: ["); 
+          for(ItemPedido p: aux){
+              mensaje.append(p.getItemPedido()+", ");
+          }
+          mensaje.setLength(mensaje.length() - 2); // Elimina la última coma y el espacio
+          mensaje.append("]");
+          System.out.println(mensaje);
+          return aux;
+       }
+      
+   }
 
      @Override
     public Set<ItemPedido> ordenarPorCriterio(){
