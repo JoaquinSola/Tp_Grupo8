@@ -11,15 +11,13 @@ import java.util.stream.Collectors;
 public class ItemsPedidoMemory implements ItemsPedidoDao{
      private Set<ItemPedido> listaItems;
      
-  public void ItemsPedidoMemory(){
-      Set<ItemPedido> listaItems = new HashSet<>();
+  public ItemsPedidoMemory(){
+      this.listaItems = new HashSet<>();
   }
   
   public Set<ItemPedido> getLista(){
       return listaItems;
   }
-  
- 
   public Set<ItemPedido> agregarItem(ItemPedido ip ){
       this.listaItems.add(ip);
       return listaItems;
