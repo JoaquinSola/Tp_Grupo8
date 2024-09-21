@@ -62,7 +62,6 @@ public class Vendedor {
         return distancia;
     }
 
-    
     public Set getComidas(){
         Set<ItemMenu> comidas = new HashSet<>();
         for(ItemMenu producto: this.listaProductos){
@@ -123,12 +122,8 @@ public class Vendedor {
         resultado.append("]");
         System.out.println(resultado.toString());
     }
-    
-    
-    
-     
-    
-        public Set getComidasVegana(){
+ 
+    public Set getComidasVegana(){
             Set<ItemMenu> comidaVegana = new HashSet<>();
             for(ItemMenu producto: this.listaProductos){
                 if(producto.aptoVegano()){
@@ -147,8 +142,6 @@ public class Vendedor {
         }
         return BebidasSinAlcohol;
     }
-    
-    
 
     public void mostrarProductos() {
         StringBuilder resultado = new StringBuilder("Lista de Productos asociados al vendedor "+this.getNombre()+" : [");
