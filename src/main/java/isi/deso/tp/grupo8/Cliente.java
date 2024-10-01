@@ -47,8 +47,8 @@ public class Cliente {
         return p;
      }
 
-     public Pedido agregarItem(Pedido p, ItemMenu im){
-         p.agregarItem(im);
+     public Pedido agregarItem(Pedido p, ItemMenu im) throws ItemNoEncontradoException{
+         p.agregarItem(im) ;
          return p;
      }
 }
