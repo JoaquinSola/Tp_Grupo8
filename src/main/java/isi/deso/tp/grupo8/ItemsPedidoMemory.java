@@ -22,6 +22,11 @@ public class ItemsPedidoMemory implements ItemsPedidoDao{
       this.listaItems.add(ip);
       return listaItems;
   }
+    public Set<ItemPedido> agregarItem(ItemMenu im ){
+        ItemPedido ip = new ItemPedido(im);
+      this.listaItems.add(ip);
+      return listaItems;
+  }
       public Set<ItemPedido> filtrado(char i) throws ItemNoEncontradoException{
        Set<ItemPedido> aux = new HashSet();
      switch(i){

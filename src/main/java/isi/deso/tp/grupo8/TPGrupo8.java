@@ -1,6 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
 
 package isi.deso.tp.grupo8;
 
@@ -199,6 +196,7 @@ public class TPGrupo8 {
         ItemsPedidoMemory ipm3 = new ItemsPedidoMemory();
         ipm2.agregarItem(b2);
         ipm2.agregarItem(b4);
+        //                Pedido(String id, Cliente c, ItemsPedidoMemory ip, Vendedor v)
         Pedido ped1 = new Pedido("1",c1, ipm1);
         Pedido ped2 = new Pedido("2",c2, ipm2);
         Pedido ped3 = new Pedido("3",c3, ipm3);

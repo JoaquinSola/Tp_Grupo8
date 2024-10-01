@@ -37,6 +37,7 @@ public class Vendedor {
     public Coordenada getCoor(){
         return coordenadas;
     }
+    
     public Set<ItemMenu> getList(){
         return listaProductos;
     }
@@ -158,11 +159,5 @@ public class Vendedor {
     
         System.out.println(resultado.toString());
     }
-    
-    
-
- 
-    
-
-    
+  
 }

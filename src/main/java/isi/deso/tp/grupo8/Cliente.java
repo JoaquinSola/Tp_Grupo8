@@ -39,4 +39,16 @@ public class Cliente {
         return coordenadas;
     }
      
+     public Pedido crearPedido(Vendedor v, String id){
+        // public Pedido(Str ing id, Cliente c, ItemsPedidoMemory ip, Vendedor v)
+        ItemsPedidoMemory im = new ItemsPedidoMemory();
+        Pedido p = new Pedido(id, this, im, v);
+         
+        return p;
+     }
+
+     public Pedido agregarItem(Pedido p, ItemMenu im){
+         p.agregarItem(im);
+         return p;
+     }
 }
