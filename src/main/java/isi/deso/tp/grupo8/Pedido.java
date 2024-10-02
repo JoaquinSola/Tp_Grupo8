@@ -43,4 +43,8 @@ public class Pedido {
        this.estado = EstadoPedido.RECIBIDO;
        return t.calcularRecargo(monto);
    }
+
+   public void estadoDelPedido(){
+    System.out.println("El estado del pedido es: $"+this.estado);
+   }
 }

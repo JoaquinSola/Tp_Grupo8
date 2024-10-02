@@ -104,10 +104,10 @@ public class TPGrupo8 {
         Set<ItemMenu> productos3 = new HashSet<>();
         Set<ItemMenu> productos4 = new HashSet<>();
         //vendedores
-        Vendedor v1 = new Vendedor ("v00001", "Horacio", "Iriondo 1582", coorV1,productos2);  //EL ULTIMO ATRUBUTO ES LA LISTA DE PRODUCTOS ASOCIADO A ESE VENDEDOR
-        Vendedor v2 = new Vendedor ("v00002", "Marcelo", "Misiones 492", coorV2,productos);
+        Vendedor v1 = new Vendedor ("v00001", "Horacio", "Iriondo 1582", coorV1,productos);  //EL ULTIMO ATRUBUTO ES LA LISTA DE PRODUCTOS ASOCIADO A ESE VENDEDOR
+        Vendedor v2 = new Vendedor ("v00002", "Marcelo", "Misiones 492", coorV2,productos2);
         Vendedor v3 = new Vendedor ("v00003", "Florencia", "Santa Fe 2123", coorV3,productos3);
-        Vendedor v4 = new Vendedor ("v00004", "Rodrigo", "Tacural 2123", coorV3,productos3);
+        Vendedor v4 = new Vendedor ("v00004", "Rodrigo", "Tacural 2123", coorV3,productos4);
         //vector de vendedores
         Vendedor[] vendedores = new Vendedor[4];
         vendedores[0] = v1;
@@ -147,23 +147,31 @@ public class TPGrupo8 {
         Plato plato2 = new Plato(15,true,true,"Lechuga",69);
         Plato plato3 = new Plato(23,true,false,"Pizza",12);
         Plato plato4 = new Plato(18,false,true,"Wok de verduras",225.5);
+        Plato plato5 = new Plato(20,false,false,"Alfajor",10);
+        Plato plato6 = new Plato(36,false,false,"Papa Frita",39);
         Bebida bebida1 = new Bebida(40, 450,"Vodka");
         Bebida bebida2 = new Bebida(0, 450,"Manaos");
         Bebida bebida3 = new Bebida(0, 500,"Limonada");
         Bebida bebida4 = new Bebida(39,750,"Fernet con Coca");
-        //Productos asignados a Vendedor 2
+        Bebida bebida5 = new Bebida(0,750,"Agua Tonica");
+        Bebida bebida6 = new Bebida(0,500,"Pepsi");
+
+        //Productos asignados a Vendedor 1
         productos.add(bebida1);
         productos.add(bebida2);
-        productos.add(bebida3);
-        productos.add(bebida4);
         productos.add(plato1);
         productos.add(plato2);
-        productos.add(plato3);
-        productos.add(plato4);
+        //Productos asignados a Vendedor 2
+        productos2.add(bebida3);
+        productos2.add(bebida4);
+        productos2.add(plato3);
+        productos2.add(plato4);
         //Productos asignados a Vendedor 4
-        productos4.add(bebida1);
-        productos4.add(bebida2);
-        productos4.add(bebida3);
+        productos4.add(bebida5);
+        productos4.add(bebida6);
+        productos4.add(plato5);
+        productos4.add(plato6);
+
         System.out.println("El peso del plato es: "+plato1.peso(15));
         plato1.esComida();
         plato1.esBebida();
@@ -181,25 +189,36 @@ public class TPGrupo8 {
         ItemPedido p2 = new ItemPedido(plato2);
         ItemPedido p3 = new ItemPedido(plato3);
         ItemPedido p4 = new ItemPedido(plato4);
+        ItemPedido p5 = new ItemPedido(plato5);
+        ItemPedido p6 = new ItemPedido(plato6);
         ItemPedido b1 = new ItemPedido(bebida1);
         ItemPedido b2 = new ItemPedido(bebida2);
         ItemPedido b3 = new ItemPedido(bebida3);
         ItemPedido b4 = new ItemPedido(bebida4);
+        ItemPedido b5 = new ItemPedido(bebida5);
+        ItemPedido b6 = new ItemPedido(bebida6);
+        
+        //PEDIDO QUE SE ASIGNA AL VENDEDOR 1
         ItemsPedidoMemory ipm1 = new ItemsPedidoMemory();
         ipm1.agregarItem(p1);
-        ipm1.agregarItem(p4);
-        ipm1.agregarItem(b3);
+        ipm1.agregarItem(p2);
+        ipm1.agregarItem(b1);
+        ipm1.agregarItem(b2);
+        //PEDIDO QUE SE ASIGNA AL VENDEDOR 2
         ItemsPedidoMemory ipm2 = new ItemsPedidoMemory();
-        ipm2.agregarItem(p2);
         ipm2.agregarItem(p3);
-        ipm2.agregarItem(b1);
-        ItemsPedidoMemory ipm3 = new ItemsPedidoMemory();
-        ipm2.agregarItem(b2);
+        ipm2.agregarItem(p4);
+        ipm2.agregarItem(b3);
         ipm2.agregarItem(b4);
-        //                Pedido(String id, Cliente c, ItemsPedidoMemory ip, Vendedor v)
-        Pedido ped1 = new Pedido("1",c1, ipm1);
-        Pedido ped2 = new Pedido("2",c2, ipm2);
-        Pedido ped3 = new Pedido("3",c3, ipm3);
+        //PEDIDO QUE SE ASIGNA AL VENDEDOR 4
+        ItemsPedidoMemory ipm4 = new ItemsPedidoMemory();
+        ipm4.agregarItem(p5);
+        ipm4.agregarItem(p6);
+        ipm4.agregarItem(b5);
+        ipm4.agregarItem(b6);
+        Pedido ped1 = new Pedido("1",c1, ipm1,v1);
+        Pedido ped2 = new Pedido("2",c2, ipm2,v2);
+        Pedido ped3 = new Pedido("3",c3, ipm4,v4);
         ipm1.busquedaPorRangodePecios(0, 700);
         //v2.mostrarProductos(); // EJEMPLO, ESTE VENDEDOR TIENE MUCHOS ITEMS A SU VENTA
         ipm2.ordenarPorCriterio(); // ORDENA ALFABETICAMENTE
@@ -209,6 +228,14 @@ public class TPGrupo8 {
         ipm2.filtrado('B'); //filtra por BEBIDAS
         ipm2.filtrado('V'); //filtra por COMIDA VEGANA
         ipm2.buscarPorRestaurante(v2); // BUSCA QUE VENDEDOR, CUMPLE CON TODOS LOS ITEMS A PROVEER , ESTOS ITEMS SON LOS QUE ESTAN DENTRO DE DE LA INSTANCIA DE ItemsPedidosMemory
-    }   
+
+        //Compruebo si el estado cambia -----OK!
+        ped2.pagarConMP("JoaquinSola.MP");
+        ped1.estadoDelPedido();
+        ped2.estadoDelPedido();
+        
+
+        
+    }  
    
 }
