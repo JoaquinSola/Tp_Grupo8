@@ -149,12 +149,12 @@ public class TPGrupo8 {
         Plato plato4 = new Plato(18,false,true,"Wok de verduras",225.5);
         Plato plato5 = new Plato(20,false,false,"Alfajor",10);
         Plato plato6 = new Plato(36,false,false,"Papa Frita",39);
-        Bebida bebida1 = new Bebida(40, 450,"Vodka");
-        Bebida bebida2 = new Bebida(0, 450,"Manaos");
-        Bebida bebida3 = new Bebida(0, 500,"Limonada");
-        Bebida bebida4 = new Bebida(39,750,"Fernet con Coca");
-        Bebida bebida5 = new Bebida(0,750,"Agua Tonica");
-        Bebida bebida6 = new Bebida(0,500,"Pepsi");
+        Bebida bebida1 = new Bebida(40, 450,"Vodka",25);
+        Bebida bebida2 = new Bebida(0, 450,"Manaos",30);
+        Bebida bebida3 = new Bebida(0, 500,"Limonada",33);
+        Bebida bebida4 = new Bebida(39,750,"Fernet con Coca",150);
+        Bebida bebida5 = new Bebida(0,750,"Agua Tonica",70);
+        Bebida bebida6 = new Bebida(0,500,"Pepsi",60);
 
         //Productos asignados a Vendedor 1
         productos.add(bebida1);
@@ -229,11 +229,24 @@ public class TPGrupo8 {
         ipm2.filtrado('V'); //filtra por COMIDA VEGANA
         ipm2.buscarPorRestaurante(v2); // BUSCA QUE VENDEDOR, CUMPLE CON TODOS LOS ITEMS A PROVEER , ESTOS ITEMS SON LOS QUE ESTAN DENTRO DE DE LA INSTANCIA DE ItemsPedidosMemory
 
-        //Compruebo si el estado cambia -----OK!
-        ped2.pagarConMP("JoaquinSola.MP");
-        ped1.estadoDelPedido();
-        ped2.estadoDelPedido();
         
+        // VERIFICACION PARA MP
+        //Verifica si el precio acumulado es el correcto----OK!
+        System.out.println("El costo total del pedido1 es: $"+ipm2.calcularTotal()); 
+        //Compruebo el monto tatal a pagay y si el estado cambia -----OK!
+        ped2.estadoDelPedido();
+        System.err.println("Pagar con MP es : $"+ped2.pagarConMP("JoaquinSola.MP"));
+        ped2.estadoDelPedido();
+
+        // VERIFICACION PARA TRANSFERENCIA
+        //Verifica si el precio acumulado es el correcto----OK!
+        System.out.println("El costo total del pedido2 es: $"+ipm1.calcularTotal()); 
+        //Compruebo el monto tatal a pagay y si el estado cambia -----OK!
+        ped1.estadoDelPedido();
+        System.err.println("Pagar con Tranferencia es es : $"+ped1.pagarConTransferencia("123456","20202020"));
+        ped1.estadoDelPedido();
+        
+
 
         
     }  

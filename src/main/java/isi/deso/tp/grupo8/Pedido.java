@@ -34,14 +34,14 @@ public class Pedido {
        PagoPorMP mp = new PagoPorMP(alias);
        double monto = this.itemsPedidoMemory.calcularTotal();
        this.estado = EstadoPedido.RECIBIDO;
-       return mp.calcularRecargo(monto);
+       return (mp.calcularRecargo(monto) + monto);
    }
    
    public double pagarConTransferencia(String cbu, String cuit){
        PagoPorTransferencia t = new PagoPorTransferencia(cbu, cuit);
        double monto = this.itemsPedidoMemory.calcularTotal();
        this.estado = EstadoPedido.RECIBIDO;
-       return t.calcularRecargo(monto);
+       return (t.calcularRecargo(monto) + monto);
    }
 
    public void estadoDelPedido(){
