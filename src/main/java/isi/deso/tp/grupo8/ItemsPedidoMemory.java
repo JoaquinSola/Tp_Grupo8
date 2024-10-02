@@ -112,5 +112,12 @@ public class ItemsPedidoMemory implements ItemsPedidoDao{
     }
        return set1;
     }
+
+     public double calcularTotal(){
+       double total = listaItems.stream().mapToDouble(item -> item.getItemPedido().getPrecio()).sum();
+        return total; 
+     }
 }
 // clase Pedido la cual tiene una lista de Items Pedido
+
+  
