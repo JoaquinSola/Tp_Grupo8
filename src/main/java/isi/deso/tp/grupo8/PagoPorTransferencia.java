@@ -1,6 +1,7 @@
 package isi.deso.tp.grupo8;
 
 public class PagoPorTransferencia implements EstrategiaDePago{
+   
     final private double recargoEnTransferencia = 0.02;
     private String cbu;
     private String cuit;
