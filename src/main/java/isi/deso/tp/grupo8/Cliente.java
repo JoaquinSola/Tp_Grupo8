@@ -66,15 +66,17 @@ public class Cliente implements Observer {
         System.out.println("Generando el pago para el pedido...");
         double monto;
         Pago pa;
-        if(p.getMetodoDePago().equals("MP")){
+        if(p.getMetodoDePago().equals("Mercado Pago")){
             monto = p.pagarConMP(this.alias);
             pa = new Pago(monto,LocalDateTime.now(), "Pago hecho por Mercado Pago");
             p.guardarPago(pa);
+            pa.mensajeMDP();
         }
-        else if(p.getMetodoDePago().equals("TRANS")){
+        else if(p.getMetodoDePago().equals("Transferencia")){
            monto = p.pagarConTransferencia(this.cbu, this.cuit);
             pa = new Pago(monto, LocalDateTime.now(), "Pago hecho por Transferencia");
             p.guardarPago(pa);
+            pa.mensajeMDP();
         }
     }
 }

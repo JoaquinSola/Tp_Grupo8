@@ -63,6 +63,8 @@ public class Vendedor {
             System.out.println("El pedido no pertenece a este vendedor.");
         }
     }
+ 
+
     
     
     
@@ -210,11 +212,6 @@ public class Vendedor {
         resultado.append("]");
     
         System.out.println(resultado.toString());
-    }
-
-    public void actualizarEstado(Pedido pedido, EstadoPedido nuevoEstado) {
-        pedido.setEstado(nuevoEstado);
-        System.out.println("El vendedor ha actualizado el estado a " + nuevoEstado);
     }
 
     

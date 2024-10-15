@@ -10,4 +10,8 @@ public class Pago {
        this.fecha = fecha;
        this.metodoDePago = mdp;
    }
+
+   public void mensajeMDP(){
+    System.out.println(this.metodoDePago);
+   }
 }

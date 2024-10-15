@@ -129,9 +129,9 @@ public class TPGrupo8 {
         Coordenada coorC2 = new Coordenada (18.9f,78.6f);
         Coordenada coorC3 = new Coordenada (65.36f,91.5f);
         //clientes 
-        Cliente c1 = new Cliente ("c00001", "20-30495842-7", "jAlvarez@gmail.com","San Martin 1523", coorC1);
-        Cliente c2 = new Cliente ("c00002", "27-15378964-3", "juanPerez25@outlook.es","9 de Julio 2876", coorC2);
-        Cliente c3 = new Cliente ("c00003", "20-27894561-9", "lopezLopezCarlos@hotmail.com"," Gobernador Crespo 4201", coorC3);
+        Cliente c1 = new Cliente ("c00001", "20-30495842-7", "jAlvarez@gmail.com","San Martin 1523", coorC1,"JS","1234");
+        Cliente c2 = new Cliente ("c00002", "27-15378964-3", "juanPerez25@outlook.es","9 de Julio 2876", coorC2,"JS","1234");
+        Cliente c3 = new Cliente ("c00003", "20-27894561-9", "lopezLopezCarlos@hotmail.com"," Gobernador Crespo 4201", coorC3,"JS","1234");
        //vector de clientes
         Cliente[] clientes = new Cliente[3];
         clientes[0] = c1;
@@ -199,6 +199,7 @@ public class TPGrupo8 {
         v2.bebidaSinAlcohol();                             //IMPRIME LISTA DE BEBIDAS SIN ALCOHOL QUE VENDE ESE VENDEDOR
         v2.comidaVegana();                                //IMPRIME LISTA DE COMIDA VEGANA QUE VENDE ESE VENDEDOR
         System.out.println("\n");
+        
         //INSTANCIA 3
         ItemPedido p1 = new ItemPedido(plato1);
         ItemPedido p2 = new ItemPedido(plato2);
@@ -231,16 +232,16 @@ public class TPGrupo8 {
         ipm4.agregarItem(p6);
         ipm4.agregarItem(b5);
         ipm4.agregarItem(b6);
-        Pedido ped1 = new Pedido("1",c1, ipm1,v1);
+        Pedido ped1 = new Pedido("1",c1, ipm1,v1,"Mercado Pago");
         // Suscribir cliente al pedido
         ped1.addObserver(c1);
-        Pedido ped2 = new Pedido("2",c2, ipm2,v2);
+        Pedido ped2 = new Pedido("2",c2, ipm2,v2,"Transferencia");
         // Suscribir cliente al pedido
         ped2.addObserver(c2);
-        Pedido ped3 = new Pedido("3",c3, ipm4,v4);
+        Pedido ped3 = new Pedido("3",c3, ipm4,v4,"Mercado Pago");
         // Suscribir cliente al pedido
         ped3.addObserver(c3);
-        Pedido ped11 = new Pedido("11", c1, ipm1, v1);
+        Pedido ped11 = new Pedido("11", c1, ipm1, v1,"Mercado Pago");
         ped11.addObserver(c1);
         System.out.println("BUSCAR POR RANGO DE PRECIOS ---");
         ipm1.busquedaPorRangodePecios(0, 700);
@@ -278,17 +279,16 @@ public class TPGrupo8 {
         //PROBANDO PARTE 5
         System.out.println("ETAPA 5: ");
         ped11.setEstado(EstadoPedido.PENDIENTE);
-        System.out.println("IDs de pedidos asociados al vendedor: " + v1.getIdsPedidos());
+        System.out.println("IDs de pedidos asociados al vendedor "+v1.getNombre() +": "+ v1.getIdsPedidos());
         // Verificar y mostrar pedidos PENDIENTES
         mostrarPedidosPendientes(v1);
         mostrarPedidosPendientes(v2);
         mostrarPedidosPendientes(v3);
         // Actualizar estado de un pedido específico
         actualizarEstadoPedido(v1, ped1, EstadoPedido.RECIBIDO);
-        actualizarEstadoPedido(v2, ped2, EstadoPedido.RECIBIDO);
+        actualizarEstadoPedido(v2, ped2, EstadoPedido.EN_ENVIO);
         actualizarEstadoPedido(v4, ped3, EstadoPedido.EN_ENVIO);
-        
-        
+
     }  
 
 
