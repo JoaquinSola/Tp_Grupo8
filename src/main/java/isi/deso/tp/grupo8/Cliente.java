@@ -41,10 +41,10 @@ public class Cliente implements Observer {
         return coordenadas;
     }
      
-     public Pedido crearPedido(Vendedor v, String id){
+     public Pedido crearPedido(Vendedor v, String id, String metodoDePago){
         // public Pedido(Str ing id, Cliente c, ItemsPedidoMemory ip, Vendedor v)
         ItemsPedidoMemory im = new ItemsPedidoMemory();
-        Pedido p = new Pedido(id, this, im, v); VER ESTOOOOO!!!!
+        Pedido p = new Pedido(id, this, im, v, metodoDePago);
          
         return p;
      }
@@ -74,7 +74,7 @@ public class Cliente implements Observer {
         else if(p.getMetodoDePago().equals("TRANS")){
            monto = p.pagarConTransferencia(this.cbu, this.cuit);
             pa = new Pago(monto, LocalDateTime.now(), "Pago hecho por Transferencia");
+            p.guardarPago(pa);
         }
-        p.guardarPago(pa);
     }
 }
