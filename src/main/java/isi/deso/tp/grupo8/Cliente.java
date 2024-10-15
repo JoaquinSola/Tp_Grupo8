@@ -4,7 +4,7 @@
  */
 package isi.deso.tp.grupo8;
 
-public class Cliente {
+public class Cliente implements Observer {
     private String id;
     private String cuit;
     private String email;
@@ -51,4 +51,18 @@ public class Cliente {
          p.agregarItem(im) ;
          return p;
      }
+
+     @Override
+    public void update(Pedido pedido) {
+        System.out.println("Cliente " + this.id + " ha sido notificado: El estado del pedido es ahora " + pedido.getEstado());
+        if (pedido.getEstado() == EstadoPedido.EN_ENVIO) {
+            generarPago();
+        }
+    }
+
+    private void generarPago() {
+        System.out.println("Generando el pago para el pedido...");
+        
+        // Lógica de generación de pago
+    }
 }

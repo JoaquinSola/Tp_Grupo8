@@ -232,8 +232,16 @@ public class TPGrupo8 {
         ipm4.agregarItem(b5);
         ipm4.agregarItem(b6);
         Pedido ped1 = new Pedido("1",c1, ipm1,v1);
+        // Suscribir cliente al pedido
+        ped1.addObserver(c1);
         Pedido ped2 = new Pedido("2",c2, ipm2,v2);
+        // Suscribir cliente al pedido
+        ped2.addObserver(c2);
         Pedido ped3 = new Pedido("3",c3, ipm4,v4);
+        // Suscribir cliente al pedido
+        ped3.addObserver(c3);
+        Pedido ped11 = new Pedido("11", c1, ipm1, v1);
+        ped11.addObserver(c1);
         System.out.println("BUSCAR POR RANGO DE PRECIOS ---");
         ipm1.busquedaPorRangodePecios(0, 700);
         //v2.mostrarProductos(); // EJEMPLO, ESTE VENDEDOR TIENE MUCHOS ITEMS A SU VENTA
@@ -252,7 +260,7 @@ public class TPGrupo8 {
         // VERIFICACION PARA MP
         //Verifica si el precio acumulado es el correcto----OK!
         System.out.println("\n");
-        System.out.println("El costo total del pedido1 es: $"+ipm2.calcularTotal()); 
+        System.out.println("El costo total del pedido2 es: $"+ipm2.calcularTotal()); 
         //Compruebo el monto tatal a pagay y si el estado cambia -----OK!
         ped2.estadoDelPedido();
         System.err.println("Costo al pagar con MP: $"+ped2.pagarConMP("JoaquinSola.MP"));
@@ -261,15 +269,57 @@ public class TPGrupo8 {
         // VERIFICACION PARA TRANSFERENCIA
         //Verifica si el precio acumulado es el correcto----OK!
         System.out.println("\n");
-        System.out.println("El costo total del pedido2 es: $"+ipm1.calcularTotal()); 
+        System.out.println("El costo total del pedido1 es: $"+ipm1.calcularTotal()); 
         //Compruebo el monto tatal a pagay y si el estado cambia -----OK!
         ped1.estadoDelPedido();
         System.err.println("Costo al pegar con TRANSFERENCIA: $"+ped1.pagarConTransferencia("123456","20202020"));
         ped1.estadoDelPedido();
+
+        //PROBANDO PARTE 5
+        System.out.println("ETAPA 5: ");
+        ped11.setEstado(EstadoPedido.PENDIENTE);
+        System.out.println("IDs de pedidos asociados al vendedor: " + v1.getIdsPedidos());
+        // Verificar y mostrar pedidos PENDIENTES
+        mostrarPedidosPendientes(v1);
+        mostrarPedidosPendientes(v2);
+        mostrarPedidosPendientes(v3);
+        // Actualizar estado de un pedido específico
+        actualizarEstadoPedido(v1, ped1, EstadoPedido.RECIBIDO);
+        actualizarEstadoPedido(v2, ped2, EstadoPedido.RECIBIDO);
+        actualizarEstadoPedido(v4, ped3, EstadoPedido.EN_ENVIO);
         
-
-
         
     }  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Método para mostrar pedidos pendientes
+    private static void mostrarPedidosPendientes(Vendedor vendedor) {
+        Set<Pedido> pedidosPendientes = vendedor.getPedidosPorEstado(EstadoPedido.PENDIENTE);
+        // Muestra el primer pedido pendiente, si existe
+        if (!pedidosPendientes.isEmpty()) {
+            Pedido pedidoPendiente = pedidosPendientes.iterator().next(); // Toma un pedido pendiente
+            System.out.println("Pedido pendiente encontrado para el vendedor "+vendedor.getNombre()+ ", pedido ID: " + pedidoPendiente.getId());
+        } else {
+            System.out.println("No hay pedidos pendientes del vendedor "+vendedor.getNombre());
+        }
+    }
+
+    // Método para actualizar estado de un pedido
+    private static void actualizarEstadoPedido(Vendedor vendedor, Pedido pedido, EstadoPedido nuevoEstado) {
+        vendedor.actualizarEstadoPedido(pedido, nuevoEstado);
+    }
    
 }

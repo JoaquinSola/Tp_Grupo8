@@ -5,6 +5,8 @@
 package isi.deso.tp.grupo8;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Vendedor {
@@ -13,6 +15,8 @@ public class Vendedor {
     private String direccion;
     private Coordenada coordenadas;
     private Set<ItemMenu> listaProductos;
+    private List<Pedido> pedidos; // Lista para almacenar los pedidos
+    
     
     public Vendedor (String id, String nombre, String direc, Coordenada coor,  Set<ItemMenu> lista){
         this.listaProductos = lista;
@@ -20,6 +24,54 @@ public class Vendedor {
         this.nombre = nombre;
         this.direccion = direc;
         this.coordenadas = coor;
+        this.pedidos = new ArrayList<>(); // Inicializar la lista de pedidos
+    }
+
+    // Método para agregar un pedido a la lista
+    public void agregarPedido(Pedido pedido) {
+        pedidos.add(pedido);
+        System.out.println("Pedido agregado id: " + pedido.getId() + " ,al vendedor: " + this.nombre);
+    }
+
+    public Set<String> getIdsPedidos() {
+        Set<String> idsPedidos = new HashSet<>(); // Usamos un Set para evitar duplicados
+    
+        for (Pedido pedido : pedidos) {
+            idsPedidos.add(pedido.getId()); // Agregamos el ID de cada pedido
+        }
+    
+        return idsPedidos; // Devolvemos el conjunto de IDs
+    }
+
+    public Set<Pedido> getPedidosPorEstado(EstadoPedido estadoBuscado) {
+        Set<Pedido> pedidosFiltrados = new HashSet<>();
+    
+        for (Pedido pedido : pedidos) {
+            if (pedido.getEstado() == estadoBuscado) {
+                pedidosFiltrados.add(pedido);
+            }
+        }
+    
+        return pedidosFiltrados;
+    }
+
+    public void actualizarEstadoPedido(Pedido pedido, EstadoPedido nuevoEstado) {
+        if (pedidos.contains(pedido)) {
+            pedido.setEstado(nuevoEstado); // Asumiendo que tienes un método setEstado en la clase Pedido
+            System.out.println("El estado del pedido " + pedido.getId() + " ha sido actualizado a " + nuevoEstado);
+        } else {
+            System.out.println("El pedido no pertenece a este vendedor.");
+        }
+    }
+    
+    
+    
+    
+    
+
+     // Método para obtener todos los pedidos
+     public List<Pedido> getPedidos() {
+        return pedidos;
     }
     
     public String getId(){
@@ -159,5 +211,12 @@ public class Vendedor {
     
         System.out.println(resultado.toString());
     }
+
+    public void actualizarEstado(Pedido pedido, EstadoPedido nuevoEstado) {
+        pedido.setEstado(nuevoEstado);
+        System.out.println("El vendedor ha actualizado el estado a " + nuevoEstado);
+    }
+
+    
   
 }
