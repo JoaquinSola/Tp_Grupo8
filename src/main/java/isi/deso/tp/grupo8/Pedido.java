@@ -7,15 +7,15 @@ public class Pedido {
     private String id;
     private Cliente cliente;
     private ItemsPedidoMemory itemsPedidoMemory;
-    //private Pago pago;
+    private Pago pago;
     //private Estado estado;
     private Vendedor vendedor;
     private EstadoPedido estado;
     private List<Observer> observers = new ArrayList<>();
-    
+    private String metodoDePago ;
 
     //falta agregar pago y estado
-    public Pedido(String id, Cliente c, ItemsPedidoMemory ip, Vendedor v){
+    public Pedido(String id, Cliente c, ItemsPedidoMemory ip, Vendedor v, String metodo){
         this.id = id;
         this.cliente = c;
         this.itemsPedidoMemory= ip;
@@ -25,6 +25,7 @@ public class Pedido {
         this.estado = EstadoPedido.PENDIENTE;
          // Agregar el pedido al vendedor
         this.vendedor.agregarPedido(this); // Esta línea debería ser ejecutada
+        this.metodoDePago = metodo;
     }
 
     public String getId(){
@@ -80,4 +81,11 @@ public class Pedido {
     System.out.println("El estado del pedido es: $"+this.estado);
    }
    
+   public String getMetodoDePago(){
+      return this.metodoDePago;
+   }
+   
+   public void guardarPago(Pago pa){
+       this.pago = pa;
+   }
 }
