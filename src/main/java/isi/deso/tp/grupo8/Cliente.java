@@ -41,6 +41,14 @@ public class Cliente implements Observer {
         return coordenadas;
     }
      
+     public String getAlias(){
+        return alias;
+    }
+     
+     public String getCbu(){
+        return cbu;
+    }
+     
      public Pedido crearPedido(Vendedor v, String id, String metodoDePago){
         // public Pedido(Str ing id, Cliente c, ItemsPedidoMemory ip, Vendedor v)
         ItemsPedidoMemory im = new ItemsPedidoMemory();

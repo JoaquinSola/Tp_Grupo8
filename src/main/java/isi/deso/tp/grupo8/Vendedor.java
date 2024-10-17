@@ -64,13 +64,6 @@ public class Vendedor {
         }
     }
  
-
-    
-    
-    
-    
-    
-
      // Método para obtener todos los pedidos
      public List<Pedido> getPedidos() {
         return pedidos;

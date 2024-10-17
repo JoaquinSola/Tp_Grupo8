@@ -14,13 +14,10 @@ public class Pedido {
     private List<Observer> observers = new ArrayList<>();
     private String metodoDePago ;
 
-    //falta agregar pago y estado
     public Pedido(String id, Cliente c, ItemsPedidoMemory ip, Vendedor v, String metodo){
         this.id = id;
         this.cliente = c;
         this.itemsPedidoMemory= ip;
-        //this.pago=p;
-        //this.estado = e;
         this.vendedor=v;
         this.estado = EstadoPedido.PENDIENTE;
          // Agregar el pedido al vendedor

@@ -81,7 +81,9 @@ public class TPGrupo8 {
                     + "Email del cliente: "+ v[i].getEmail()+"\n"
                     + "Direccion del cliente: "+ v[i].getDireccion()+"\n"
                     + "Coordenadas de latitud "+ (v[i].getCoor()).getLatitud()+"\n" 
-                    + "Coordenadas de Longitud: "+(v[i].getCoor()).getLongitud());
+                    + "Coordenadas de Longitud: "+(v[i].getCoor()).getLongitud() +"\n"
+                    + "Alias del clinete: " + v[i].getAlias() +"\n"
+                    + "CBU del cliente: " + v[i].getCbu());
                     return v[i];
                     //i = v.length;
             }
@@ -129,6 +131,7 @@ public class TPGrupo8 {
         Coordenada coorC2 = new Coordenada (18.9f,78.6f);
         Coordenada coorC3 = new Coordenada (65.36f,91.5f);
         //clientes 
+        //Cliente(String id, String cuit, String email, String direc, Coordenada coor, String alias, String cbu)
         Cliente c1 = new Cliente ("c00001", "20-30495842-7", "jAlvarez@gmail.com","San Martin 1523", coorC1,"JS","1234");
         Cliente c2 = new Cliente ("c00002", "27-15378964-3", "juanPerez25@outlook.es","9 de Julio 2876", coorC2,"JS","1234");
         Cliente c3 = new Cliente ("c00003", "20-27894561-9", "lopezLopezCarlos@hotmail.com"," Gobernador Crespo 4201", coorC3,"JS","1234");
@@ -232,13 +235,14 @@ public class TPGrupo8 {
         ipm4.agregarItem(p6);
         ipm4.agregarItem(b5);
         ipm4.agregarItem(b6);
+        //Pedido(String id, Cliente c, ItemsPedidoMemory ip, Vendedor v, String metodo, Pago p, EstadoPedido e)
         Pedido ped1 = new Pedido("1",c1, ipm1,v1,"Mercado Pago");
         // Suscribir cliente al pedido
         ped1.addObserver(c1);
         Pedido ped2 = new Pedido("2",c2, ipm2,v2,"Transferencia");
         // Suscribir cliente al pedido
         ped2.addObserver(c2);
-        Pedido ped3 = new Pedido("3",c3, ipm4,v4,"Mercado Pago");
+        Pedido ped3 = new Pedido("3",c3, ipm4,v4,"Mercado Pago" );
         // Suscribir cliente al pedido
         ped3.addObserver(c3);
         Pedido ped11 = new Pedido("11", c1, ipm1, v1,"Mercado Pago");
@@ -276,7 +280,7 @@ public class TPGrupo8 {
         System.err.println("Costo al pegar con TRANSFERENCIA: $"+ped1.pagarConTransferencia("123456","20202020"));
         ped1.estadoDelPedido();
 
-        //PROBANDO PARTE 5
+        //ETAPA 5
         System.out.println("ETAPA 5: ");
         ped11.setEstado(EstadoPedido.PENDIENTE);
         System.out.println("IDs de pedidos asociados al vendedor "+v1.getNombre() +": "+ v1.getIdsPedidos());
