@@ -1,4 +1,3 @@
-
 package isi.deso.tp.grupo8;
 
 
@@ -281,7 +280,7 @@ public class TPGrupo8 {
         ped1.estadoDelPedido();
 
         //ETAPA 5
-        System.out.println("ETAPA 5: ");
+        System.out.println("ETAPA 5--- ");
         ped11.setEstado(EstadoPedido.PENDIENTE);
         System.out.println("IDs de pedidos asociados al vendedor "+v1.getNombre() +": "+ v1.getIdsPedidos());
         // Verificar y mostrar pedidos PENDIENTES
