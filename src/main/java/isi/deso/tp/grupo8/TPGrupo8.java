@@ -155,19 +155,19 @@ public class TPGrupo8 {
 
         //INSTANCIA 2
         //System.out.println("PLATOS ---"); 
-        Plato plato1 = new Plato(15,false,false,"Bife",15);
-        Plato plato2 = new Plato(15,true,true,"Lechuga",69);
-        Plato plato3 = new Plato(23,true,false,"Pizza",12);
-        Plato plato4 = new Plato(18,false,true,"Wok de verduras",225.5);
-        Plato plato5 = new Plato(20,false,false,"Alfajor",10);
-        Plato plato6 = new Plato(36,false,false,"Papa Frita",39);
+        Plato plato1 = new Plato(15,false,false,"Bife",15, "as");
+        Plato plato2 = new Plato(15,true,true,"Lechuga",69,"as");
+        Plato plato3 = new Plato(23,true,false,"Pizza",12,"as");
+        Plato plato4 = new Plato(18,false,true,"Wok de verduras",225.5,"as");
+        Plato plato5 = new Plato(20,false,false,"Alfajor",10,"as");
+        Plato plato6 = new Plato(36,false,false,"Papa Frita",39,"as");
         //System.out.println("BEBIDAS ---"); 
-        Bebida bebida1 = new Bebida(40, 450,"Vodka",25);
-        Bebida bebida2 = new Bebida(0, 450,"Manaos",30);
-        Bebida bebida3 = new Bebida(0, 500,"Limonada",33);
-        Bebida bebida4 = new Bebida(39,750,"Fernet con Coca",150);
-        Bebida bebida5 = new Bebida(0,750,"Agua Tonica",70);
-        Bebida bebida6 = new Bebida(0,500,"Pepsi",60);
+        Bebida bebida1 = new Bebida(40, 450,"Vodka",25,"as");
+        Bebida bebida2 = new Bebida(0, 450,"Manaos",30,"as");
+        Bebida bebida3 = new Bebida(0, 500,"Limonada",33,"as");
+        Bebida bebida4 = new Bebida(39,750,"Fernet con Coca",150,"as");
+        Bebida bebida5 = new Bebida(0,750,"Agua Tonica",70,"as");
+        Bebida bebida6 = new Bebida(0,500,"Pepsi",60,"as");
 
         //Productos asignados a Vendedor 1
         productos.add(bebida1);

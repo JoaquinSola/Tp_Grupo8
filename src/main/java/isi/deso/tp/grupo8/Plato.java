@@ -13,13 +13,25 @@ public class Plato extends ItemMenu {
         this.nombre=null;
     }
 
-
-    public Plato(double c, boolean aC, boolean aV, String nom, double p){
+    public double getCalorias(){
+    return this.calorias;
+}
+    public double getPeso(){
+    return this.peso;
+}
+    public boolean getAptoV(){
+    return this.aptoVegetariano;
+}
+    public boolean getAptoC(){
+    return this.aptoCeliacos;
+}
+    public Plato(double c, boolean aC, boolean aV, String nom, double p, String des){
         this.calorias = c;
         this.aptoCeliacos = aC;
         this.aptoVegetariano = aV;
         this.nombre = nom;
         this.precio = p;
+        setDesc(des);
     }
 
     @Override

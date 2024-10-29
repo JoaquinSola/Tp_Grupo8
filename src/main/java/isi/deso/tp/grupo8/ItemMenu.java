@@ -13,4 +13,18 @@ public abstract class ItemMenu {
     public abstract boolean esAlcoholica();
     public abstract String toString();
     public abstract double getPrecio();
+     public String getDesc() {
+        return descripcion;
+    }
+
+    public void setDesc(String descripcion) {
+        this.descripcion = descripcion;
+    }
+      public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

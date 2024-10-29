@@ -5,13 +5,19 @@ public class Bebida extends ItemMenu {
     private double volumen;
     private double graduacionAlcoholica;
 
-    public Bebida(double alc, double tam,String nom, double p){
+    public Bebida(double alc, double tam,String nom, double p, String desc){
         this.graduacionAlcoholica = alc;
         this.volumen = tam;
         this.nombre = nom;
         this.precio = p;
+        setDesc(desc);
     }
-
+public double getVol(){
+    return this.volumen;
+}
+public double getGradA(){
+    return this.graduacionAlcoholica;
+}
     @Override
     public double peso(double p) {    
         double peso;          
