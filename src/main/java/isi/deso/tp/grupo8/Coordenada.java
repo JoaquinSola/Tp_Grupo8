@@ -5,19 +5,19 @@
 package isi.deso.tp.grupo8;
 
 public class Coordenada {
-    private float longitud;
-    private float latitud;
+    private double longitud;
+    private double latitud;
     
-    public Coordenada (float latitud, float longitud){
+    public Coordenada (double latitud, double longitud){
         this.longitud = longitud;
         this.latitud = latitud;
     }
     
-    public float getLongitud(){
+    public double getLongitud(){
         return longitud;
     }
     
-     public float getLatitud(){
+     public double getLatitud(){
         return latitud;
     }
 }

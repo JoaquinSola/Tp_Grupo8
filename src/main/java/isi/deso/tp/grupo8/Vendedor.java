@@ -72,7 +72,15 @@ public class Vendedor {
     public String getId(){
         return id;
     }
-    
+     public void setNombre(String n){
+        this.nombre = n;
+    }
+     public void setId(String i){
+        this.id = i;
+    }
+      public void setDireccion(String Direc){
+        this.direccion = Direc;
+    }
     public String getNombre(){
         return nombre;
     }
