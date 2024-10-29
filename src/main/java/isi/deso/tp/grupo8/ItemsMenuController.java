@@ -20,7 +20,18 @@ public class ItemsMenuController {
         Bebida bebida = new Bebida(alcohol, volumen, nombre, precio, descripcion);
         itemsMenuMemory.crearItem(bebida);
     }
+public void modificarItem(int id, String nombre, String descripcion, double precio) {
+    ItemMenu item = buscarItem(id); // Buscar el ítem por ID
 
+    if (item != null) {
+        item.nombre = nombre;  // Modificar el nombre
+        item.setDesc(descripcion);  // Usar el setter para descripción
+        item.precio = precio;  // Modificar el precio
+        itemsMenuMemory.actualizarItem(item);  // Guardar los cambios
+    } else {
+        throw new IllegalArgumentException("El ítem con ID " + id + " no existe.");
+    }
+}
     public ItemMenu buscarItem(int id) {
         return itemsMenuMemory.buscarItem(id);
     }

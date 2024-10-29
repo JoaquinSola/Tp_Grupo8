@@ -107,15 +107,47 @@ public class GestionItemsMenu extends JFrame {
         ItemMenu item = controlador.buscarItem(id);
 
         if (item != null) {
-            areaResultados.setText(item.toString());
+            StringBuilder sb = new StringBuilder("Ítems del Menú:\n");
+            sb.append("ID: ").append(item.getId()).append("\n")
+              .append("Nombre: ").append(item.nombre).append("\n")
+              .append("Descripción: ").append(item.getDesc()).append("\n")
+              .append("Precio: $").append(item.getPrecio()).append("\n");
+
+            // Verificar si es un Plato o una Bebida
+            if (item instanceof Plato) {
+                Plato plato = (Plato) item;
+                sb.append("Tipo: Plato\n")
+                  .append("Calorías: ").append(plato.getCalorias()).append("\n")
+                  .append("Apto Celíacos: ").append(plato.getAptoC() ? "Sí" : "No").append("\n")
+                  .append("Apto Vegetariano: ").append(plato.getAptoV() ? "Sí" : "No").append("\n");
+            } else if (item instanceof Bebida) {
+                Bebida bebida = (Bebida) item;
+                sb.append("Tipo: Bebida\n")
+                  .append("Volumen: ").append(bebida.getVol()).append(" L\n")
+                  .append("Alcohol: ").append(bebida.getGradA() > 0 ? "Sí" : "No").append("\n");
+            }
+
+            sb.append("--------------------------------------\n");
         } else {
             areaResultados.setText("Ítem no encontrado.");
         }
     }
 
-    private void modificarItem(ActionEvent e) {
-        // Lógica para modificar ítems
+   private void modificarItem(ActionEvent e) {
+    try {
+        int id = Integer.parseInt(txtID.getText());
+        String nombre = txtNombre.getText();
+        String descripcion = txtDescripcion.getText();
+        double precio = Double.parseDouble(txtPrecio.getText());
+
+        controlador.modificarItem(id, nombre, descripcion, precio);
+        areaResultados.setText("Ítem modificado exitosamente.");
+    } catch (NumberFormatException ex) {
+        areaResultados.setText("Error: Asegúrate de ingresar un ID y precio válidos.");
+    } catch (IllegalArgumentException ex) {
+        areaResultados.setText(ex.getMessage());
     }
+}
 
     private void eliminarItem(ActionEvent e) {
         int id = Integer.parseInt(txtID.getText());
