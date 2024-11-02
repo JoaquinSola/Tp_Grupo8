@@ -21,7 +21,7 @@ public class GestionItemsMenu extends JFrame {
 
         setTitle("Gestión de Ítems de Menú");
         setSize(700, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);;
         setLayout(new FlowLayout());
 
         txtID = new JTextField(5);

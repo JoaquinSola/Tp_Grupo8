@@ -28,7 +28,11 @@ public class Pedido {
     public String getId(){
         return id;
     }
-
+ public Vendedor getVendedor(){
+        return vendedor;
+    } public Cliente getCliente(){
+        return cliente;
+    }
     // Método para agregar observadores
     public void addObserver(Observer observer) {
         observers.add(observer);

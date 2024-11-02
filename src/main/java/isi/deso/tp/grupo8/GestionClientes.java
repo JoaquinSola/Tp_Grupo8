@@ -19,7 +19,7 @@ public class GestionClientes extends JFrame {
 
         setTitle("Gestión de Clientes");
         setSize(600, 500);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);;
         setLayout(new FlowLayout());
 
         txtID = new JTextField(10);
