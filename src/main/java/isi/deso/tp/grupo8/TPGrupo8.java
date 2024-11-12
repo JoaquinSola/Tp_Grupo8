@@ -36,7 +36,7 @@ public class TPGrupo8 {
             System.out.println("ID del vendedor: "+ v[i].getId()+"\n"
                     + "Nombre del Vendedor: " +v[i].getNombre()+"\n"
                     + "Direccion del vendedor: "+ v[i].getDireccion()+"\n"
-                    + "Coordenadas de latitud "+ (v[i].getCoor()).getLatitud()+"\n" 
+                    + "Coordenadas de latitud "+ (v[i].getCoor()).getLatitud()+"Id coordenada es: "+ (v[i].getCoor()).getId()+ "\n" 
                     + "Coordenadas de Longitud: "+(v[i].getCoor()).getLongitud());
                     return v[i];
                     //i = v.length;
@@ -268,6 +268,7 @@ public class TPGrupo8 {
         //Compruebo el monto tatal a pagay y si el estado cambia -----OK!
         ped2.estadoDelPedido();
         System.err.println("Costo al pagar con MP: $"+ped2.pagarConMP("JoaquinSola.MP"));
+        
         ped2.estadoDelPedido();
 
         // VERIFICACION PARA TRANSFERENCIA
@@ -291,6 +292,11 @@ public class TPGrupo8 {
         actualizarEstadoPedido(v1, ped1, EstadoPedido.RECIBIDO);
         actualizarEstadoPedido(v2, ped2, EstadoPedido.EN_ENVIO);
         actualizarEstadoPedido(v4, ped3, EstadoPedido.EN_ENVIO);
+        CoordenadaDAO dao = new CoordenadaDAO();
+        Coordenada coord1 = new Coordenada(12.5, 22.3);
+        dao.save(coord1);
+
+        System.out.println("Coordenada guardada con ID: " + coord1.getId()); // ID generado por la base de
 
     }  
 

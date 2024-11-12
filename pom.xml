@@ -11,4 +11,21 @@
         <maven.compiler.target>21</maven.compiler.target>
         <exec.mainClass>isi.deso.tp.grupo8.TPGrupo8</exec.mainClass>
     </properties>
+    <dependencies>
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.33</version>
+    </dependency>
+
+    <dependency>
+    <groupId>jakarta.persistence</groupId>
+    <artifactId>jakarta.persistence-api</artifactId>
+    <version>3.1.0</version> <!-- Asegúrate de tener la versión correcta -->
+</dependency>
+
+</dependencies>
+
+
+
 </project>

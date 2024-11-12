@@ -1,7 +1,10 @@
 
 package isi.deso.tp.grupo8;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.time.format.TextStyle;
 
 public class Pedido {
     private String id;
@@ -68,7 +71,10 @@ public class Pedido {
        PagoPorMP mp = new PagoPorMP(alias);
        double monto = this.itemsPedidoMemory.calcularTotal();
        this.estado = EstadoPedido.RECIBIDO;
-       return (mp.calcularRecargo(monto) + monto);
+       double valorT = (mp.calcularRecargo(monto) + monto);
+       LocalDate fechaActual = LocalDate.now();
+       //Pago pagoTotal = new Pago(valorT,fechaActual,'Mercado Pago');
+       return valorT;
    }
    
    public double pagarConTransferencia(String cbu, String cuit){
