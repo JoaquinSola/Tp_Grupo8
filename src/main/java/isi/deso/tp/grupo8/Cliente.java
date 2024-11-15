@@ -50,7 +50,6 @@ public class Cliente implements Observer {
     }
      
      public Pedido crearPedido(Vendedor v, String id, String metodoDePago){
-        // public Pedido(Str ing id, Cliente c, ItemsPedidoMemory ip, Vendedor v)
         ItemsPedidoMemory im = new ItemsPedidoMemory();
         Pedido p = new Pedido(id, this, im, v, metodoDePago);
          

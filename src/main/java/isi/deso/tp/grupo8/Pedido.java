@@ -66,8 +66,17 @@ public class Pedido {
        return this;
    }
    
+   public pagarPedido(String metodoDePago, ){
+       if(metodoDePago.equals("PagoPorMP")){
+           //cliente controller obtener alias
+           pago = new PagoPorMP();
+       } else if(metodoDePago.equals("PagoPorTransferencia")){
+           //cliente controller obtener cvu y cuit
+           //pago = new PagoPorTransferencia();
+       }
+   }
    
-   public double pagarConMP(String alias){
+   /*public double pagarConMP(String alias){
        PagoPorMP mp = new PagoPorMP(alias);
        double monto = this.itemsPedidoMemory.calcularTotal();
        this.estado = EstadoPedido.RECIBIDO;
@@ -83,7 +92,7 @@ public class Pedido {
        this.estado = EstadoPedido.RECIBIDO;
        return (t.calcularRecargo(monto) + monto);
    }
-
+*/
    public void estadoDelPedido(){
     System.out.println("El estado del pedido es: $"+this.estado);
    }

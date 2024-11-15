@@ -1,17 +1,15 @@
 package isi.deso.tp.grupo8;
 import java.time.LocalDateTime;
-public class Pago {
+public abstract class Pago {
+   private long id;
    private double monto;
    private LocalDateTime fecha;
-   private String metodoDePago;
    
-   public Pago(double monto, LocalDateTime fecha, String mdp){
+   //generar el id
+   //FALTAAAAAAAAAAA
+   
+   public Pago(double monto, LocalDateTime fecha){
        this.monto = monto;
        this.fecha = fecha;
-       this.metodoDePago = mdp;
-   }
-
-   public void mensajeMDP(){
-    System.out.println(this.metodoDePago);
    }
 }
