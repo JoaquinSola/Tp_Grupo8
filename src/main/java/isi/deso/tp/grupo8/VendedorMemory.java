@@ -14,9 +14,9 @@ public class VendedorMemory implements VendedorDAO {
         vendedores.add(vendedor);
     }
         @Override
-    public Vendedor buscarVendedor(String id) {
+    public Vendedor buscarVendedor(long id) {
         return vendedores.stream()
-                .filter(v -> v.getId().equals(id))
+                .filter(v -> v.getId()==(id))
                 .findFirst()
                 .orElse(null);
     }
@@ -26,8 +26,8 @@ public class VendedorMemory implements VendedorDAO {
         vendedores.add(vendedor);
     }
     @Override
-    public void eliminarVendedor(String id) {
-        vendedores.removeIf(v -> v.getId().equals(id));
+    public void eliminarVendedor(long id) {
+        vendedores.removeIf(v -> v.getId()==(id));
     }
     @Override
     public Set<Vendedor> listarVendedores() {
