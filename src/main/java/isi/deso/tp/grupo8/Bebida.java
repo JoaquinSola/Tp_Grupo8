@@ -1,6 +1,6 @@
 package isi.deso.tp.grupo8;
 
-public class Bebida extends ItemMenu {
+public class Bebida extends ItemMenu{
 
     private double volumen;
     private double graduacionAlcoholica;

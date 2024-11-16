@@ -17,7 +17,7 @@ public class ItemsMenuMemory implements ItemMenuDAO {
     }
 
     @Override
-    public ItemMenu buscarItem(int id) {
+    public ItemMenu buscarItem(long id) {
         return items.stream()
                 .filter(item -> item.getId() == id)  // Usar el getter
                 .findFirst()
@@ -31,7 +31,7 @@ public class ItemsMenuMemory implements ItemMenuDAO {
     }
 
     @Override
-    public void eliminarItem(int id) {
+    public void eliminarItem(long id) {
         items.removeIf(item -> item.getId() == id);  // Usar el getter
     }
 

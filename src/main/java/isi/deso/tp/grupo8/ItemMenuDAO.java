@@ -6,8 +6,8 @@ package isi.deso.tp.grupo8;
 import java.util.Set;
 public interface ItemMenuDAO {
     void crearItem(ItemMenu item);
-    ItemMenu buscarItem(int id);
+    ItemMenu buscarItem(long id);
     void actualizarItem(ItemMenu item);
-    void eliminarItem(int id);
+    void eliminarItem(long id);
     Set<ItemMenu> listarItems();
 }

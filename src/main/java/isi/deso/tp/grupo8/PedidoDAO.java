@@ -4,8 +4,8 @@ import java.util.Set;
 
 public interface PedidoDAO {
     void crearPedido(Pedido pedido);
-    Pedido buscarPedido(String id);
+    Pedido buscarPedido(long id);
     void actualizarPedido(Pedido pedido);
-    void eliminarPedido(String id);
+    void eliminarPedido(long id);
     Set<Pedido> listarPedidos();
 }

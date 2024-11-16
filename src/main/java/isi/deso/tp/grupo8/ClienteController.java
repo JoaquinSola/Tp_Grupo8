@@ -13,26 +13,26 @@ public class ClienteController {
         this.clienteMemory = clienteMemory;
     }
 
-    private String generarIdCliente() {
-        return "CLI-" + String.format("%03d", contadorID++); // Ejemplo: CLI-001
+    private long generarIdCliente() {
+        return contadorID++;
     }
 
     public void crearNuevoCliente(String cuit, String email, String direccion, Coordenada coordenadas, String alias, String cbu) {
-        String id = generarIdCliente(); // Generación automática del ID
+        long id = generarIdCliente(); // Generación automática del ID
         Cliente cliente = new Cliente(id, cuit, email, direccion, coordenadas, alias, cbu);
         clienteMemory.crearCliente(cliente);
     }
 
-    public Cliente buscarCliente(String id) {
+    public Cliente buscarCliente(long id) {
         return clienteMemory.buscarCliente(id);
     }
 
-    public void modificarCliente(String id, String cuit, String email, String direccion, Coordenada coordenadas, String alias, String cbu) {
+    public void modificarCliente(long id, String cuit, String email, String direccion, Coordenada coordenadas, String alias, String cbu) {
         Cliente cliente = new Cliente(id, cuit, email, direccion, coordenadas, alias, cbu);
         clienteMemory.actualizarCliente(cliente);
     }
 
-    public void eliminarCliente(String id) {
+    public void eliminarCliente(long id) {
         clienteMemory.eliminarCliente(id);
     }
 

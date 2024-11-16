@@ -8,8 +8,8 @@ import java.util.Set;
 
 public interface VendedorDAO {
     void crearVendedor(Vendedor vendedor);
-    Vendedor buscarVendedor(String id);
+    Vendedor buscarVendedor(long id);
     void actualizarVendedor(Vendedor vendedor);
-    void eliminarVendedor(String id);
+    void eliminarVendedor(long id);
     Set<Vendedor> listarVendedores();
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 
 public class Vendedor {
-    private Long id;
+    private long id;
     private String nombre;
     private String direccion;
     private Coordenada coordenadas;
@@ -18,7 +18,7 @@ public class Vendedor {
     private List<Pedido> pedidos; // Lista para almacenar los pedidos
     
     
-    public Vendedor (String id, String nombre, String direc, Coordenada coor,  Set<ItemMenu> lista){
+    public Vendedor (long id, String nombre, String direc, Coordenada coor,  Set<ItemMenu> lista){
         this.listaProductos = lista;
         this.id = id;
         this.nombre = nombre;
@@ -33,8 +33,8 @@ public class Vendedor {
         System.out.println("Pedido agregado id: " + pedido.getId() + " ,al vendedor: " + this.nombre);
     }
 
-    public Set<String> getIdsPedidos() {
-        Set<String> idsPedidos = new HashSet<>(); // Usamos un Set para evitar duplicados
+    public Set<Long> getIdsPedidos() {
+        Set<Long> idsPedidos = new HashSet<>(); // Usamos un Set para evitar duplicados
     
         for (Pedido pedido : pedidos) {
             idsPedidos.add(pedido.getId()); // Agregamos el ID de cada pedido
@@ -69,13 +69,13 @@ public class Vendedor {
         return pedidos;
     }
     
-    public String getId(){
+    public long getId(){
         return id;
     }
      public void setNombre(String n){
         this.nombre = n;
     }
-     public void setId(String i){
+     public void setId(long i){
         this.id = i;
     }
       public void setDireccion(String Direc){

@@ -7,7 +7,7 @@ import java.util.Locale;
 import java.time.format.TextStyle;
 
 public class Pedido {
-    private String id;
+    private long id;
     private Cliente cliente;
     private ItemsPedidoMemory itemsPedidoMemory;
     private Pago pago;
@@ -17,7 +17,7 @@ public class Pedido {
     private List<Observer> observers = new ArrayList<>();
     private String metodoDePago ;
 
-    public Pedido(String id, Cliente c, ItemsPedidoMemory ip, Vendedor v, String metodo){
+    public Pedido(long id, Cliente c, ItemsPedidoMemory ip, Vendedor v, String metodo){
         this.id = id;
         this.cliente = c;
         this.itemsPedidoMemory= ip;
@@ -28,7 +28,7 @@ public class Pedido {
         this.metodoDePago = metodo;
     }
 
-    public String getId(){
+    public long getId(){
         return id;
     }
  public Vendedor getVendedor(){

@@ -15,7 +15,7 @@ public class PedidoController {
         this.itemMenuDAO = itemMenuDAO;
     }
 
-    public void crearPedido(String idPedido, String idCliente, String idVendedor, String metodoPago, Set<Integer> idsItems) {
+    public void crearPedido(long idPedido, long idCliente, long idVendedor, String metodoPago, Set<Integer> idsItems) {
         Cliente cliente = clienteDAO.buscarCliente(idCliente);
         Vendedor vendedor = vendedorDAO.buscarVendedor(idVendedor);
         ItemsPedidoMemory itemsPedido = new ItemsPedidoMemory();
@@ -31,7 +31,7 @@ public class PedidoController {
         pedidoDAO.crearPedido(pedido);
     }
 
-    public Pedido buscarPedido(String id) {
+    public Pedido buscarPedido(long id) {
         return pedidoDAO.buscarPedido(id);
     }
 
@@ -39,7 +39,7 @@ public class PedidoController {
         pedidoDAO.actualizarPedido(pedido);
     }
 
-    public void eliminarPedido(String id) {
+    public void eliminarPedido(long id) {
         pedidoDAO.eliminarPedido(id);
     }
 

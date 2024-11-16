@@ -7,8 +7,8 @@ import java.util.Set;
 
 public interface ClienteDAO {
     void crearCliente(Cliente cliente);
-    Cliente buscarCliente(String id);
+    Cliente buscarCliente(long id);
     void actualizarCliente(Cliente cliente);
-    void eliminarCliente(String id);
+    void eliminarCliente(long id);
     Set<Cliente> listarClientes();
 }

@@ -1,7 +1,7 @@
 package isi.deso.tp.grupo8;
 
 public class Coordenada {
-    private Long id;
+    private long id;
     private double latitud;
     private double longitud;
 
@@ -11,11 +11,11 @@ public class Coordenada {
     }
 
     // Getters y Setters
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

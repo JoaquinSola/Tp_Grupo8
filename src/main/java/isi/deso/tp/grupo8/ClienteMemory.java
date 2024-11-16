@@ -15,9 +15,9 @@ public class ClienteMemory implements ClienteDAO {
     }
 
     @Override
-    public Cliente buscarCliente(String id) {
+    public Cliente buscarCliente(long id) {
         return clientes.stream()
-                .filter(c -> c.getId().equals(id))
+                .filter(c -> c.getId()==(id))
                 .findFirst()
                 .orElse(null);
     }
@@ -29,8 +29,8 @@ public class ClienteMemory implements ClienteDAO {
     }
 
     @Override
-    public void eliminarCliente(String id) {
-        clientes.removeIf(c -> c.getId().equals(id));
+    public void eliminarCliente(long id) {
+        clientes.removeIf(c -> c.getId()==(id));
     }
 
     @Override

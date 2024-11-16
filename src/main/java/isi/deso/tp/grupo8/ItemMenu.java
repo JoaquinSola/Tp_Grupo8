@@ -1,7 +1,7 @@
 package isi.deso.tp.grupo8;
 
 public abstract class ItemMenu {
-    private int id;
+    private long id;
     public String nombre;
     private String descripcion;
     public double precio;
@@ -20,11 +20,11 @@ public abstract class ItemMenu {
     public void setDesc(String descripcion) {
         this.descripcion = descripcion;
     }
-      public int getId() {
+      public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 }

@@ -3,7 +3,7 @@ package isi.deso.tp.grupo8;
 import java.time.LocalDateTime;
 
 public class Cliente implements Observer {
-    private String id;
+    private long id;
     private String cuit;
     private String email;
     private String direccion;
@@ -11,7 +11,7 @@ public class Cliente implements Observer {
     private String alias;
     private String cbu;
     
-    public Cliente(String id, String cuit, String email, String direc, Coordenada coor, String alias, String cbu){
+    public Cliente(long id, String cuit, String email, String direc, Coordenada coor, String alias, String cbu){
         this.id = id;
         this.cuit = cuit;
         this.email = email;
@@ -21,7 +21,7 @@ public class Cliente implements Observer {
         this.cbu = cbu;
     }
     
-    public String getId(){
+    public long getId(){
         return id;
     }
     
@@ -49,7 +49,7 @@ public class Cliente implements Observer {
         return cbu;
     }
      
-     public Pedido crearPedido(Vendedor v, String id, String metodoDePago){
+     public Pedido crearPedido(Vendedor v,long id, String metodoDePago){
         ItemsPedidoMemory im = new ItemsPedidoMemory();
         Pedido p = new Pedido(id, this, im, v, metodoDePago);
          

@@ -12,9 +12,9 @@ public class PedidoMemory implements PedidoDAO {
     }
 
     @Override
-    public Pedido buscarPedido(String id) {
+    public Pedido buscarPedido(long id) {
         return pedidos.stream()
-                .filter(p -> p.getId().equals(id))
+                .filter(p -> p.getId()==(id))
                 .findFirst()
                 .orElse(null);
     }
@@ -26,8 +26,8 @@ public class PedidoMemory implements PedidoDAO {
     }
 
     @Override
-    public void eliminarPedido(String id) {
-        pedidos.removeIf(p -> p.getId().equals(id));
+    public void eliminarPedido(long id) {
+        pedidos.removeIf(p -> p.getId()==(id));
     }
 
     @Override

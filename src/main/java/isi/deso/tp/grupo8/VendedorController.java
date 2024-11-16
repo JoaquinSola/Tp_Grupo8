@@ -14,26 +14,26 @@ public class VendedorController {
         this.vendedorMemory = vendedorMemory;
     }
 
-    private String generarIdVendedor() {
-        return "VEN-" + String.format("%03d", contadorID++); // Ejemplo: VEN-001
+    private long generarIdVendedor() {
+        return contadorID++; // Ejemplo: VEN-001
     }
 
     public void crearNuevoVendedor(String nombre, String direccion, Coordenada coordenadas) {
-        String id = generarIdVendedor(); // Genera el ID automáticamente
+        long id = generarIdVendedor(); // Genera el ID automáticamente
         Vendedor vendedor = new Vendedor(id, nombre, direccion, coordenadas, new HashSet<>());
         vendedorMemory.crearVendedor(vendedor);
     }
 
-    public Vendedor buscarVendedor(String id) {
+    public Vendedor buscarVendedor(long id) {
         return vendedorMemory.buscarVendedor(id);
     }
 
-    public void modificarVendedor(String id, String nombre, String direccion, Coordenada coordenadas) {
+    public void modificarVendedor(long id, String nombre, String direccion, Coordenada coordenadas) {
         Vendedor vendedor = new Vendedor(id, nombre, direccion, coordenadas, new HashSet<>());
         vendedorMemory.actualizarVendedor(vendedor);
     }
 
-    public void eliminarVendedor(String id) {
+    public void eliminarVendedor(long id) {
         vendedorMemory.eliminarVendedor(id);
     }
 
