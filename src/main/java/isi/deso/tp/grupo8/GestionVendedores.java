@@ -1,13 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package isi.deso.tp.grupo8;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.sql.SQLException;
 import java.util.Set;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 public class GestionVendedores extends JFrame {
     private final VendedorController controlador;
@@ -63,73 +66,101 @@ public class GestionVendedores extends JFrame {
         setVisible(true);
     }
 
-    private void crearVendedor(ActionEvent e) {
-        String nombre = txtNombre.getText();
-        String direccion = txtDireccion.getText();
-        double latitud = Double.parseDouble(txtLatitud.getText());
-        double longitud = Double.parseDouble(txtLongitud.getText());
-        Coordenada coord = new Coordenada(latitud, longitud);
+ private void crearVendedor(ActionEvent e) {
+    String nombre = txtNombre.getText();
+    String direccion = txtDireccion.getText();
+    double latitud = Double.parseDouble(txtLatitud.getText());
+    double longitud = Double.parseDouble(txtLongitud.getText());
 
-        controlador.crearNuevoVendedor(nombre, direccion, coord);
-        areaResultados.setText("Vendedor creado.");
+    CoordenadaDAO coordenadaDAO = new CoordenadaDAO();
+    
+    // 1. Buscar si ya existe la coordenada con estas latitud y longitud
+    Coordenada coordenada = coordenadaDAO.findByLatLong(latitud, longitud);
+
+    if (coordenada == null) {
+        // 2. Si no existe, crear la coordenada
+        coordenada = new Coordenada(latitud, longitud, 0); // ID inicializado en 0
+        coordenadaDAO.save(coordenada); // Este método asignará un ID desde la DB
+        
+        if (coordenada.getId() == 0) { // Validación para evitar errores en la asignación del ID
+            areaResultados.setText("Error al guardar la coordenada. No se generó un ID válido.");
+            return;
+        }
     }
 
-   private void buscarVendedor(ActionEvent e) {
-    String id = txtID.getText(); // Obtener el ID del campo de texto
-    Vendedor vendedor = controlador.buscarVendedor(id);
-
-    if (vendedor != null) {
-        // Mostrar los datos completos del vendedor
-        StringBuilder sb = new StringBuilder();
-        sb.append("ID: ").append(vendedor.getId()).append("\n")
-          .append("Nombre: ").append(vendedor.getNombre()).append("\n")
-          .append("Dirección: ").append(vendedor.getDireccion()).append("\n")
-          .append("Coordenadas: (").append(vendedor.getCoor().getLatitud()).append(", ")
-          .append(vendedor.getCoor().getLongitud()).append(")\n");
-
-        areaResultados.setText(sb.toString());
-    } else {
-        areaResultados.setText("Vendedor con ID " + id + " no encontrado.");
-    }
+    // 3. Crear el vendedor con la coordenada existente o recién creada
+    controlador.crearNuevoVendedor(nombre, direccion, coordenada);
+    areaResultados.setText("Vendedor creado con ID Coordenada: " + coordenada.getId());
 }
 
-    private void modificarVendedor(ActionEvent e) {
-        String id = txtID.getText();
-        String nombre = txtNombre.getText();
-        String direccion = txtDireccion.getText();
-        double latitud = Double.parseDouble(txtLatitud.getText());
-        double longitud = Double.parseDouble(txtLongitud.getText());
-        Coordenada coord = new Coordenada(latitud, longitud);
+    private void buscarVendedor(ActionEvent e) {
+        try {
+            long id = Long.parseLong(txtID.getText()); // Obtener el ID como long
+            Vendedor vendedor = controlador.buscarVendedor(id);
 
-        controlador.modificarVendedor(id, nombre, direccion, coord);
-        areaResultados.setText("Vendedor modificado.");
+            if (vendedor != null) {
+                // Mostrar los datos completos del vendedor
+                StringBuilder sb = new StringBuilder();
+                sb.append("ID: ").append(vendedor.getId()).append("\n")
+                  .append("Nombre: ").append(vendedor.getNombre()).append("\n")
+                  .append("Dirección: ").append(vendedor.getDireccion()).append("\n")
+                  .append("Coordenadas: (").append(vendedor.getCoor().getLatitud()).append(", ")
+                  .append(vendedor.getCoor().getLongitud()).append(")\n");
+
+                areaResultados.setText(sb.toString());
+            } else {
+                areaResultados.setText("Vendedor con ID " + id + " no encontrado.");
+            }
+        } catch (NumberFormatException ex) {
+            areaResultados.setText("El ID debe ser un número válido.");
+        }
+    }
+
+    private void modificarVendedor(ActionEvent e) {
+        try {
+            long id = Long.parseLong(txtID.getText()); // Obtener el ID como long
+            String nombre = txtNombre.getText();
+            String direccion = txtDireccion.getText();
+            double latitud = Double.parseDouble(txtLatitud.getText());
+            double longitud = Double.parseDouble(txtLongitud.getText());
+            Coordenada coord = new Coordenada(latitud, longitud,1);
+
+            controlador.modificarVendedor(id, nombre, direccion, coord);
+            areaResultados.setText("Vendedor modificado.");
+        } catch (NumberFormatException ex) {
+            areaResultados.setText("El ID debe ser un número válido.");
+        }
     }
 
     private void eliminarVendedor(ActionEvent e) {
-        String id = txtID.getText();
-        controlador.eliminarVendedor(id);
-        areaResultados.setText("Vendedor eliminado.");
-    }
-
-  private void listarVendedores() {
-    Set<Vendedor> vendedores = controlador.obtenerListaVendedores(); // Obtener lista desde el controlador
-    if (vendedores.isEmpty()) {
-        areaResultados.setText("No hay vendedores registrados.");
-    } else {
-        StringBuilder sb = new StringBuilder("Vendedores:\n");
-        for (Vendedor vendedor : vendedores) {
-            sb.append("ID: ").append(vendedor.getId()).append("\n")
-              .append("Nombre: ").append(vendedor.getNombre()).append("\n")
-              .append("Dirección: ").append(vendedor.getDireccion()).append("\n")
-              .append("Coordenadas: (").append(vendedor.getCoor().getLatitud()).append(", ")
-              .append(vendedor.getCoor().getLongitud()).append(")\n")
-              .append("--------------------------------------\n");
+        try {
+            long id = Long.parseLong(txtID.getText()); // Obtener el ID como long
+            controlador.eliminarVendedor(id);
+            areaResultados.setText("Vendedor eliminado.");
+        } catch (NumberFormatException ex) {
+            areaResultados.setText("El ID debe ser un número válido.");
         }
-        areaResultados.setText(sb.toString());
     }
-}
 
-    public static void main(String[] args) {
+    private void listarVendedores() {
+        Set<Vendedor> vendedores = controlador.obtenerListaVendedores(); // Obtener lista desde el controlador
+        if (vendedores.isEmpty()) {
+            areaResultados.setText("No hay vendedores registrados.");
+        } else {
+            StringBuilder sb = new StringBuilder("Vendedores:\n");
+            for (Vendedor vendedor : vendedores) {
+                sb.append("ID: ").append(vendedor.getId()).append("\n")
+                  .append("Nombre: ").append(vendedor.getNombre()).append("\n")
+                  .append("Dirección: ").append(vendedor.getDireccion()).append("\n")
+                  .append("Coordenadas: (").append(vendedor.getCoor().getLatitud()).append(", ")
+                  .append(vendedor.getCoor().getLongitud()).append(")\n")
+                  .append("--------------------------------------\n");
+            }
+            areaResultados.setText(sb.toString());
+        }
+    }
+
+public static void main(String[] args) throws SQLException {
         VendedorMemory memory = new VendedorMemory();
         VendedorController controlador = new VendedorController(memory);
         new GestionVendedores(controlador);

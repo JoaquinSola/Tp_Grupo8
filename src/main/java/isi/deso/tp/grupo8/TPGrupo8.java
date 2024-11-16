@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class TPGrupo8 {
-    public static Vendedor [] eliminarVendedor(Vendedor [] v, Vendedor vAEliminar){
+   /*public static Vendedor [] eliminarVendedor(Vendedor [] v, Vendedor vAEliminar){
         int i = 0;
         int k=0;
         int tam = v.length;
@@ -330,5 +330,6 @@ public class TPGrupo8 {
     private static void actualizarEstadoPedido(Vendedor vendedor, Pedido pedido, EstadoPedido nuevoEstado) {
         vendedor.actualizarEstadoPedido(pedido, nuevoEstado);
     }
+    */
    
 }

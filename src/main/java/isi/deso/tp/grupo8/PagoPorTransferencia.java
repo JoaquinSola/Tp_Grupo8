@@ -1,6 +1,8 @@
 package isi.deso.tp.grupo8;
 
-public class PagoPorTransferencia implements EstrategiaDePago{
+import java.time.LocalDate;
+
+public class PagoPorTransferencia extends Pago implements EstrategiaDePago{
    
     /* Heredados
     private long id;
@@ -12,13 +14,18 @@ public class PagoPorTransferencia implements EstrategiaDePago{
     private String cbu;
     private String cuit;
     
-    public PagoPorTransferencia(String cbu, String cuit){
+   @Override
+    public double calcularRecargo(double monto){
+        this.monto = monto * this.recargoEnTransferencia + monto ;
+        return monto;
+    }
+    public void setCbu(String cbu){
         this.cbu = cbu;
+    }
+    public void setCuit(String cuit){
         this.cuit = cuit;
     }
-    
-    @Override
-    public double calcularRecargo(double monto){
-        return monto * this.recargoEnTransferencia;
+    public void setFecha(LocalDate fecha){
+        this.fecha = fecha;
     }
 }

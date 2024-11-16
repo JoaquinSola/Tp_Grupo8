@@ -2,6 +2,7 @@ package isi.deso.tp.grupo8;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -89,9 +90,9 @@ public class GestionPedidos extends JFrame {
     }
 
     private void crearPedido(ActionEvent e) {
-        String idPedido = txtIdPedido.getText();
-        String idCliente = txtIdCliente.getText();
-        String idVendedor = txtIdVendedor.getText();
+        long idPedido = Long.parseLong(txtIdPedido.getText());
+        long idCliente = Long.parseLong(txtIdCliente.getText());
+        long idVendedor = Long.parseLong(txtIdVendedor.getText());
         String metodoPago = txtMetodoPago.getText();
 
         try {
@@ -107,7 +108,7 @@ public class GestionPedidos extends JFrame {
     }
 
     private void modificarPedido(ActionEvent e) {
-        String idPedido = txtIdPedido.getText();
+        long idPedido = Long.parseLong(txtIdPedido.getText());
         Pedido pedido = controlador.buscarPedido(idPedido);
         if (pedido != null) {
             pedido.setEstado(EstadoPedido.RECIBIDO);
@@ -119,7 +120,7 @@ public class GestionPedidos extends JFrame {
     }
 
     private void eliminarPedido(ActionEvent e) {
-        String idPedido = txtIdPedido.getText();
+        long idPedido = Long.parseLong(txtIdPedido.getText());
         controlador.eliminarPedido(idPedido);
         areaResultados.setText("Pedido eliminado.");
     }
@@ -134,7 +135,7 @@ public class GestionPedidos extends JFrame {
         }
         areaResultados.setText(sb.toString());
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         // Crear las instancias de memoria
         ClienteMemory clienteMemory = new ClienteMemory();
         VendedorMemory vendedorMemory = new VendedorMemory();

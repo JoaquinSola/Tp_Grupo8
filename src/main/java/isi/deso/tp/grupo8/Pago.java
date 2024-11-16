@@ -1,15 +1,11 @@
 package isi.deso.tp.grupo8;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 public abstract class Pago {
-   private long id;
-   private double monto;
-   private LocalDateTime fecha;
+   protected long id;
+   protected double monto;
+   protected LocalDate fecha;
    
    //generar el id
    //FALTAAAAAAAAAAA
-   
-   public Pago(double monto, LocalDateTime fecha){
-       this.monto = monto;
-       this.fecha = fecha;
-   }
+ 
 }

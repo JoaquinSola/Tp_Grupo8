@@ -3,8 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package isi.deso.tp.grupo8;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 public class VendedorController {
     private final VendedorDAO vendedorMemory;
@@ -18,11 +18,14 @@ public class VendedorController {
         return contadorID++; // Ejemplo: VEN-001
     }
 
-    public void crearNuevoVendedor(String nombre, String direccion, Coordenada coordenadas) {
-        long id = generarIdVendedor(); // Genera el ID automáticamente
-        Vendedor vendedor = new Vendedor(id, nombre, direccion, coordenadas, new HashSet<>());
-        vendedorMemory.crearVendedor(vendedor);
+public void crearNuevoVendedor(String nombre, String direccion, Coordenada coordenadas) {
+    if (coordenadas.getId() <= 0) {
+        throw new IllegalArgumentException("La coordenada debe tener un ID válido antes de crear el vendedor.");
     }
+    long id = generarIdVendedor(); // Genera el ID automáticamente para el vendedor
+    Vendedor vendedor = new Vendedor(id, nombre, direccion, coordenadas, new HashSet<>());
+    vendedorMemory.crearVendedor(vendedor); // Guarda el vendedor en la base de datos
+}
 
     public Vendedor buscarVendedor(long id) {
         return vendedorMemory.buscarVendedor(id);

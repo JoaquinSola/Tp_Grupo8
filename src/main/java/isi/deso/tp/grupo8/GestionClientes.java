@@ -3,10 +3,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package isi.deso.tp.grupo8;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.util.Set;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 public class GestionClientes extends JFrame {
     private final ClienteController controlador;
@@ -79,14 +85,14 @@ public class GestionClientes extends JFrame {
         String cbu = txtCbu.getText();
         double latitud = Double.parseDouble(txtLatitud.getText());
         double longitud = Double.parseDouble(txtLongitud.getText());
-        Coordenada coordenadas = new Coordenada(latitud, longitud);
+        Coordenada coordenadas = new Coordenada(latitud, longitud,1);
 
         controlador.crearNuevoCliente(cuit, email, direccion, coordenadas, alias, cbu);
         areaResultados.setText("Cliente creado.");
     }
 
     private void buscarCliente(ActionEvent e) {
-        String id = txtID.getText();
+        long id = Long.parseLong(txtID.getText());
         Cliente cliente = controlador.buscarCliente(id);
 
         if (cliente != null) {
@@ -106,7 +112,7 @@ public class GestionClientes extends JFrame {
     }
 
     private void modificarCliente(ActionEvent e) {
-        String id = txtID.getText();
+       long id = Long.parseLong(txtID.getText());
         String cuit = txtCuit.getText();
         String email = txtEmail.getText();
         String direccion = txtDireccion.getText();
@@ -114,14 +120,14 @@ public class GestionClientes extends JFrame {
         String cbu = txtCbu.getText();
         double latitud = Double.parseDouble(txtLatitud.getText());
         double longitud = Double.parseDouble(txtLongitud.getText());
-        Coordenada coordenadas = new Coordenada(latitud, longitud);
+        Coordenada coordenadas = new Coordenada(latitud, longitud,1);
 
         controlador.modificarCliente(id, cuit, email, direccion, coordenadas, alias, cbu);
         areaResultados.setText("Cliente modificado.");
     }
 
     private void eliminarCliente(ActionEvent e) {
-        String id = txtID.getText();
+        long id = Long.parseLong(txtID.getText());
         controlador.eliminarCliente(id);
         areaResultados.setText("Cliente eliminado.");
     }

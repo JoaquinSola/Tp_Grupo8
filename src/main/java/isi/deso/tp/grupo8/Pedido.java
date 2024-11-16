@@ -3,8 +3,6 @@ package isi.deso.tp.grupo8;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.time.format.TextStyle;
 
 public class Pedido {
     private long id;
@@ -66,33 +64,33 @@ public class Pedido {
        return this;
    }
    
-   public pagarPedido(String metodoDePago, ){
-       if(metodoDePago.equals("PagoPorMP")){
-           //cliente controller obtener alias
-           pago = new PagoPorMP();
-       } else if(metodoDePago.equals("PagoPorTransferencia")){
-           //cliente controller obtener cvu y cuit
-           //pago = new PagoPorTransferencia();
-       }
-   }
+  
    
-   /*public double pagarConMP(String alias){
-       PagoPorMP mp = new PagoPorMP(alias);
+   public double pagarConMP(String alias){
+    PagoPorMP pagoMP = new PagoPorMP();
        double monto = this.itemsPedidoMemory.calcularTotal();
        this.estado = EstadoPedido.RECIBIDO;
-       double valorT = (mp.calcularRecargo(monto) + monto);
+       double valorT = (pagoMP.calcularRecargo(monto));
        LocalDate fechaActual = LocalDate.now();
-       //Pago pagoTotal = new Pago(valorT,fechaActual,'Mercado Pago');
+       pagoMP.setAlias(alias);
+       pagoMP.setFecha(fechaActual);
+       this.pago=pagoMP;
        return valorT;
    }
    
    public double pagarConTransferencia(String cbu, String cuit){
-       PagoPorTransferencia t = new PagoPorTransferencia(cbu, cuit);
+       PagoPorTransferencia t = new PagoPorTransferencia();
        double monto = this.itemsPedidoMemory.calcularTotal();
        this.estado = EstadoPedido.RECIBIDO;
-       return (t.calcularRecargo(monto) + monto);
+       double valorT = (t.calcularRecargo(monto));
+       LocalDate fechaActual = LocalDate.now();
+       t.setCbu(cbu);
+       t.setCuit(cuit);
+       t.setFecha(fechaActual);
+       this.pago=t;
+       return valorT;
    }
-*/
+
    public void estadoDelPedido(){
     System.out.println("El estado del pedido es: $"+this.estado);
    }
