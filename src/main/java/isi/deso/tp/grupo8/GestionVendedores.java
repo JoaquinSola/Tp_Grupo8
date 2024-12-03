@@ -85,7 +85,7 @@ private void crearVendedor(ActionEvent e) {
         System.out.println("Longitud: " + longitud);
 
         // Crear la coordenada con latitud y longitud (sin ID, se asignará automáticamente)
-        Coordenada c1 = new Coordenada(longitud, latitud, 0); // ID de coordenada aún no asignado
+        Coordenada c1 = new Coordenada(longitud, latitud); // ID de coordenada aún no asignado
 
         // Guardar la coordenada en la base de datos
         CoordenadaDAO coordenadaDAO = new CoordenadaDAO();
@@ -93,7 +93,7 @@ private void crearVendedor(ActionEvent e) {
 
         // Crear el vendedor con la coordenada existente o recién creada
         controlador.crearNuevoVendedor(nombre, direccion, c1);
-        areaResultados.setText("Vendedor creado con ID Coordenada: " + c1.getId());
+        areaResultados.setText("Vendedor creado: " + nombre);
 
     } catch (NumberFormatException ex) {
         areaResultados.setText("Por favor, ingresa valores válidos en los campos numéricos.");
@@ -116,8 +116,9 @@ private void crearVendedor(ActionEvent e) {
                 sb.append("ID: ").append(vendedor.getId()).append("\n")
                   .append("Nombre: ").append(vendedor.getNombre()).append("\n")
                   .append("Dirección: ").append(vendedor.getDireccion()).append("\n")
-                  .append("Coordedana id: ").append(vendedor.getCoor().getId())
-                  .append("Coordedana id: ").append(vendedor.getCoor().getLatitud());
+                  .append("Coordedana id: ").append(vendedor.getCoor().getId()).append("\n")
+                  .append("Coordedana Latitud: ").append(vendedor.getCoor().getLatitud()).append("\n")
+                  .append("Coordedana Longitud: ").append(vendedor.getCoor().getLongitud()).append("\n");
                   //.append("Coordenadas: (").append((vendedor.getCoor()).getLatitud()).append(", ").append((vendedor.getCoor()).getLongitud()).append(")\n");
                   
                 areaResultados.setText(sb.toString());
@@ -138,7 +139,7 @@ private void crearVendedor(ActionEvent e) {
             vendedor.setDireccion(txtDireccion.getText());
     
             // Crear un objeto Coordenada
-            Coordenada coord = new Coordenada(1,1,1);
+            Coordenada coord = new Coordenada();
             coord.setLatitud(Double.parseDouble(txtLatitud.getText()));
             coord.setLongitud(Double.parseDouble(txtLongitud.getText()));
             vendedor.setCoordenada(coord); // Asociar la coordenada al vendedor

@@ -36,36 +36,47 @@ public class VendedorMemory implements VendedorDAO {
         e.printStackTrace();
     }
 }
-       @Override
-       public Vendedor buscarVendedor(long id) {
-        String sql = "SELECT id_vendedor, nombre, direccion, id_coordenada FROM Vendedor WHERE id_vendedor = ?";
-        Vendedor vendedor = null;
-    
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            // Asignar el valor del ID al parámetro de la consulta
-            stmt.setLong(1, id);
-    
-            try (ResultSet rs = stmt.executeQuery()) {
-                // Si se encuentra un resultado, mapearlo al objeto Vendedor
-                if (rs.next()) {
-                    vendedor = new Vendedor();
-                    vendedor.setId(rs.getLong("id_vendedor"));
-                    vendedor.setNombre(rs.getString("nombre"));
-                    vendedor.setDireccion(rs.getString("direccion"));
-    
-                    // Suponiendo que tienes un objeto Coordenada
-                    Coordenada coordenada = new Coordenada();
-                    CoordenadaDAO coordenadaDAO = new CoordenadaDAO();
-                    coordenada = coordenadaDAO.findById(rs.getLong("id_coordenada"));
-                    vendedor.setCoordenada(coordenada);
-                }
+      @Override
+public Vendedor buscarVendedor(long id) {
+    String sql = "SELECT v.id_vendedor, v.nombre, v.direccion, v.id_coordenada, " +
+                 "c.latitud, c.longitud " +
+                 "FROM Vendedor v " +
+                 "LEFT JOIN Coordenadas c ON v.id_coordenada = c.id_coordenada " +
+                 "WHERE v.id_vendedor = ?";
+    Vendedor vendedor = null;
+
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        stmt.setLong(1, id);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                vendedor = mapearVendedor(rs);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-    
-        return vendedor;
+    } catch (SQLException e) {
+        // Manejo del error: puedes usar un logger aquí
+        System.err.println("Error al buscar el vendedor con ID: " + id);
+        e.printStackTrace();
     }
+
+    return vendedor;
+}
+
+// Método auxiliar para mapear el ResultSet a un objeto Vendedor
+private Vendedor mapearVendedor(ResultSet rs) throws SQLException {
+    Vendedor vendedor = new Vendedor();
+    vendedor.setId(rs.getLong("id_vendedor"));
+    vendedor.setNombre(rs.getString("nombre"));
+    vendedor.setDireccion(rs.getString("direccion"));
+
+    Coordenada coordenada = new Coordenada();
+    coordenada.setId(rs.getLong("id_coordenada"));
+    coordenada.setLatitud(rs.getDouble("latitud"));
+    coordenada.setLongitud(rs.getDouble("longitud"));
+    vendedor.setCoordenada(coordenada);
+
+    return vendedor;
+}
     
 
 // Método para verificar si una coordenada existe en la base de datos

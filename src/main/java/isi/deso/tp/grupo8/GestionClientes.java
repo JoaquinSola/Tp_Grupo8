@@ -85,7 +85,7 @@ public class GestionClientes extends JFrame {
         String cbu = txtCbu.getText();
         double latitud = Double.parseDouble(txtLatitud.getText());
         double longitud = Double.parseDouble(txtLongitud.getText());
-        Coordenada coordenadas = new Coordenada(latitud, longitud,1);
+        Coordenada coordenadas = new Coordenada(latitud, longitud);
 
         controlador.crearNuevoCliente(cuit, email, direccion, coordenadas, alias, cbu);
         areaResultados.setText("Cliente creado.");
@@ -120,7 +120,7 @@ public class GestionClientes extends JFrame {
         String cbu = txtCbu.getText();
         double latitud = Double.parseDouble(txtLatitud.getText());
         double longitud = Double.parseDouble(txtLongitud.getText());
-        Coordenada coordenadas = new Coordenada(latitud, longitud,1);
+        Coordenada coordenadas = new Coordenada(latitud, longitud);
 
         controlador.modificarCliente(id, cuit, email, direccion, coordenadas, alias, cbu);
         areaResultados.setText("Cliente modificado.");

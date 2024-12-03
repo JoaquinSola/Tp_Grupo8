@@ -10,7 +10,7 @@ public class CoordenadaDAO {
     private static final String SELECT_BY_ID_SQL = "SELECT id_coordenada, latitud, longitud FROM coordenadas WHERE id = ?";
     private static final String SELECT_BY_COORDS_SQL = "SELECT id_coordenada FROM coordenadas WHERE longitud = ? AND latitud = ?";
 
-    public void save(Coordenada coordenada) {
+    public Coordenada save(Coordenada coordenada) {
         try (Connection conn = ConexionDB.getConnection();
              PreparedStatement stmt = conn.prepareStatement(INSERT_SQL, PreparedStatement.RETURN_GENERATED_KEYS)) {
             
@@ -23,10 +23,13 @@ public class CoordenadaDAO {
                 if (generatedKeys.next()) {
                     coordenada.setId(generatedKeys.getLong(1)); // Asigna el ID generado a la instancia
                 }
+                return coordenada; 
             }
         } catch (SQLException e) {
             System.err.println("Error al guardar la coordenada: " + e.getMessage());
+            
         }
+        return null;
     }
 
      public Coordenada findByLatLong(double latitud, double longitud) {

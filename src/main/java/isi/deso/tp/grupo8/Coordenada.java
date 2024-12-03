@@ -5,15 +5,18 @@ public class Coordenada {
     private double latitud;
     private double longitud;
 
-    public Coordenada(double latitud, double longitud, long id) {
-        this.latitud = latitud;
-        this.longitud = longitud;
-        this.id =id;
+    public Coordenada() {
+      
     }
 
-    public Coordenada(){
-        this.latitud = 99999;
-        this.longitud = 99999;
+    public Coordenada(double latitud, double longitud){
+       this.latitud = latitud;
+        this.longitud = longitud;
+    }
+     public Coordenada(double latitud, double longitud, long id){
+       this.latitud = latitud;
+        this.longitud = longitud;
+        this.id=id;
     }
 
     // Getters y Setters
