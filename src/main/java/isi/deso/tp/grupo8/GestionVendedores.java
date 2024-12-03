@@ -66,32 +66,44 @@ public class GestionVendedores extends JFrame {
         setVisible(true);
     }
 
- private void crearVendedor(ActionEvent e) {
-    String nombre = txtNombre.getText();
-    String direccion = txtDireccion.getText();
-    double latitud = Double.parseDouble(txtLatitud.getText());
-    double longitud = Double.parseDouble(txtLongitud.getText());
+private void crearVendedor(ActionEvent e) {
+    try {
+        String nombre = txtNombre.getText();
+        String direccion = txtDireccion.getText();
 
-    CoordenadaDAO coordenadaDAO = new CoordenadaDAO();
-    
-    // 1. Buscar si ya existe la coordenada con estas latitud y longitud
-    Coordenada coordenada = coordenadaDAO.findByLatLong(latitud, longitud);
-
-    if (coordenada == null) {
-        // 2. Si no existe, crear la coordenada
-        coordenada = new Coordenada(latitud, longitud, 0); // ID inicializado en 0
-        coordenadaDAO.save(coordenada); // Este método asignará un ID desde la DB
-        
-        if (coordenada.getId() == 0) { // Validación para evitar errores en la asignación del ID
-            areaResultados.setText("Error al guardar la coordenada. No se generó un ID válido.");
-            return;
+        // Validar que los campos de latitud y longitud no estén vacíos
+        if (txtLatitud.getText().isEmpty() || txtLongitud.getText().isEmpty()) {
+            areaResultados.setText("Por favor, completa todos los campos.");
+            return; // Detener la ejecución si algún campo está vacío
         }
-    }
 
-    // 3. Crear el vendedor con la coordenada existente o recién creada
-    controlador.crearNuevoVendedor(nombre, direccion, coordenada);
-    areaResultados.setText("Vendedor creado con ID Coordenada: " + coordenada.getId());
+        // Convertir latitud y longitud a double
+        double latitud = Double.parseDouble(txtLatitud.getText());
+        double longitud = Double.parseDouble(txtLongitud.getText());
+
+        System.out.println("Latitud: " + latitud);
+        System.out.println("Longitud: " + longitud);
+
+        // Crear la coordenada con latitud y longitud (sin ID, se asignará automáticamente)
+        Coordenada c1 = new Coordenada(longitud, latitud, 0); // ID de coordenada aún no asignado
+
+        // Guardar la coordenada en la base de datos
+        CoordenadaDAO coordenadaDAO = new CoordenadaDAO();
+        coordenadaDAO.save(c1); // Esto debería generar un ID para la coordenada
+
+        // Crear el vendedor con la coordenada existente o recién creada
+        controlador.crearNuevoVendedor(nombre, direccion, c1);
+        areaResultados.setText("Vendedor creado con ID Coordenada: " + c1.getId());
+
+    } catch (NumberFormatException ex) {
+        areaResultados.setText("Por favor, ingresa valores válidos en los campos numéricos.");
+        ex.printStackTrace(); // Puedes registrar el error para depuración
+    } catch (Exception ex) {
+        areaResultados.setText("Ocurrió un error al crear el vendedor: " + ex.getMessage());
+        ex.printStackTrace();
+    }
 }
+
 
     private void buscarVendedor(ActionEvent e) {
         try {
@@ -104,9 +116,10 @@ public class GestionVendedores extends JFrame {
                 sb.append("ID: ").append(vendedor.getId()).append("\n")
                   .append("Nombre: ").append(vendedor.getNombre()).append("\n")
                   .append("Dirección: ").append(vendedor.getDireccion()).append("\n")
-                  .append("Coordenadas: (").append(vendedor.getCoor().getLatitud()).append(", ")
-                  .append(vendedor.getCoor().getLongitud()).append(")\n");
-
+                  .append("Coordedana id: ").append(vendedor.getCoor().getId())
+                  .append("Coordedana id: ").append(vendedor.getCoor().getLatitud());
+                  //.append("Coordenadas: (").append((vendedor.getCoor()).getLatitud()).append(", ").append((vendedor.getCoor()).getLongitud()).append(")\n");
+                  
                 areaResultados.setText(sb.toString());
             } else {
                 areaResultados.setText("Vendedor con ID " + id + " no encontrado.");
@@ -116,21 +129,38 @@ public class GestionVendedores extends JFrame {
         }
     }
 
-    private void modificarVendedor(ActionEvent e) {
+    private boolean modificarVendedor(ActionEvent e) {
         try {
-            long id = Long.parseLong(txtID.getText()); // Obtener el ID como long
-            String nombre = txtNombre.getText();
-            String direccion = txtDireccion.getText();
-            double latitud = Double.parseDouble(txtLatitud.getText());
-            double longitud = Double.parseDouble(txtLongitud.getText());
-            Coordenada coord = new Coordenada(latitud, longitud,1);
-
-            controlador.modificarVendedor(id, nombre, direccion, coord);
-            areaResultados.setText("Vendedor modificado.");
+            // Crear un objeto Vendedor con los datos del formulario
+            Vendedor vendedor = new Vendedor();
+            vendedor.setId(Long.parseLong(txtID.getText())); // id_vendedor
+            vendedor.setNombre(txtNombre.getText());
+            vendedor.setDireccion(txtDireccion.getText());
+    
+            // Crear un objeto Coordenada
+            Coordenada coord = new Coordenada(1,1,1);
+            coord.setLatitud(Double.parseDouble(txtLatitud.getText()));
+            coord.setLongitud(Double.parseDouble(txtLongitud.getText()));
+            vendedor.setCoordenada(coord); // Asociar la coordenada al vendedor
+    
+            // Llamar al controlador para modificar el vendedor
+            boolean modificado = controlador.modificarVendedor(vendedor);
+    
+            // Mostrar mensaje en el área de resultados
+            if (modificado) {
+                areaResultados.setText("Vendedor modificado exitosamente.");
+            } else {
+                areaResultados.setText("No se pudo modificar el vendedor. Verifica el ID.");
+            }
         } catch (NumberFormatException ex) {
-            areaResultados.setText("El ID debe ser un número válido.");
+            areaResultados.setText("Por favor, ingresa datos válidos en los campos.");
+        } catch (Exception ex) {
+            areaResultados.setText("Ocurrió un error al modificar el vendedor: " + ex.getMessage());
         }
+        return true;
     }
+    
+    
 
     private void eliminarVendedor(ActionEvent e) {
         try {

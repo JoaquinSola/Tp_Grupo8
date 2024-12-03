@@ -11,6 +11,11 @@ public class Coordenada {
         this.id =id;
     }
 
+    public Coordenada(){
+        this.latitud = 99999;
+        this.longitud = 99999;
+    }
+
     // Getters y Setters
     public long getId() {
         return id;
@@ -27,4 +32,11 @@ public class Coordenada {
     public double getLongitud() {
         return longitud;
     }
+
+    public void setLongitud(double longitud){ 
+        this.longitud = longitud; 
+    }
+
+    public void setLatitud(double latitud) { 
+        this.latitud = latitud; }
 }

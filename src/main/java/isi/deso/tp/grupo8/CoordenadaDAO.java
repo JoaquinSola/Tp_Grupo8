@@ -6,9 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CoordenadaDAO {
-    private static final String INSERT_SQL = "INSERT INTO coordenada (latitud, longitud) VALUES (?, ?)";
-    private static final String SELECT_BY_ID_SQL = "SELECT id, latitud, longitud FROM coordenada WHERE id = ?";
-    private static final String SELECT_BY_COORDS_SQL = "SELECT id FROM coordenadas WHERE latitud = ? AND longitud = ?";
+    private static final String INSERT_SQL = "INSERT INTO coordenadas (longitud, latitud) VALUES (?, ?)";
+    private static final String SELECT_BY_ID_SQL = "SELECT id_coordenada, latitud, longitud FROM coordenadas WHERE id = ?";
+    private static final String SELECT_BY_COORDS_SQL = "SELECT id_coordenada FROM coordenadas WHERE longitud = ? AND latitud = ?";
 
     public void save(Coordenada coordenada) {
         try (Connection conn = ConexionDB.getConnection();
@@ -57,7 +57,7 @@ public class CoordenadaDAO {
             if (rs.next()) {
                 double latitud = rs.getDouble("latitud");
                 double longitud = rs.getDouble("longitud");
-                Coordenada coordenada = new Coordenada(latitud, longitud,1);
+                Coordenada coordenada = new Coordenada(latitud, longitud,id);
                 coordenada.setId(rs.getLong("id"));
                 return coordenada;
             }

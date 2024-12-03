@@ -16,6 +16,8 @@ public class Vendedor {
     private Coordenada coordenadas;
     private Set<ItemMenu> listaProductos;
     private List<Pedido> pedidos; // Lista para almacenar los pedidos
+
+    
     
     
     public Vendedor (long id, String nombre, String direc, Coordenada coor,  Set<ItemMenu> lista){
@@ -25,6 +27,15 @@ public class Vendedor {
         this.direccion = direc;
         this.coordenadas = coor;
         this.pedidos = new ArrayList<>(); // Inicializar la lista de pedidos
+    }
+
+    
+    public Vendedor(){
+
+    }
+
+    public void setCoordenada(Coordenada coor){
+        this.coordenadas = coor;
     }
 
     // Método para agregar un pedido a la lista
@@ -72,6 +83,7 @@ public class Vendedor {
     public long getId(){
         return id;
     }
+
      public void setNombre(String n){
         this.nombre = n;
     }

@@ -30,10 +30,12 @@ public void crearNuevoVendedor(String nombre, String direccion, Coordenada coord
     public Vendedor buscarVendedor(long id) {
         return vendedorMemory.buscarVendedor(id);
     }
+    
 
-    public void modificarVendedor(long id, String nombre, String direccion, Coordenada coordenadas) {
-        Vendedor vendedor = new Vendedor(id, nombre, direccion, coordenadas, new HashSet<>());
-        vendedorMemory.actualizarVendedor(vendedor);
+    public boolean modificarVendedor(Vendedor vendedor) {
+        Vendedor vendedores = new Vendedor(vendedor.getId(), vendedor.getNombre(), vendedor.getDireccion(), vendedor.getCoor(), new HashSet<>());
+        vendedorMemory.modificarVendedor(vendedores);
+        return true;
     }
 
     public void eliminarVendedor(long id) {

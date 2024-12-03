@@ -9,7 +9,7 @@ import java.util.Set;
 public interface VendedorDAO {
     void crearVendedor(Vendedor vendedor);
     Vendedor buscarVendedor(long id);
-    void actualizarVendedor(Vendedor vendedor);
+    boolean modificarVendedor(Vendedor vendedor);
     void eliminarVendedor(long id);
     Set<Vendedor> listarVendedores();
 }
