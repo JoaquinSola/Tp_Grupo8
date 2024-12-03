@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
 import java.util.Set;
 
 public class VendedorMemory implements VendedorDAO {
@@ -108,37 +109,105 @@ private void insertarCoordenada(Coordenada coordenada) {
     }
 }
 
+
 @Override
 public boolean modificarVendedor(Vendedor vendedor) {
-    // Verificar si la coordenada existe
-    if (!existeCoordenada((vendedor.getCoor()).getId())) {
-        throw new RuntimeException("La coordenada con ID " + vendedor.getCoor().getId() + " no existe.");
-    }
+    boolean vendedorActualizado = false;
+    boolean coordenadaActualizada = false;
 
-    String sql = "UPDATE Vendedor SET nombre = ?, direccion = ?, id_coordenada = ? WHERE id_vendedor = ?";
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-        stmt.setString(1, vendedor.getNombre());
-        stmt.setString(2, vendedor.getDireccion());
-        stmt.setLong(3, vendedor.getCoor().getId());
-        stmt.setLong(4, vendedor.getId());
+    try {
+        // Iniciar una transacción
+        connection.setAutoCommit(false);
 
-        int rowsUpdated = stmt.executeUpdate();
-        return rowsUpdated > 0; // Retorna true si se modificó alguna fila
+        // Actualizar la coordenada
+        if (vendedor.getCoor() != null) {
+            Coordenada coordenada = vendedor.getCoor();
+            coordenadaActualizada = modificarCoordenada(coordenada);
+        }
+
+        // Actualizar el vendedor
+        String sql = "UPDATE Vendedor SET nombre = ?, direccion = ? WHERE id_vendedor = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, vendedor.getNombre());
+            stmt.setString(2, vendedor.getDireccion());
+            stmt.setLong(3, vendedor.getId());
+
+            int filasActualizadas = stmt.executeUpdate();
+            vendedorActualizado = (filasActualizadas > 0);
+        }
+
+        // Confirmar transacción si ambas actualizaciones fueron exitosas
+        if (vendedorActualizado && coordenadaActualizada) {
+            connection.commit();
+        } else {
+            connection.rollback(); // Revertir cambios si algo falla
+        }
+
     } catch (SQLException e) {
+        try {
+            connection.rollback(); // Revertir la transacción en caso de error
+        } catch (SQLException rollbackEx) {
+            System.err.println("Error al hacer rollback");
+            rollbackEx.printStackTrace();
+        }
+        System.err.println("Error al modificar el vendedor con ID: " + vendedor.getId());
         e.printStackTrace();
-        throw new RuntimeException("Error al modificar el vendedor: " + e.getMessage());
+    } finally {
+        try {
+            connection.setAutoCommit(true); // Restaurar el modo por defecto
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
+    return vendedorActualizado && coordenadaActualizada;
 }
+public boolean modificarCoordenada(Coordenada coordenada) {
+    String sql = "UPDATE Coordenadas SET latitud = ?, longitud = ? WHERE id_coordenada = ?";
+    boolean actualizada = false;
 
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        stmt.setDouble(1, coordenada.getLatitud());
+        stmt.setDouble(2, coordenada.getLongitud());
+        stmt.setLong(3, coordenada.getId());
 
-    
-    
+        int filasActualizadas = stmt.executeUpdate();
+        actualizada = (filasActualizadas > 0); // Si se actualizó al menos una fila
+    } catch (SQLException e) {
+        System.err.println("Error al modificar la coordenada con ID: " + coordenada.getId());
+        e.printStackTrace();
+    }
+
+    return actualizada;
+}
     @Override
     public void eliminarVendedor(long id) {
         
     }
-    @Override
-    public Set<Vendedor> listarVendedores() {
-        return null;
+ 
+@Override
+public Set<Vendedor> listarVendedores() {
+    String sql = "SELECT v.id_vendedor, v.nombre, v.direccion, v.id_coordenada, " +
+                 "c.latitud, c.longitud " +
+                 "FROM Vendedor v " +
+                 "LEFT JOIN Coordenadas c ON v.id_coordenada = c.id_coordenada";
+    Set<Vendedor> vendedores = new HashSet<>(); // Usamos HashSet para garantizar unicidad
+
+    try (PreparedStatement stmt = connection.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+
+        while (rs.next()) {
+            Vendedor vendedor = mapearVendedor(rs);
+            vendedores.add(vendedor); // HashSet se encarga de evitar duplicados
+        }
+    } catch (SQLException e) {
+        // Manejo del error: log o mensaje de consola
+        System.err.println("Error al listar los vendedores");
+        e.printStackTrace();
     }
+
+    return vendedores;
+}
+
+
 }
