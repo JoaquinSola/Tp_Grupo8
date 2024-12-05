@@ -133,18 +133,14 @@ private void crearVendedor(ActionEvent e) {
     private boolean modificarVendedor(ActionEvent e) {
         try {
             // Crear un objeto Vendedor con los datos del formulario
-            Vendedor vendedor = new Vendedor();
-            vendedor.setId(Long.parseLong(txtID.getText())); // id_vendedor
+            Vendedor vendedor = controlador.buscarVendedor(Long.parseLong(txtID.getText()));
             vendedor.setNombre(txtNombre.getText());
             vendedor.setDireccion(txtDireccion.getText());
-    
-            // Crear un objeto Coordenada
-            Coordenada coord = new Coordenada();
+            Coordenada coord = vendedor.getCoor();
             coord.setLatitud(Double.parseDouble(txtLatitud.getText()));
             coord.setLongitud(Double.parseDouble(txtLongitud.getText()));
             vendedor.setCoordenada(coord); // Asociar la coordenada al vendedor
     
-            // Llamar al controlador para modificar el vendedor
             boolean modificado = controlador.modificarVendedor(vendedor);
     
             // Mostrar mensaje en el área de resultados

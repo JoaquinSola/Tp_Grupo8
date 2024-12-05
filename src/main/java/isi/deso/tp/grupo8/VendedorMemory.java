@@ -113,19 +113,17 @@ private void insertarCoordenada(Coordenada coordenada) {
 @Override
 public boolean modificarVendedor(Vendedor vendedor) {
     boolean vendedorActualizado = false;
-    boolean coordenadaActualizada = false;
+    boolean coordenadaActualizada = true; // Por defecto asumimos éxito
 
     try {
-        // Iniciar una transacción
         connection.setAutoCommit(false);
-
-        // Actualizar la coordenada
+    
+        // Actualizar coordenada (si existe)
         if (vendedor.getCoor() != null) {
-            Coordenada coordenada = vendedor.getCoor();
-            coordenadaActualizada = modificarCoordenada(coordenada);
+            coordenadaActualizada = modificarCoordenada(vendedor.getCoor());
         }
 
-        // Actualizar el vendedor
+        // Actualizar vendedor
         String sql = "UPDATE Vendedor SET nombre = ?, direccion = ? WHERE id_vendedor = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, vendedor.getNombre());
@@ -136,16 +134,16 @@ public boolean modificarVendedor(Vendedor vendedor) {
             vendedorActualizado = (filasActualizadas > 0);
         }
 
-        // Confirmar transacción si ambas actualizaciones fueron exitosas
+        // Confirmar transacción si todo fue exitoso
         if (vendedorActualizado && coordenadaActualizada) {
             connection.commit();
         } else {
-            connection.rollback(); // Revertir cambios si algo falla
+            connection.rollback();
         }
 
     } catch (SQLException e) {
         try {
-            connection.rollback(); // Revertir la transacción en caso de error
+            connection.rollback();
         } catch (SQLException rollbackEx) {
             System.err.println("Error al hacer rollback");
             rollbackEx.printStackTrace();
@@ -154,7 +152,7 @@ public boolean modificarVendedor(Vendedor vendedor) {
         e.printStackTrace();
     } finally {
         try {
-            connection.setAutoCommit(true); // Restaurar el modo por defecto
+            connection.setAutoCommit(true);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -163,16 +161,35 @@ public boolean modificarVendedor(Vendedor vendedor) {
     return vendedorActualizado && coordenadaActualizada;
 }
 public boolean modificarCoordenada(Coordenada coordenada) {
+    
+    if (coordenada == null) {
+        throw new IllegalArgumentException("La coordenada no puede ser nula.");
+    }
+
+    if (Double.isNaN(coordenada.getLatitud()) || Double.isNaN(coordenada.getLongitud())) {
+        throw new IllegalArgumentException("Latitud o longitud no son válidos.");
+    }
+
     String sql = "UPDATE Coordenadas SET latitud = ?, longitud = ? WHERE id_coordenada = ?";
     boolean actualizada = false;
 
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-        stmt.setDouble(1, coordenada.getLatitud());
-        stmt.setDouble(2, coordenada.getLongitud());
-        stmt.setLong(3, coordenada.getId());
+    try {
+        if (connection == null || connection.isClosed()) {
+            throw new IllegalStateException("La conexión a la base de datos no está disponible.");
+        }
 
-        int filasActualizadas = stmt.executeUpdate();
-        actualizada = (filasActualizadas > 0); // Si se actualizó al menos una fila
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setDouble(1, coordenada.getLatitud());
+            stmt.setDouble(2, coordenada.getLongitud());
+            stmt.setLong(3, coordenada.getId());
+
+            int filasActualizadas = stmt.executeUpdate();
+            actualizada = (filasActualizadas > 0);
+
+            if (!actualizada) {
+                System.err.println("No se encontró ninguna coordenada con ID: " + coordenada.getId());
+            }
+        }
     } catch (SQLException e) {
         System.err.println("Error al modificar la coordenada con ID: " + coordenada.getId());
         e.printStackTrace();
@@ -180,11 +197,27 @@ public boolean modificarCoordenada(Coordenada coordenada) {
 
     return actualizada;
 }
+
+
     @Override
-    public void eliminarVendedor(long id) {
-        
+   public void eliminarVendedor(long id) {
+    String sql = "DELETE FROM Vendedor WHERE id_vendedor = ?";
+
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        stmt.setLong(1, id);
+
+        int filasAfectadas = stmt.executeUpdate(); 
+
+        if (filasAfectadas == 0) {
+            throw new SQLException("No se encontró ningún vendedor con ID: " + id);
+        } else {
+            System.out.println("Vendedor con ID " + id + " eliminado correctamente.");
+        }
+    } catch (SQLException e) {
+        System.err.println("Error al eliminar el vendedor con ID: " + id);
+        e.printStackTrace();
     }
- 
+}
 @Override
 public Set<Vendedor> listarVendedores() {
     String sql = "SELECT v.id_vendedor, v.nombre, v.direccion, v.id_coordenada, " +

@@ -18,7 +18,9 @@ public class Cliente implements Observer {
         this.alias = alias;
         this.cbu = cbu;
     }
-    
+    public void setId(long id){
+        this.id=id;
+    }
     public long getId(){
         return id;
     }
@@ -46,6 +48,31 @@ public class Cliente implements Observer {
      public String getCbu(){
         return cbu;
     }
+
+
+public void setCuit(String cuit) {
+    this.cuit = cuit;
+}
+
+public void setEmail(String email) {
+    this.email = email;
+}
+
+public void setDireccion(String direccion) {
+    this.direccion = direccion;
+}
+
+public void setCoor(Coordenada coordenadas) {
+    this.coordenadas = coordenadas;
+}
+
+public void setAlias(String alias) {
+    this.alias = alias;
+}
+
+public void setCbu(String cbu) {
+    this.cbu = cbu;
+}
      
      public Pedido crearPedido(Vendedor v,long id, String metodoDePago){
         ItemsPedidoMemory im = new ItemsPedidoMemory();

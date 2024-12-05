@@ -1,122 +1,219 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package isi.deso.tp.grupo8;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
 public class ClienteMemory implements ClienteDAO {
-    private Set<Cliente> clientes = new HashSet<>();
+    private Connection connection;
+
+    public ClienteMemory() throws SQLException {
+        this.connection = ConexionDB.getConnection();
+    }
 
     @Override
     public void crearCliente(Cliente cliente) {
-        // Primero, agregamos el cliente a la lista en memoria (si lo necesitas)
-        clientes.add(cliente);
+        String sql = "INSERT INTO Cliente (cuit, email, direccion, id_coordenada, alias, cbu) VALUES (?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, cliente.getCuit());
+            stmt.setString(2, cliente.getEmail());
+            stmt.setString(3, cliente.getDireccion());
+            stmt.setLong(4, cliente.getCoor().getId()); // Usar el ID de la coordenada
+            stmt.setString(5, cliente.getAlias());
+            stmt.setString(6, cliente.getCbu());
+            stmt.executeUpdate();
 
-        // Ahora, agregamos el cliente a la base de datos
-        Connection conexion = null;
-        PreparedStatement ps = null;
+            // Obtener el ID generado automáticamente para el cliente
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    cliente.setId(generatedKeys.getLong(1));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Cliente buscarCliente(long id) {
+        String sql = "SELECT c.id_cliente, c.cuit, c.email, c.direccion, c.id_coordenada, " +
+                     "c.alias, c.cbu, co.latitud, co.longitud " +
+                     "FROM Cliente c " +
+                     "LEFT JOIN Coordenadas co ON c.id_coordenada = co.id_coordenada " +
+                     "WHERE c.id_cliente = ?";
+        Cliente cliente = null;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    cliente = mapearCliente(rs);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al buscar el cliente con ID: " + id);
+            e.printStackTrace();
+        }
+
+        return cliente;
+    }
+
+    // Método auxiliar para mapear el ResultSet a un objeto Cliente
+    private Cliente mapearCliente(ResultSet rs) throws SQLException {
+        Coordenada coordenada = new Coordenada();
+        coordenada.setId(rs.getLong("id_coordenada"));
+        coordenada.setLatitud(rs.getDouble("latitud"));
+        coordenada.setLongitud(rs.getDouble("longitud"));
+
+        Cliente cliente = new Cliente(
+            rs.getLong("id_cliente"),
+            rs.getString("cuit"),
+            rs.getString("email"),
+            rs.getString("direccion"),
+            coordenada,
+            rs.getString("alias"),
+            rs.getString("cbu")
+        );
+
+        return cliente;
+    }
+
+    @Override
+    public boolean modificarCliente(Cliente cliente) {
+        boolean clienteActualizado = false;
+        boolean coordenadaActualizada = true; // Por defecto asumimos éxito
 
         try {
-            // Obtener la conexión
-            conexion = ConexionDB.getConnection();
-            
-            // Sentencia SQL para insertar un nuevo cliente
-            String sql = "INSERT INTO Cliente (cuit, email, direccion, alias, cbu) VALUES (?, ?, ?, ?, ?)";
-            ps = conexion.prepareStatement(sql);
-            
-            // Asignamos los valores del cliente a la consulta
-            ps.setString(1, cliente.getCuit());
-            ps.setString(2, cliente.getEmail());
-            ps.setString(3, cliente.getDireccion());
-            ps.setString(4, cliente.getAlias());
-            ps.setString(5, cliente.getCbu());
-            
-            // Asegúrate de obtener el ID de la coordenada correctamente
+            connection.setAutoCommit(false);
 
-            // Ejecutamos la consulta
-            ps.executeUpdate();  // No es necesario pasar la consulta aquí, ya está en el PreparedStatement
-            
+            // Actualizar coordenada (si existe)
+            if (cliente.getCoor() != null) {
+                coordenadaActualizada = modificarCoordenada(cliente.getCoor());
+            }
+
+            // Actualizar cliente
+            String sql = "UPDATE Cliente SET cuit = ?, email = ?, direccion = ?, alias = ?, cbu = ? WHERE id_cliente = ?";
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setString(1, cliente.getCuit());
+                stmt.setString(2, cliente.getEmail());
+                stmt.setString(3, cliente.getDireccion());
+                stmt.setString(4, cliente.getAlias());
+                stmt.setString(5, cliente.getCbu());
+                stmt.setLong(6, cliente.getId());
+
+                int filasActualizadas = stmt.executeUpdate();
+                clienteActualizado = (filasActualizadas > 0);
+            }
+
+            // Confirmar transacción si todo fue exitoso
+            if (clienteActualizado && coordenadaActualizada) {
+                connection.commit();
+            } else {
+                connection.rollback();
+            }
+
         } catch (SQLException e) {
-            // Manejo de excepciones, puedes mejorar el mensaje de error
-            System.err.println("Error al insertar cliente en la base de datos: " + e.getMessage());
+            try {
+                connection.rollback();
+            } catch (SQLException rollbackEx) {
+                System.err.println("Error al hacer rollback");
+                rollbackEx.printStackTrace();
+            }
+            System.err.println("Error al modificar el cliente con ID: " + cliente.getId());
             e.printStackTrace();
         } finally {
-            // Cerramos recursos
             try {
-                if (ps != null) ps.close();
-                if (conexion != null) conexion.close();
+                connection.setAutoCommit(true);
             } catch (SQLException e) {
-                // Si ocurre un error al cerrar los recursos
-                System.err.println("Error al cerrar los recursos: " + e.getMessage());
                 e.printStackTrace();
             }
         }
+
+        return clienteActualizado && coordenadaActualizada;
     }
 
-    @Override
-    //DEBEMOS VER QUE HACER CON COORDEDANAS
-public Cliente buscarCliente(long id) {
-    Cliente cliente = null;
-    Connection conexion = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-
-    try {
-        conexion = ConexionDB.getConnection();
-        String sql = "SELECT * FROM Cliente WHERE id_cliente = ?";
-        ps = conexion.prepareStatement(sql);
-        ps.setLong(1, id);
-
-        rs = ps.executeQuery();
-
-        if (rs.next()) {
-            // Crear un objeto Cliente con los datos obtenidos, sin coordenada
-            cliente = new Cliente(
-                rs.getLong("id_cliente"),
-                rs.getString("cuit"),
-                rs.getString("email"),
-                rs.getString("direccion"),
-                null,  // Ya no necesitas la coordenada, pon null o ajusta si tienes otro valor.
-                rs.getString("alias"),
-                rs.getString("cbu")
-            );
+    public boolean modificarCoordenada(Coordenada coordenada) {
+        if (coordenada == null) {
+            throw new IllegalArgumentException("La coordenada no puede ser nula.");
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    } finally {
+
+        if (Double.isNaN(coordenada.getLatitud()) || Double.isNaN(coordenada.getLongitud())) {
+            throw new IllegalArgumentException("Latitud o longitud no son válidos.");
+        }
+
+        String sql = "UPDATE Coordenadas SET latitud = ?, longitud = ? WHERE id_coordenada = ?";
+        boolean actualizada = false;
+
         try {
-            if (rs != null) rs.close();
-            if (ps != null) ps.close();
-            if (conexion != null) conexion.close();
+            if (connection == null || connection.isClosed()) {
+                throw new IllegalStateException("La conexión a la base de datos no está disponible.");
+            }
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setDouble(1, coordenada.getLatitud());
+                stmt.setDouble(2, coordenada.getLongitud());
+                stmt.setLong(3, coordenada.getId());
+
+                int filasActualizadas = stmt.executeUpdate();
+                actualizada = (filasActualizadas > 0);
+
+                if (!actualizada) {
+                    System.err.println("No se encontró ninguna coordenada con ID: " + coordenada.getId());
+                }
+            }
         } catch (SQLException e) {
+            System.err.println("Error al modificar la coordenada con ID: " + coordenada.getId());
             e.printStackTrace();
         }
-    }
 
-    return cliente;
-}
-
-
-    @Override
-    public void actualizarCliente(Cliente cliente) {
-        eliminarCliente(cliente.getId());
-        clientes.add(cliente);
+        return actualizada;
     }
 
     @Override
     public void eliminarCliente(long id) {
-        clientes.removeIf(c -> c.getId()==(id));
+        String sql = "DELETE FROM Cliente WHERE id_cliente = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+
+            int filasAfectadas = stmt.executeUpdate();
+
+            if (filasAfectadas == 0) {
+                throw new SQLException("No se encontró ningún cliente con ID: " + id);
+            } else {
+                System.out.println("Cliente con ID " + id + " eliminado correctamente.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al eliminar el cliente con ID: " + id);
+            e.printStackTrace();
+        }
     }
 
     @Override
     public Set<Cliente> listarClientes() {
+        String sql = "SELECT c.id_cliente, c.cuit, c.email, c.direccion, c.id_coordenada, " +
+                     "c.alias, c.cbu, co.latitud, co.longitud " +
+                     "FROM Cliente c " +
+                     "LEFT JOIN Coordenadas co ON c.id_coordenada = co.id_coordenada";
+        Set<Cliente> clientes = new HashSet<>(); // Usamos HashSet para garantizar unicidad
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Cliente cliente = mapearCliente(rs);
+                clientes.add(cliente); // HashSet se encarga de evitar duplicados
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al listar los clientes");
+            e.printStackTrace();
+        }
+
         return clientes;
     }
 }
