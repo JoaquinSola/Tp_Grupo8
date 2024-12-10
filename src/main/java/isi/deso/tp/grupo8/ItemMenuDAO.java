@@ -3,13 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package isi.deso.tp.grupo8;
-
 import java.util.Set;
-
 public interface ItemMenuDAO {
-    String crearItem(ItemMenu item, Categoria categoria);
+    void crearItem(ItemMenu item);
     ItemMenu buscarItem(long id);
-    void actualizarItem(ItemMenu item, Categoria categoria);
+    void actualizarItem(ItemMenu item);
     void eliminarItem(long id);
     Set<ItemMenu> listarItems();
 }
