@@ -4,6 +4,7 @@
  */
 package isi.deso.tp.grupo8;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -87,6 +88,20 @@ public class ItemsMenuMemory implements ItemMenuDAO {
             }catch(SQLException e){
                 e.printStackTrace();
             }
+=======
+import java.util.HashSet;
+import java.util.Set;
+
+
+public class ItemsMenuMemory implements ItemMenuDAO {
+    private final Set<ItemMenu> items = new HashSet<>();
+    private int ultimoID = 1;  // Para generar IDs únicos
+
+    @Override
+    public void crearItem(ItemMenu item) {
+        item.setId(ultimoID++);  // Asignar ID utilizando el setter
+        items.add(item);
+>>>>>>> parent of 1bc88f8 (itemmenu)
 =======
 import java.util.HashSet;
 import java.util.Set;
