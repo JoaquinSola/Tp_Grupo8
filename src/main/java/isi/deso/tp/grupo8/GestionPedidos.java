@@ -7,8 +7,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -83,28 +85,34 @@ public class GestionPedidos extends JFrame {
         btnListarPedidos.addActionListener(e -> listarPedidos());
 
         btnAbrirGestionCliente.addActionListener(e -> new GestionClientes(this.clienteController));
-    btnAbrirGestionVendedor.addActionListener(e -> new GestionVendedores(this.vendedorController));
-    btnAbrirGestionItem.addActionListener(e -> new GestionItemsMenu(this.itemsMenuController));
+        btnAbrirGestionVendedor.addActionListener(e -> new GestionVendedores(this.vendedorController));
+        btnAbrirGestionItem.addActionListener(e -> new GestionItemsMenu(this.itemsMenuController));
 
         setVisible(true);
     }
 
     private void crearPedido(ActionEvent e) {
-        long idPedido = Long.parseLong(txtIdPedido.getText());
-        long idCliente = Long.parseLong(txtIdCliente.getText());
-        long idVendedor = Long.parseLong(txtIdVendedor.getText());
-        String metodoPago = txtMetodoPago.getText();
-
+        // Lógica para crear el pedido
         try {
-            int idItem = Integer.parseInt(txtIdItem.getText());
-            idsItemsSeleccionados.add(idItem);
-        } catch (NumberFormatException ex) {
-            areaResultados.setText("Error: ID de item inválido");
-            return;
-        }
+            long idPedido = Long.parseLong(txtIdPedido.getText());
+            long idCliente = Long.parseLong(txtIdCliente.getText());
+            long idVendedor = Long.parseLong(txtIdVendedor.getText());
+            String metodoPago = txtMetodoPago.getText();
+            Set<Integer> idsItems = new HashSet<>();
+            idsItems.add(Integer.parseInt(txtIdItem.getText()));
 
-        controlador.crearPedido(idPedido, idCliente, idVendedor, metodoPago, idsItemsSeleccionados);
-        areaResultados.setText("Pedido creado exitosamente.");
+            if (idCliente <= 0 || idVendedor <= 0 || metodoPago.isEmpty() || idsItems.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
+                return;
+            }
+
+            controlador.crearPedido(idPedido, idCliente, idVendedor, metodoPago, idsItems);
+            JOptionPane.showMessageDialog(this, "Pedido creado exitosamente.");
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "ID debe ser un número válido.");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al crear el pedido: " + ex.getMessage());
+        }
     }
 
     private void modificarPedido(ActionEvent e) {
@@ -135,6 +143,7 @@ public class GestionPedidos extends JFrame {
         }
         areaResultados.setText(sb.toString());
     }
+
     public static void main(String[] args) throws SQLException {
         // Crear las instancias de memoria
         ClienteMemory clienteMemory = new ClienteMemory();
@@ -151,6 +160,5 @@ public class GestionPedidos extends JFrame {
         
         // Crear y mostrar la ventana de gestión de pedidos
         new GestionPedidos(pedidoController, clienteController, vendedorController, itemsMenuController);
-    
-}
+    }
 }

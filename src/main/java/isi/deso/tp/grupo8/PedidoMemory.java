@@ -5,10 +5,13 @@ import java.util.Set;
 
 public class PedidoMemory implements PedidoDAO {
     private Set<Pedido> pedidos = new HashSet<>();
+    
 
     @Override
     public void crearPedido(Pedido pedido) {
-        pedidos.add(pedido);
+        if (pedido != null) {
+            pedidos.add(pedido);
+        }
     }
 
     @Override
@@ -21,6 +24,10 @@ public class PedidoMemory implements PedidoDAO {
 
     @Override
     public void actualizarPedido(Pedido pedido) {
+        Pedido existente = buscarPedido(pedido.getId());
+        if (existente == null) {
+            throw new IllegalArgumentException("El pedido con ID " + pedido.getId() + " no existe.");
+        }
         eliminarPedido(pedido.getId());
         pedidos.add(pedido);
     }

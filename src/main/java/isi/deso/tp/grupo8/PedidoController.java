@@ -15,20 +15,41 @@ public class PedidoController {
         this.itemMenuDAO = itemMenuDAO;
     }
 
+    /**
+     * Crea un nuevo pedido con los datos proporcionados.
+     *
+     * @param idPedido    ID único del pedido.
+     * @param idCliente   ID del cliente que realiza el pedido.
+     * @param idVendedor  ID del vendedor que atiende el pedido.
+     * @param metodoPago  Método de pago utilizado.
+     * @param idsItems    Conjunto de IDs de los ítems del menú seleccionados.
+     */
     public void crearPedido(long idPedido, long idCliente, long idVendedor, String metodoPago, Set<Integer> idsItems) {
+        // Buscar cliente y vendedor en los DAOs correspondientes
         Cliente cliente = clienteDAO.buscarCliente(idCliente);
         Vendedor vendedor = vendedorDAO.buscarVendedor(idVendedor);
+
+        // Inicializar una instancia de ItemsPedidoMemory
         ItemsPedidoMemory itemsPedido = new ItemsPedidoMemory();
 
+        // Añadir ítems al pedido utilizando los IDs proporcionados
         for (int itemId : idsItems) {
             ItemMenu item = itemMenuDAO.buscarItem(itemId);
             if (item != null) {
-                itemsPedido.agregarItem(item);
+                itemsPedido.agregarItem(item); // Añadir ítem al pedido
             }
         }
 
+        // Crear el pedido con los datos proporcionados
         Pedido pedido = new Pedido(idPedido, cliente, itemsPedido, vendedor, metodoPago);
-        pedidoDAO.crearPedido(pedido);
+
+        try {
+            // Guardar el pedido utilizando el DAO
+            pedidoDAO.crearPedido(pedido);
+        } catch (Exception e) {
+            // Manejo de excepciones en la creación del pedido
+            System.err.println("Error al crear el pedido: " + e.getMessage());
+        }
     }
 
     public Pedido buscarPedido(long id) {
