@@ -186,26 +186,27 @@ public class ItemsMenuMemory implements ItemMenuDAO {
         }
     }
 
-    @Override
+  @Override
     public void eliminarItem(long id) {
-        String sqlItemMenu = "DELETE FROM itemmenu WHERE id_itemMenu = ?";
-        try (PreparedStatement stmtItemMenu = connection.prepareStatement(sqlItemMenu)) {
+        String sqlDeleteBebida = "DELETE FROM bebida WHERE id_itemMenu = ?";
+        String sqlDeletePlato = "DELETE FROM plato WHERE id_itemMenu = ?";
+        String sqlDeleteItemMenu = "DELETE FROM itemmenu WHERE id_itemMenu = ?";
+        try (PreparedStatement stmtDeleteBebida = connection.prepareStatement(sqlDeleteBebida);
+             PreparedStatement stmtDeletePlato = connection.prepareStatement(sqlDeletePlato);
+             PreparedStatement stmtDeleteItemMenu = connection.prepareStatement(sqlDeleteItemMenu)) {
             connection.setAutoCommit(false); // Start transaction
 
-            stmtItemMenu.setLong(1, id);
-            stmtItemMenu.executeUpdate();
+            // Delete from bebida
+            stmtDeleteBebida.setLong(1, id);
+            stmtDeleteBebida.executeUpdate();
 
-            String sqlBebida = "DELETE FROM bebida WHERE id_itemMenu = ?";
-            try (PreparedStatement stmtBebida = connection.prepareStatement(sqlBebida)) {
-                stmtBebida.setLong(1, id);
-                stmtBebida.executeUpdate();
-            }
+            // Delete from plato
+            stmtDeletePlato.setLong(1, id);
+            stmtDeletePlato.executeUpdate();
 
-            String sqlPlato = "DELETE FROM plato WHERE id_itemMenu = ?";
-            try (PreparedStatement stmtPlato = connection.prepareStatement(sqlPlato)) {
-                stmtPlato.setLong(1, id);
-                stmtPlato.executeUpdate();
-            }
+            // Delete from itemmenu
+            stmtDeleteItemMenu.setLong(1, id);
+            stmtDeleteItemMenu.executeUpdate();
 
             connection.commit(); // Commit transaction
         } catch (SQLException e) {
