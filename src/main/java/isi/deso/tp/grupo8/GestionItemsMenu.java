@@ -1,39 +1,48 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package isi.deso.tp.grupo8;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.sql.SQLException;
 import java.util.Set;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 public class GestionItemsMenu extends JFrame {
     private final ItemsMenuController controlador;
-    private JTextField txtID, txtNombre, txtDescripcion, txtPrecio, txtCalorias, txtVolumen, txtAlcohol;
+    private JTextField txtID, txtNombre, txtDescripcion, txtPrecio, txtCalorias, txtVolumen, txtAlcohol, txtPeso, txtIdCategoria;
     private JCheckBox chkCeliacos, chkVegetariano;
     private JTextArea areaResultados;
     private JButton btnCrearPlato, btnCrearBebida, btnBuscar, btnModificar, btnEliminar, btnListar;
 
     public GestionItemsMenu(ItemsMenuController controlador) {
         this.controlador = controlador;
+        initComponents();
+    }
 
-        setTitle("Gestión de Ítems de Menú");
-        setSize(700, 600);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);;
+    private void initComponents() {
+        setTitle("Gestión de Items del Menú");
+        setSize(800, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new FlowLayout());
 
-        txtID = new JTextField(5);
-        txtNombre = new JTextField(15);
-        txtDescripcion = new JTextField(20);
+        txtID = new JTextField(10);
+        txtNombre = new JTextField(10);
+        txtDescripcion = new JTextField(10);
         txtPrecio = new JTextField(10);
         txtCalorias = new JTextField(10);
         txtVolumen = new JTextField(10);
         txtAlcohol = new JTextField(10);
-        chkCeliacos = new JCheckBox("Apto Celíacos");
+        txtPeso = new JTextField(10);
+        txtIdCategoria = new JTextField(10);
+        chkCeliacos = new JCheckBox("Apto Celiacos");
         chkVegetariano = new JCheckBox("Apto Vegetariano");
-        areaResultados = new JTextArea(20, 50);
+        areaResultados = new JTextArea(20, 40);
         areaResultados.setEditable(false);
 
         btnCrearPlato = new JButton("Crear Plato");
@@ -43,7 +52,6 @@ public class GestionItemsMenu extends JFrame {
         btnEliminar = new JButton("Eliminar");
         btnListar = new JButton("Listar");
 
-        // Añadir componentes
         add(new JLabel("ID:"));
         add(txtID);
         add(new JLabel("Nombre:"));
@@ -54,12 +62,16 @@ public class GestionItemsMenu extends JFrame {
         add(txtPrecio);
         add(new JLabel("Calorías:"));
         add(txtCalorias);
-        add(chkCeliacos);
-        add(chkVegetariano);
         add(new JLabel("Volumen:"));
         add(txtVolumen);
-        add(new JLabel("Alcohol (%):"));
+        add(new JLabel("Alcohol:"));
         add(txtAlcohol);
+        add(new JLabel("Peso:"));
+        add(txtPeso);
+        add(new JLabel("ID Categoría:"));
+        add(txtIdCategoria);
+        add(chkCeliacos);
+        add(chkVegetariano);
         add(btnCrearPlato);
         add(btnCrearBebida);
         add(btnBuscar);
@@ -68,15 +80,12 @@ public class GestionItemsMenu extends JFrame {
         add(btnListar);
         add(new JScrollPane(areaResultados));
 
-        // Acciones de los botones
         btnCrearPlato.addActionListener(this::crearPlato);
         btnCrearBebida.addActionListener(this::crearBebida);
         btnBuscar.addActionListener(this::buscarItem);
         btnModificar.addActionListener(this::modificarItem);
         btnEliminar.addActionListener(this::eliminarItem);
-        btnListar.addActionListener(e -> listarItems());
-
-        setVisible(true);
+        btnListar.addActionListener(this::listarItems);
     }
 
     private void crearPlato(ActionEvent e) {
@@ -86,9 +95,12 @@ public class GestionItemsMenu extends JFrame {
         double calorias = Double.parseDouble(txtCalorias.getText());
         boolean celiacos = chkCeliacos.isSelected();
         boolean vegetariano = chkVegetariano.isSelected();
+        double peso = Double.parseDouble(txtPeso.getText());
+        long idCategoria = Long.parseLong(txtIdCategoria.getText());
+        Categoria categoria = new Categoria(idCategoria);
 
-        controlador.crearPlato(nombre, descripcion, precio, calorias, celiacos, vegetariano);
-        areaResultados.setText("Plato creado.");
+        controlador.crearPlato(nombre, descripcion, precio, calorias, celiacos, vegetariano, peso, categoria);
+        areaResultados.setText("Plato creado exitosamente. Añadido correctamente.");
     }
 
     private void crearBebida(ActionEvent e) {
@@ -97,100 +109,67 @@ public class GestionItemsMenu extends JFrame {
         double precio = Double.parseDouble(txtPrecio.getText());
         double volumen = Double.parseDouble(txtVolumen.getText());
         double alcohol = Double.parseDouble(txtAlcohol.getText());
+        long idCategoria = Long.parseLong(txtIdCategoria.getText());
+        Categoria categoria = new Categoria(idCategoria);
 
-        controlador.crearBebida(nombre, descripcion, precio, volumen, alcohol);
-        areaResultados.setText("Bebida creada.");
+        controlador.crearBebida(nombre, descripcion, precio, volumen, alcohol, categoria);
+        areaResultados.setText("Bebida creada exitosamente. Añadido correctamente.");
     }
 
     private void buscarItem(ActionEvent e) {
-        int id = Integer.parseInt(txtID.getText());
+        long id = Long.parseLong(txtID.getText());
         ItemMenu item = controlador.buscarItem(id);
-
         if (item != null) {
-            StringBuilder sb = new StringBuilder("Ítems del Menú:\n");
-            sb.append("ID: ").append(item.getId()).append("\n")
-              .append("Nombre: ").append(item.nombre).append("\n")
-              .append("Descripción: ").append(item.getDesc()).append("\n")
-              .append("Precio: $").append(item.getPrecio()).append("\n");
-
-            // Verificar si es un Plato o una Bebida
-            if (item instanceof Plato) {
-                Plato plato = (Plato) item;
-                sb.append("Tipo: Plato\n")
-                  .append("Calorías: ").append(plato.getCalorias()).append("\n")
-                  .append("Apto Celíacos: ").append(plato.getAptoC() ? "Sí" : "No").append("\n")
-                  .append("Apto Vegetariano: ").append(plato.getAptoV() ? "Sí" : "No").append("\n");
-            } else if (item instanceof Bebida) {
-                Bebida bebida = (Bebida) item;
-                sb.append("Tipo: Bebida\n")
-                  .append("Volumen: ").append(bebida.getVol()).append(" L\n")
-                  .append("Alcohol: ").append(bebida.getGradA() > 0 ? "Sí" : "No").append("\n");
-            }
-
-            sb.append("--------------------------------------\n");
+            areaResultados.setText(item.toString());
         } else {
-            areaResultados.setText("Ítem no encontrado.");
+            areaResultados.setText("Item no encontrado.");
         }
     }
 
-   private void modificarItem(ActionEvent e) {
-    try {
-        int id = Integer.parseInt(txtID.getText());
+    private void modificarItem(ActionEvent e) {
+        long id = Long.parseLong(txtID.getText());
         String nombre = txtNombre.getText();
         String descripcion = txtDescripcion.getText();
         double precio = Double.parseDouble(txtPrecio.getText());
-
-        controlador.modificarItem(id, nombre, descripcion, precio);
-        areaResultados.setText("Ítem modificado exitosamente.");
-    } catch (NumberFormatException ex) {
-        areaResultados.setText("Error: Asegúrate de ingresar un ID y precio válidos.");
-    } catch (IllegalArgumentException ex) {
-        areaResultados.setText(ex.getMessage());
+        long idCategoria = Long.parseLong(txtIdCategoria.getText());
+        Categoria categoria = new Categoria(idCategoria);
+        controlador.modificarItem(id, nombre, descripcion, precio, categoria);
+        areaResultados.setText("Item Modificado. Añadido correctamente.");
     }
-}
 
     private void eliminarItem(ActionEvent e) {
-        int id = Integer.parseInt(txtID.getText());
+        long id = Long.parseLong(txtID.getText());
         controlador.eliminarItem(id);
-        areaResultados.setText("Ítem eliminado.");
+        areaResultados.setText("Item Eliminado. Añadido correctamente.");
     }
 
-  private void listarItems() {
-    Set<ItemMenu> items = controlador.obtenerListaItems(); // Obtener los ítems desde el controlador
-
+    private void listarItems(ActionEvent e) {
+    Set<ItemMenu> items = controlador.obtenerListaItems(); // Obtener lista desde el controlador
     if (items.isEmpty()) {
-        areaResultados.setText("No hay ítems en el menú.");
+        areaResultados.setText("No hay items en el menú registrados.");
     } else {
-        StringBuilder sb = new StringBuilder("Ítems del Menú:\n");
+        StringBuilder sb = new StringBuilder("Items del Menú:\n");
         for (ItemMenu item : items) {
             sb.append("ID: ").append(item.getId()).append("\n")
-              .append("Nombre: ").append(item.nombre).append("\n")
+              .append("Nombre: ").append(item.getNombre()).append("\n")
               .append("Descripción: ").append(item.getDesc()).append("\n")
-              .append("Precio: $").append(item.getPrecio()).append("\n");
-
-            // Verificar si es un Plato o una Bebida
-            if (item instanceof Plato) {
-                Plato plato = (Plato) item;
-                sb.append("Tipo: Plato\n")
-                  .append("Calorías: ").append(plato.getCalorias()).append("\n")
-                  .append("Apto Celíacos: ").append(plato.getAptoC() ? "Sí" : "No").append("\n")
-                  .append("Apto Vegetariano: ").append(plato.getAptoV() ? "Sí" : "No").append("\n");
-            } else if (item instanceof Bebida) {
-                Bebida bebida = (Bebida) item;
-                sb.append("Tipo: Bebida\n")
-                  .append("Volumen: ").append(bebida.getVol()).append(" L\n")
-                  .append("Alcohol: ").append(bebida.getGradA() > 0 ? "Sí" : "No").append("\n");
-            }
-
-            sb.append("--------------------------------------\n");
+              .append("Precio: $").append(item.getPrecio()).append("\n")
+              .append("Categoría: ").append(item.getCategoria() != null ? item.getCategoria().toString() : "Sin categoría").append("\n")
+              .append("Es comida: ").append(item.esComida() ? "Sí" : "No").append("\n")
+              .append("Es bebida: ").append(item.esBebida() ? "Sí" : "No").append("\n")
+              .append("Apto para veganos: ").append(item.aptoVegano() ? "Sí" : "No").append("\n")
+              .append("Es alcohólica: ").append(item.esAlcoholica() ? "Sí" : "No").append("\n")
+              .append("--------------------------------------\n");
         }
         areaResultados.setText(sb.toString());
     }
 }
 
-    public static void main(String[] args) {
-        ItemsMenuMemory memory = new ItemsMenuMemory();
-        ItemsMenuController controlador = new ItemsMenuController(memory);
-        new GestionItemsMenu(controlador);
+
+    public static void main(String[] args) throws SQLException {
+        ItemMenuDAO itemsMenuMemory = new ItemsMenuMemory();
+        ItemsMenuController controlador = new ItemsMenuController(itemsMenuMemory);
+        GestionItemsMenu frame = new GestionItemsMenu(controlador);
+        frame.setVisible(true);
     }
 }
