@@ -89,6 +89,11 @@ public class GestionItemsMenu extends JFrame {
     }
 
     private void crearPlato(ActionEvent e) {
+         //Comprobar que esten completos todos los campos necesarios
+         if(txtNombre.getText().isEmpty() || txtDescripcion.getText().isEmpty() || txtPrecio.getText().isEmpty() || txtCalorias.getText().isEmpty()){
+            areaResultados.setText("Por favor, complete todos los campos");
+            return;
+        }
         String nombre = txtNombre.getText();
         String descripcion = txtDescripcion.getText();
         double precio = Double.parseDouble(txtPrecio.getText());
@@ -104,6 +109,11 @@ public class GestionItemsMenu extends JFrame {
     }
 
     private void crearBebida(ActionEvent e) {
+             //Comprobar que esten completos todos los campos necesarios
+         if(txtNombre.getText().isEmpty() || txtDescripcion.getText().isEmpty() || txtPrecio.getText().isEmpty() || txtVolumen.getText().isEmpty() || txtAlcohol.getText().isEmpty()){
+            areaResultados.setText("Por favor, complete todos los campos");
+            return;
+        }
         String nombre = txtNombre.getText();
         String descripcion = txtDescripcion.getText();
         double precio = Double.parseDouble(txtPrecio.getText());
