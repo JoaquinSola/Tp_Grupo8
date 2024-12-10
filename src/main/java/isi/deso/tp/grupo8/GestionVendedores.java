@@ -14,57 +14,77 @@ import javax.swing.JTextField;
 
 public class GestionVendedores extends JFrame {
     private final VendedorController controlador;
-    private JTextField txtNombre, txtDireccion, txtLatitud, txtLongitud, txtID;
+    private JTextField txtNombre,txtIdItemMenu, txtDireccion, txtLatitud, txtLongitud, txtID;
     private JTextArea areaResultados;
-    private JButton btnCrear, btnBuscar, btnModificar, btnEliminar, btnListar;
+    private JButton btnCrear, btnBuscar, btnModificar, btnEliminar, btnListar,btnAgregarItemMenu;;
 
-    public GestionVendedores(VendedorController controlador) {
-        this.controlador = controlador;
+   public GestionVendedores(VendedorController controlador) {
+    this.controlador = controlador;
 
-        setTitle("Gestión de Vendedores");
-        setSize(600, 500);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new FlowLayout());
+    setTitle("Gestión de Vendedores");
+    setSize(600, 500);
+    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    setLayout(new FlowLayout());
 
-        txtID = new JTextField(10);
-        txtNombre = new JTextField(15);
-        txtDireccion = new JTextField(20);
-        txtLatitud = new JTextField(10);
-        txtLongitud = new JTextField(10);
-        areaResultados = new JTextArea(15, 40);
-        areaResultados.setEditable(false);
+    txtID = new JTextField(10);
+    txtNombre = new JTextField(15);
+    txtDireccion = new JTextField(20);
+    txtLatitud = new JTextField(10);
+    txtLongitud = new JTextField(10);
+    txtIdItemMenu = new JTextField(10); // Inicializar el campo de texto para el ID del Item Menu
+    areaResultados = new JTextArea(15, 40);
+    areaResultados.setEditable(false);
 
-        btnCrear = new JButton("Crear");
-        btnBuscar = new JButton("Buscar");
-        btnModificar = new JButton("Modificar");
-        btnEliminar = new JButton("Eliminar");
-        btnListar = new JButton("Listar");
+    btnCrear = new JButton("Crear");
+    btnBuscar = new JButton("Buscar");
+    btnModificar = new JButton("Modificar");
+    btnEliminar = new JButton("Eliminar");
+    btnListar = new JButton("Listar");
+    btnAgregarItemMenu = new JButton("Agregar Item Menu"); // Inicializar el botón
 
-        add(new JLabel("ID:"));
-        add(txtID);
-        add(new JLabel("Nombre:"));
-        add(txtNombre);
-        add(new JLabel("Dirección:"));
-        add(txtDireccion);
-        add(new JLabel("Latitud:"));
-        add(txtLatitud);
-        add(new JLabel("Longitud:"));
-        add(txtLongitud);
-        add(btnCrear);
-        add(btnBuscar);
-        add(btnModificar);
-        add(btnEliminar);
-        add(btnListar);
-        add(new JScrollPane(areaResultados));
+    add(new JLabel("ID:"));
+    add(txtID);
+    add(new JLabel("Nombre:"));
+    add(txtNombre);
+    add(new JLabel("Dirección:"));
+    add(txtDireccion);
+    add(new JLabel("Latitud:"));
+    add(txtLatitud);
+    add(new JLabel("Longitud:"));
+    add(txtLongitud);
+    add(new JLabel("ID Item Menu:")); // Etiqueta para el ID del Item Menu
+    add(txtIdItemMenu); // Agregar el campo de texto para el ID del Item Menu
+    add(btnCrear);
+    add(btnBuscar);
+    add(btnModificar);
+    add(btnEliminar);
+    add(btnListar);
+    add(btnAgregarItemMenu); // Agregar el botón al panel
+    add(new JScrollPane(areaResultados));
 
-        btnCrear.addActionListener(this::crearVendedor);
-        btnBuscar.addActionListener(this::buscarVendedor);
-        btnModificar.addActionListener(this::modificarVendedor);
-        btnEliminar.addActionListener(this::eliminarVendedor);
-        btnListar.addActionListener(e -> listarVendedores());
+    btnCrear.addActionListener(this::crearVendedor);
+    btnBuscar.addActionListener(this::buscarVendedor);
+    btnModificar.addActionListener(this::modificarVendedor);
+    btnEliminar.addActionListener(this::eliminarVendedor);
+    btnAgregarItemMenu.addActionListener(this::agregarItemMenuAVendedor); // Ahora esto funcionará
+    btnListar.addActionListener(e -> listarVendedores());
+    
+    setVisible(true);
+}
 
-        setVisible(true);
+private void agregarItemMenuAVendedor(ActionEvent e) {
+    try {
+        long idVendedor = Long.parseLong(txtID.getText());
+        long idItemMenu = Long.parseLong(txtIdItemMenu.getText()); // Ahora esto funcionará
+
+        controlador.agregarItemMenuAVendedor(idVendedor, idItemMenu);
+        areaResultados.setText("ItemMenu agregado al Vendedor con ID: " + idVendedor);
+    } catch (NumberFormatException ex) {
+        areaResultados.setText("Por favor, ingresa un ID válido.");
+    } catch (Exception ex) {
+        areaResultados.setText("Ocurrió un error al agregar el ItemMenu: " + ex.getMessage());
     }
+}
 
 private void crearVendedor(ActionEvent e) {
     try {

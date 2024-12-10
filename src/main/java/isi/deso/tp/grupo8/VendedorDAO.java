@@ -12,4 +12,5 @@ public interface VendedorDAO {
     boolean modificarVendedor(Vendedor vendedor);
     void eliminarVendedor(long id);
     Set<Vendedor> listarVendedores();
+    void agregarItemMenu(long idVendedor, long idItemMenu);
 }

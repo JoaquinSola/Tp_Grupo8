@@ -45,4 +45,8 @@ public void crearNuevoVendedor(String nombre, String direccion, Coordenada coord
     public Set<Vendedor> obtenerListaVendedores() {
         return vendedorMemory.listarVendedores();
     }
+    public void agregarItemMenuAVendedor(long idVendedor, long idItemMenu) {
+    // Lógica para agregar la relación en la base de datos
+    vendedorMemory.agregarItemMenu(idVendedor, idItemMenu);
+}
 }

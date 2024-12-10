@@ -198,6 +198,16 @@ public boolean modificarCoordenada(Coordenada coordenada) {
     return actualizada;
 }
 
+public void agregarItemMenu(long idVendedor, long idItemMenu) {
+    String sql = "INSERT INTO vendedor_itemmenu (id_vendedor, id_itemMenu) VALUES (?, ?)";
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        stmt.setLong(1, idVendedor);
+        stmt.setLong(2, idItemMenu);
+        stmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
 
     @Override
    public void eliminarVendedor(long id) {
