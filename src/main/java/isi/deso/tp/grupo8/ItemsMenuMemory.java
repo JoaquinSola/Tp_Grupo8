@@ -26,17 +26,43 @@ public class ItemsMenuMemory implements ItemMenuDAO {
                 stmt.setString(1,item.getNombre());
                 stmt.setString(2,item.getDesc());
                 stmt.setDouble(3,item.getPrecio());
+                stmt.executeUpdate();
                 
                 // Obtener el ID generado automáticamente para el item
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     item.setId(generatedKeys.getLong(1));
                 }
-            } //Guardar los datos en plato o bebida dependiendo del objeto que se guarde
-               /*  if(item.getClass() == Plato.class){
-                     String sql = String sql = "INSERT INTO itemMenu (nombre, descripcion, precio) VALUES (?, ?, ?)";
-                     
-                }*/
+            } //Guardar los datos en plato o bebida dependiendo del tipo de objeto
+               if(item.esComida()){
+                Plato itemComida = (Plato) item;
+                String sql2 = "INSERT INTO plato (nombre, descripcion, precio, calorias, aptoCeliaco, aptoVegetariano, peso, id_itemMenu) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                try(PreparedStatement stmt2 = connection.prepareStatement(sql2, Statement.RETURN_GENERATED_KEYS)){
+                stmt2.setString(1,itemComida.getNombre());
+                stmt2.setString(2,itemComida.getDesc());
+                stmt2.setDouble(3,itemComida.getPrecio());
+                stmt2.setDouble(4,itemComida.getCalorias());
+                stmt2.setBoolean(5, itemComida.getAptoC());
+                stmt2.setBoolean(6, itemComida.getAptoV());
+                stmt2.setDouble(7, itemComida.getPeso());
+                stmt2.setLong(8, itemComida.getId());
+                stmt2.executeUpdate();
+                }
+              }else{
+                if(item.esBebida()){
+                Bebida itemBebida = (Bebida) item;
+                String sql2 = "INSERT INTO bebida (nombre, descripcion, precio,graduacionAlcoholica, volumen, id_itemMenu) VALUES (?, ?, ?, ?, ?, ?)";
+                try(PreparedStatement stmt2 = connection.prepareStatement(sql2, Statement.RETURN_GENERATED_KEYS)){
+                stmt2.setString(1,itemBebida.getNombre());
+                stmt2.setString(2,itemBebida.getDesc());
+                stmt2.setDouble(3,itemBebida.getPrecio());
+                stmt2.setDouble(4,itemBebida.getGradA());
+                stmt2.setDouble(5, itemBebida.getVol());
+                stmt2.setLong(6, itemBebida.getId());
+                stmt2.executeUpdate();
+                }
+              }
+               }
             }catch(SQLException e){
                 e.printStackTrace();
             }
