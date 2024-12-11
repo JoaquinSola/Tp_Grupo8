@@ -13,4 +13,5 @@ public interface VendedorDAO {
     void eliminarVendedor(long id);
     Set<Vendedor> listarVendedores();
     void agregarItemMenu(long idVendedor, long idItemMenu);
+    Set<ItemMenu> obtenerListaProductos(long idVendedor);
 }

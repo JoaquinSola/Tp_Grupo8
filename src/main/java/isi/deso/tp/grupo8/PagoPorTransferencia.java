@@ -2,30 +2,40 @@ package isi.deso.tp.grupo8;
 
 import java.time.LocalDate;
 
-public class PagoPorTransferencia extends Pago implements EstrategiaDePago{
-   
-    /* Heredados
-    private long id;
-    private double monto;
-    private LocalDateTime fecha;
-    */
-    
-    final private double recargoEnTransferencia = 0.02;
+public class PagoPorTransferencia extends Pago {
     private String cbu;
     private String cuit;
-    
-   @Override
-    public double calcularRecargo(double monto){
-        this.monto = monto * this.recargoEnTransferencia + monto ;
-        return monto;
-    }
-    public void setCbu(String cbu){
+    private double recargo;
+
+    public PagoPorTransferencia(long id, double monto, LocalDate fecha, String cbu, String cuit, double descuento) {
+        super(id, monto, fecha);
         this.cbu = cbu;
-    }
-    public void setCuit(String cuit){
         this.cuit = cuit;
     }
-    public void setFecha(LocalDate fecha){
-        this.fecha = fecha;
+
+    public String getCbu() {
+        return cbu;
+    }
+
+    public void setCbu(String cbu) {
+        this.cbu = cbu;
+    }
+
+    public String getCuit() {
+        return cuit;
+    }
+
+    public void setCuit(String cuit) {
+        this.cuit = cuit;
+    }
+   public void setRecargo(double recargo) {
+        this.recargo = recargo;
+    }
+    public double getRecargo() {
+        return recargo;
+    }
+    @Override
+    public String getTipoPago() {
+        return "Transferencia";
     }
 }

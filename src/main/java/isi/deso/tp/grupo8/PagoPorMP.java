@@ -2,33 +2,35 @@ package isi.deso.tp.grupo8;
 
 import java.time.LocalDate;
 
-
-public class PagoPorMP extends Pago implements EstrategiaDePago {
-   
-    /* Heredados
-    private long id;
-    private double monto;
-    private LocalDateTime fecha;
-    */
-    final private double recargoEnMP = 0.04;
+public class PagoPorMP extends Pago {
+    private double recargo;
     private String alias;
-    private double monto_final;
 
-  
-    
-    @Override
-    public double calcularRecargo(double monto){
-        this.monto = monto;
-       this.monto_final = monto * this.recargoEnMP + monto ;
-        return monto_final;
+    public PagoPorMP(long id, double monto, LocalDate fecha, String alias, double recargo) {
+        super(id, monto, fecha);
+        this.alias = alias;
+        this.recargo = recargo;
     }
-    public void setAlias(String alias){
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
         this.alias = alias;
     }
-    public void setFecha(LocalDate fecha){
-        this.fecha = fecha;
+
+    public double getRecargo() {
+        return recargo;
     }
+
+    public void setRecargo(double recargo) {
+        this.recargo = recargo;
+    }
+
     
-    
-    
+    @Override
+    public String getTipoPago() {
+        return "Mercado Pago";
+    }
 }

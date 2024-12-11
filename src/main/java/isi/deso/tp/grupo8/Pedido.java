@@ -1,6 +1,5 @@
-
 package isi.deso.tp.grupo8;
-import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,97 +8,99 @@ public class Pedido {
     private Cliente cliente;
     private ItemsPedidoMemory itemsPedidoMemory;
     private Pago pago;
-    //private Estado estado;
     private Vendedor vendedor;
     private EstadoPedido estado;
-    private List<Observer> observers = new ArrayList<>();
-    private String metodoDePago ;
+    private List<Observer> observers;
+    private String metodoDePago;
 
-    public Pedido(long id, Cliente c, ItemsPedidoMemory ip, Vendedor v, String metodo){
-        this.id = id;
-        this.cliente = c;
-        this.itemsPedidoMemory= ip;
-        this.vendedor=v;
-        this.estado = EstadoPedido.PENDIENTE;
-         // Agregar el pedido al vendedor
-        this.vendedor.agregarPedido(this); // Esta línea debería ser ejecutada
-        this.metodoDePago = metodo;
+    public Pedido() {
+        this.observers = new ArrayList<>();
     }
 
-    public long getId(){
+    public Pedido(long id, Cliente cliente, ItemsPedidoMemory itemsPedidoMemory, Vendedor vendedor, String metodoDePago) {
+        this.id = id;
+        this.cliente = cliente;
+        this.itemsPedidoMemory = itemsPedidoMemory;
+        this.vendedor = vendedor;
+        this.metodoDePago = metodoDePago;
+        this.estado = EstadoPedido.PENDIENTE;
+        this.observers = new ArrayList<>();
+    }
+
+    // Métodos getters y setters
+
+    public long getId() {
         return id;
     }
- public Vendedor getVendedor(){
-        return vendedor;
-    } public Cliente getCliente(){
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Cliente getCliente() {
         return cliente;
     }
-    // Método para agregar observadores
-    public void addObserver(Observer observer) {
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public ItemsPedidoMemory getItemsPedidoMemory() {
+        return itemsPedidoMemory;
+    }
+
+    public void setItemsPedidoMemory(ItemsPedidoMemory itemsPedidoMemory) {
+        this.itemsPedidoMemory = itemsPedidoMemory;
+    }
+
+    public Pago getPago() {
+        return pago;
+    }
+
+    public void setPago(Pago pago) {
+        this.pago = pago;
+    }
+
+    public Vendedor getVendedor() {
+        return vendedor;
+    }
+
+    public void setVendedor(Vendedor vendedor) {
+        this.vendedor = vendedor;
+    }
+
+    public EstadoPedido getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoPedido estado) {
+        this.estado = estado;
+        notificarObservers();
+    }
+
+    public List<Observer> getObservers() {
+        return observers;
+    }
+
+    public void agregarObserver(Observer observer) {
         observers.add(observer);
     }
 
-    // Método para notificar a los observadores
-    private void notifyObservers() {
+    public void eliminarObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    private void notificarObservers() {
         for (Observer observer : observers) {
             observer.update(this);
         }
     }
 
-    public void setEstado(EstadoPedido nuevoEstado) {
-        this.estado = nuevoEstado;
-        notifyObservers();  // Notificar cuando cambie el estado
+    public String getMetodoDePago() {
+        return metodoDePago;
     }
 
-    public EstadoPedido getEstado() {
-        return this.estado;
+    public void setMetodoDePago(String metodoDePago) {
+        this.metodoDePago = metodoDePago;
     }
-
-   public Pedido agregarItem(ItemMenu im) throws ItemNoEncontradoException {
-       if(this.vendedor.getList().contains(im)){
-       this.itemsPedidoMemory.agregarItem(im);
-       } else {
-           throw new ItemNoEncontradoException("Item No encontrado");
-       }
-       return this;
-   }
-   
-  
-   
-   public double pagarConMP(String alias){
-    PagoPorMP pagoMP = new PagoPorMP();
-       double monto = this.itemsPedidoMemory.calcularTotal();
-       this.estado = EstadoPedido.RECIBIDO;
-       double valorT = (pagoMP.calcularRecargo(monto));
-       LocalDate fechaActual = LocalDate.now();
-       pagoMP.setAlias(alias);
-       pagoMP.setFecha(fechaActual);
-       this.pago=pagoMP;
-       return valorT;
-   }
-   
-   public double pagarConTransferencia(String cbu, String cuit){
-       PagoPorTransferencia t = new PagoPorTransferencia();
-       double monto = this.itemsPedidoMemory.calcularTotal();
-       this.estado = EstadoPedido.RECIBIDO;
-       double valorT = (t.calcularRecargo(monto));
-       LocalDate fechaActual = LocalDate.now();
-       t.setCbu(cbu);
-       t.setCuit(cuit);
-       t.setFecha(fechaActual);
-       this.pago=t;
-       return valorT;
-   }
-
-   public void estadoDelPedido(){
-    System.out.println("El estado del pedido es: $"+this.estado);
-   }
-   
-   public String getMetodoDePago(){
-      return this.metodoDePago;
-   }
-   
-   public void guardarPago(Pago pa){
-       this.pago = pa;
-   }
 }

@@ -1,20 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package isi.deso.tp.grupo8;
+
 import java.util.HashSet;
 import java.util.Set;
 
 public class VendedorController {
-    private final VendedorDAO vendedorMemory;
-    private int contadorID = 1; // Para generar IDs únicos
+    private final VendedorDAO vendedorDAO;
+    private final ItemMenuDAO itemMenuDAO;
+        private int contadorID = 1; // Para generar IDs únicos
 
-    public VendedorController(VendedorDAO vendedorMemory) {
-        this.vendedorMemory = vendedorMemory;
+    public VendedorController(VendedorDAO vendedorDAO, ItemMenuDAO itemMenuDAO) {
+        this.vendedorDAO = vendedorDAO;
+        this.itemMenuDAO = itemMenuDAO;
+        
+
     }
-
-    private long generarIdVendedor() {
+ private long generarIdVendedor() {
         return contadorID++; // Ejemplo: VEN-001
     }
 
@@ -24,29 +24,34 @@ public void crearNuevoVendedor(String nombre, String direccion, Coordenada coord
     }
     long id = generarIdVendedor(); // Genera el ID automáticamente para el vendedor
     Vendedor vendedor = new Vendedor(id, nombre, direccion, coordenadas, new HashSet<>());
-    vendedorMemory.crearVendedor(vendedor); // Guarda el vendedor en la base de datos
+    vendedorDAO.crearVendedor(vendedor); // Guarda el vendedor en la base de datos
 }
 
+
+
     public Vendedor buscarVendedor(long id) {
-        return vendedorMemory.buscarVendedor(id);
+        return vendedorDAO.buscarVendedor(id);
     }
-    
 
     public boolean modificarVendedor(Vendedor vendedor) {
-        Vendedor vendedores = new Vendedor(vendedor.getId(), vendedor.getNombre(), vendedor.getDireccion(), vendedor.getCoor(), new HashSet<>());
-        vendedorMemory.modificarVendedor(vendedores);
-        return true;
+        return vendedorDAO.modificarVendedor(vendedor);
     }
 
     public void eliminarVendedor(long id) {
-        vendedorMemory.eliminarVendedor(id);
+        vendedorDAO.eliminarVendedor(id);
     }
 
     public Set<Vendedor> obtenerListaVendedores() {
-        return vendedorMemory.listarVendedores();
+        return vendedorDAO.listarVendedores();
     }
+
     public void agregarItemMenuAVendedor(long idVendedor, long idItemMenu) {
-    // Lógica para agregar la relación en la base de datos
-    vendedorMemory.agregarItemMenu(idVendedor, idItemMenu);
+        vendedorDAO.agregarItemMenu(idVendedor, idItemMenu);
+    }
+
+    public Set<ItemMenu> obtenerListaProductosVendedor(long idVendedor) {
+        return vendedorDAO.obtenerListaProductos(idVendedor);
+    }
 }
-}
+
+

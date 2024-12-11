@@ -1,6 +1,6 @@
 package isi.deso.tp.grupo8;
 
-public class Cliente implements Observer {
+public class Cliente {
     private long id;
     private String cuit;
     private String email;
@@ -73,37 +73,4 @@ public void setAlias(String alias) {
 public void setCbu(String cbu) {
     this.cbu = cbu;
 }
-     
-     public Pedido crearPedido(Vendedor v,long id, String metodoDePago){
-        ItemsPedidoMemory im = new ItemsPedidoMemory();
-        Pedido p = new Pedido(id, this, im, v, metodoDePago);
-         
-        return p;
-     }
-
-     public Pedido agregarItem(Pedido p, ItemMenu im) throws ItemNoEncontradoException{
-         p.agregarItem(im) ;
-         return p;
-     }
-
-     @Override
-    public void update(Pedido pedido) {
-        System.out.println("Cliente " + this.id + " ha sido notificado: El estado del pedido es ahora " + pedido.getEstado());
-        if (pedido.getEstado() == EstadoPedido.EN_ENVIO) {
-            generarPago(pedido);
-        }
-    }
-
-    private void generarPago(Pedido p) {
-        System.out.println("Generando el pago para el pedido...");
-        double monto;
-        if(p.getMetodoDePago().equals("Mercado Pago")){
-            monto = p.pagarConMP(this.alias);
-
-        }
-        else if(p.getMetodoDePago().equals("Transferencia")){
-           monto = p.pagarConTransferencia(this.cbu, this.cuit);
-        
-        }
-    }
 }

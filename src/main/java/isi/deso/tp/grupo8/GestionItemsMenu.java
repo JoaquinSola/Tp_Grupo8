@@ -117,82 +117,104 @@ public class GestionItemsMenu extends JFrame {
     }
 
     private void buscarItem(ActionEvent e) {
-        long id = Long.parseLong(txtID.getText());
-        ItemMenu item = controlador.buscarItem(id);
-        if (item != null) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("ID: ").append(item.getId()).append("\n")
-              .append("Nombre: ").append(item.getNombre()).append("\n")
-              .append("Descripción: ").append(item.getDesc()).append("\n")
-              .append("Precio: $").append(item.getPrecio()).append("\n")
-              .append("Categoría: ").append(item.getCategoria() != null ? item.getCategoria().toString() : "Sin categoría").append("\n")
-              .append("Es comida: ").append(item.esComida() ? "Sí" : "No").append("\n")
-              .append("Es bebida: ").append(item.esBebida() ? "Sí" : "No").append("\n")
-              .append("Apto para veganos: ").append(item.aptoVegano() ? "Sí" : "No").append("\n")
-              .append("Es alcohólica: ").append(item.esAlcoholica() ? "Sí" : "No").append("\n");
+        try {
+            long id = Long.parseLong(txtID.getText());
+            ItemMenu item = controlador.buscarItem(id);
+            if (item != null) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("ID: ").append(item.getId()).append("\n")
+                  .append("Nombre: ").append(item.getNombre()).append("\n")
+                  .append("Descripción: ").append(item.getDesc()).append("\n")
+                  .append("Precio: $").append(item.getPrecio()).append("\n")
+                  .append("Categoría: ").append(item.getCategoria() != null ? item.getCategoria().toString() : "Sin categoría").append("\n")
+                  .append("Es comida: ").append(item.esComida() ? "Sí" : "No").append("\n")
+                  .append("Es bebida: ").append(item.esBebida() ? "Sí" : "No").append("\n")
 
-            if (item instanceof Plato) {
-                Plato plato = (Plato) item;
-                sb.append("Calorías: ").append(plato.getCalorias()).append("\n")
-                  .append("Apto Celiacos: ").append(plato.getAptoC() ? "Sí" : "No").append("\n")
-                  .append("Apto Vegetariano: ").append(plato.getAptoV() ? "Sí" : "No").append("\n")
-                  .append("Peso: ").append(plato.getPeso()).append("\n");
-            } else if (item instanceof Bebida) {
-                Bebida bebida = (Bebida) item;
-                sb.append("Volumen: ").append(bebida.getVol()).append("\n")
-                  .append("Graduación Alcohólica: ").append(bebida.getGradA()).append("\n");
+                  .append("Es alcohólica: ").append(item.esAlcoholica() ? "Sí" : "No").append("\n");
+
+                if (item instanceof Plato) {
+                    Plato plato = (Plato) item;
+                    sb.append("Calorías: ").append(plato.getCalorias()).append("\n")
+                      .append("Apto Celiacos: ").append(plato.getAptoC() ? "Sí" : "No").append("\n")
+                      .append("Apto Vegetariano: ").append(plato.getAptoV() ? "Sí" : "No").append("\n")
+                      .append("Peso: ").append(plato.getPeso()).append("\n");
+                } else if (item instanceof Bebida) {
+                    Bebida bebida = (Bebida) item;
+                    sb.append("Volumen: ").append(bebida.getVol()).append("\n")
+                      .append("Graduación Alcohólica: ").append(bebida.getGradA()).append("\n");
+                }
+
+                areaResultados.setText(sb.toString());
+            } else {
+                areaResultados.setText("Item no encontrado.");
             }
-
-            areaResultados.setText(sb.toString());
-        } else {
-            areaResultados.setText("Item no encontrado.");
+        } catch (NumberFormatException ex) {
+            areaResultados.setText("Por favor, ingresa un ID válido.");
+        } catch (Exception ex) {
+            areaResultados.setText("Error al buscar el item: " + ex.getMessage());
         }
     }
 
     private void modificarItem(ActionEvent e) {
-        long id = Long.parseLong(txtID.getText());
-        String nombre = txtNombre.getText();
-        String descripcion = txtDescripcion.getText();
-        double precio = Double.parseDouble(txtPrecio.getText());
-        long idCategoria = Long.parseLong(txtIdCategoria.getText());
-        Categoria categoria = new Categoria(idCategoria);
-        controlador.modificarItem(id, nombre, descripcion, precio, categoria);
-        areaResultados.setText("Item Modificado. Añadido correctamente.");
+        try {
+            long id = Long.parseLong(txtID.getText());
+            String nombre = txtNombre.getText();
+            String descripcion = txtDescripcion.getText();
+            double precio = Double.parseDouble(txtPrecio.getText());
+            long idCategoria = Long.parseLong(txtIdCategoria.getText());
+            Categoria categoria = new Categoria(idCategoria);
+
+            controlador.modificarItem(id, nombre, descripcion, precio, categoria);
+            areaResultados.setText("Item modificado exitosamente.");
+        } catch (NumberFormatException ex) {
+            areaResultados.setText("Por favor, ingresa valores válidos.");
+        } catch (Exception ex) {
+            areaResultados.setText("Error al modificar el item: " + ex.getMessage());
+        }
     }
 
     private void eliminarItem(ActionEvent e) {
-        long id = Long.parseLong(txtID.getText());
-        controlador.eliminarItem(id);
-        areaResultados.setText("Item Eliminado. Añadido correctamente.");
+        try {
+            long id = Long.parseLong(txtID.getText());
+            controlador.eliminarItem(id);
+            areaResultados.setText("Item eliminado correctamente.");
+        } catch (NumberFormatException ex) {
+            areaResultados.setText("Por favor, ingresa un ID válido.");
+        } catch (Exception ex) {
+            areaResultados.setText("Error al eliminar el item: " + ex.getMessage());
+        }
     }
 
-    private void listarItems(ActionEvent e) {
-    Set<ItemMenu> items = controlador.obtenerListaItems(); // Obtener lista desde el controlador
-    if (items.isEmpty()) {
-        areaResultados.setText("No hay items en el menú registrados.");
-    } else {
-        StringBuilder sb = new StringBuilder("Items del Menú:\n");
-        for (ItemMenu item : items) {
-            sb.append("ID: ").append(item.getId()).append("\n")
-              .append("Nombre: ").append(item.getNombre()).append("\n")
-              .append("Descripción: ").append(item.getDesc()).append("\n")
-              .append("Precio: $").append(item.getPrecio()).append("\n")
-              .append("Categoría: ").append(item.getCategoria() != null ? item.getCategoria().toString() : "Sin categoría").append("\n")
-              .append("Es comida: ").append(item.esComida() ? "Sí" : "No").append("\n")
-              .append("Es bebida: ").append(item.esBebida() ? "Sí" : "No").append("\n")
-              .append("Apto para veganos: ").append(item.aptoVegano() ? "Sí" : "No").append("\n")
-              .append("Es alcohólica: ").append(item.esAlcoholica() ? "Sí" : "No").append("\n")
-              .append("--------------------------------------\n");
+  private void listarItems(ActionEvent e) {
+    try {
+        Set<ItemMenu> items = controlador.obtenerListaItems();
+        if (items.isEmpty()) {
+            areaResultados.setText("No hay items en el menú registrados.");
+        } else {
+            StringBuilder sb = new StringBuilder("Items del Menú:\n");
+            for (ItemMenu item : items) {
+                sb.append("ID: ").append(item.getId()).append("\n")
+                  .append("Nombre: ").append(item.getNombre()).append("\n")
+                  .append("Descripción: ").append(item.getDesc()).append("\n")
+                  .append("Precio: $").append(item.getPrecio()).append("\n")
+                  .append("Categoría: ").append(item.getCategoria() != null ? item.getCategoria().toString() : "Sin categoría").append("\n")
+                  .append("Es comida: ").append(item.esComida() ? "Sí" : "No").append("\n")
+                  .append("Es bebida: ").append(item.esBebida() ? "Sí" : "No").append("\n")
+                  .append("--------------------------------------\n");
+            }
+            areaResultados.setText(sb.toString());
         }
-        areaResultados.setText(sb.toString());
+    } catch (Exception ex) {
+        areaResultados.setText("Error al listar los items: " + ex.getMessage());
     }
 }
 
-
-    public static void main(String[] args) throws SQLException {
+   public static void main(String[] args) throws SQLException {
         ItemMenuDAO itemsMenuMemory = new ItemsMenuMemory();
         ItemsMenuController controlador = new ItemsMenuController(itemsMenuMemory);
         GestionItemsMenu frame = new GestionItemsMenu(controlador);
         frame.setVisible(true);
     }
+
+
 }

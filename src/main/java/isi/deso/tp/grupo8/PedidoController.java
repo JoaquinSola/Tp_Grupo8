@@ -3,10 +3,10 @@ package isi.deso.tp.grupo8;
 import java.util.Set;
 
 public class PedidoController {
-    private PedidoDAO pedidoDAO;
-    private ClienteDAO clienteDAO;
-    private VendedorDAO vendedorDAO;
-    private ItemMenuDAO itemMenuDAO;
+    private final PedidoDAO pedidoDAO;
+    private final ClienteDAO clienteDAO;
+    private final VendedorDAO vendedorDAO;
+    private final ItemMenuDAO itemMenuDAO;
 
     public PedidoController(PedidoDAO pedidoDAO, ClienteDAO clienteDAO, VendedorDAO vendedorDAO, ItemMenuDAO itemMenuDAO) {
         this.pedidoDAO = pedidoDAO;
@@ -15,12 +15,12 @@ public class PedidoController {
         this.itemMenuDAO = itemMenuDAO;
     }
 
-    public void crearPedido(long idPedido, long idCliente, long idVendedor, String metodoPago, Set<Integer> idsItems) {
+    public void crearPedido(long idPedido, long idCliente, long idVendedor, String metodoPago, Set<Long> idsItems) {
         Cliente cliente = clienteDAO.buscarCliente(idCliente);
         Vendedor vendedor = vendedorDAO.buscarVendedor(idVendedor);
         ItemsPedidoMemory itemsPedido = new ItemsPedidoMemory();
 
-        for (int itemId : idsItems) {
+        for (Long itemId : idsItems) {
             ItemMenu item = itemMenuDAO.buscarItem(itemId);
             if (item != null) {
                 itemsPedido.agregarItem(item);
@@ -28,6 +28,11 @@ public class PedidoController {
         }
 
         Pedido pedido = new Pedido(idPedido, cliente, itemsPedido, vendedor, metodoPago);
+        if (metodoPago.equalsIgnoreCase("MP")) {
+            // Aquí podrías agregar lógica para crear el PagoPorMP y asociarlo al pedido
+        } else if (metodoPago.equalsIgnoreCase("Por Transferencia")) {
+            // Aquí podrías agregar lógica para crear el PagoPorTransferencia y asociarlo al pedido
+        }
         pedidoDAO.crearPedido(pedido);
     }
 

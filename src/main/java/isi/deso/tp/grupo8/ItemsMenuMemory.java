@@ -83,7 +83,7 @@ public class ItemsMenuMemory implements ItemMenuDAO {
         return "Error al crear el item";
     }
 
-      @Override
+    @Override
     public ItemMenu buscarItem(long id) {
         String sqlItemMenu = "SELECT * FROM itemmenu WHERE id_itemMenu = ?";
         try (PreparedStatement stmtItemMenu = connection.prepareStatement(sqlItemMenu)) {
@@ -185,47 +185,47 @@ public class ItemsMenuMemory implements ItemMenuDAO {
             }
         }
     }
+            
+    @Override
+public void eliminarItem(long id) {
+    String sqlDeleteBebida = "DELETE FROM bebida WHERE id_itemMenu = ?";
+    String sqlDeletePlato = "DELETE FROM plato WHERE id_itemMenu = ?";
+    String sqlDeleteItemMenu = "DELETE FROM itemmenu WHERE id_itemMenu = ?";
+    try (PreparedStatement stmtDeleteBebida = connection.prepareStatement(sqlDeleteBebida);
+         PreparedStatement stmtDeletePlato = connection.prepareStatement(sqlDeletePlato);
+         PreparedStatement stmtDeleteItemMenu = connection.prepareStatement(sqlDeleteItemMenu)) {
+        connection.setAutoCommit(false); // Start transaction
 
-  @Override
-    public void eliminarItem(long id) {
-        String sqlDeleteBebida = "DELETE FROM bebida WHERE id_itemMenu = ?";
-        String sqlDeletePlato = "DELETE FROM plato WHERE id_itemMenu = ?";
-        String sqlDeleteItemMenu = "DELETE FROM itemmenu WHERE id_itemMenu = ?";
-        try (PreparedStatement stmtDeleteBebida = connection.prepareStatement(sqlDeleteBebida);
-             PreparedStatement stmtDeletePlato = connection.prepareStatement(sqlDeletePlato);
-             PreparedStatement stmtDeleteItemMenu = connection.prepareStatement(sqlDeleteItemMenu)) {
-            connection.setAutoCommit(false); // Start transaction
+        // Delete from bebida
+        stmtDeleteBebida.setLong(1, id);
+        stmtDeleteBebida.executeUpdate();
 
-            // Delete from bebida
-            stmtDeleteBebida.setLong(1, id);
-            stmtDeleteBebida.executeUpdate();
+        // Delete from plato
+        stmtDeletePlato.setLong(1, id);
+        stmtDeletePlato.executeUpdate();
 
-            // Delete from plato
-            stmtDeletePlato.setLong(1, id);
-            stmtDeletePlato.executeUpdate();
+        // Delete from itemmenu
+        stmtDeleteItemMenu.setLong(1, id);
+        stmtDeleteItemMenu.executeUpdate();
 
-            // Delete from itemmenu
-            stmtDeleteItemMenu.setLong(1, id);
-            stmtDeleteItemMenu.executeUpdate();
-
-            connection.commit(); // Commit transaction
-        } catch (SQLException e) {
-            try {
-                connection.rollback(); // Rollback transaction on error
-            } catch (SQLException rollbackEx) {
-                rollbackEx.printStackTrace();
-            }
-            e.printStackTrace();
-        } finally {
-            try {
-                connection.setAutoCommit(true); // Reset auto-commit mode
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
+        connection.commit(); // Commit transaction
+    } catch (SQLException e) {
+        try {
+            connection.rollback(); // Rollback transaction on error
+        } catch (SQLException rollbackEx) {
+            rollbackEx.printStackTrace();
+        }
+        e.printStackTrace();
+    } finally {
+        try {
+            connection.setAutoCommit(true); // Reset auto-commit mode
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
     }
+}
 
-@Override
+  @Override
 public Set<ItemMenu> listarItems() {
     Set<ItemMenu> items = new HashSet<>();
     String sqlItemMenu = "SELECT * FROM itemmenu";
@@ -258,6 +258,7 @@ public Set<ItemMenu> listarItems() {
                         Plato plato = new Plato(rsPlato.getDouble("calorias"), rsPlato.getBoolean("aptoCeliaco"), rsPlato.getBoolean("aptoVegetariano"), nombre, precio, descripcion, rsPlato.getDouble("peso"));
                         plato.setId(id);
                         items.add(plato);
+                        continue;
                     }
                 }
             }

@@ -3,10 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package isi.deso.tp.grupo8;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class Vendedor {
@@ -17,31 +17,65 @@ public class Vendedor {
     private Set<ItemMenu> listaProductos;
     private List<Pedido> pedidos; // Lista para almacenar los pedidos
 
-    
-    
-    
-    public Vendedor (long id, String nombre, String direc, Coordenada coor,  Set<ItemMenu> lista){
-        this.listaProductos = lista;
+    public Vendedor(long id, String nombre, String direc, Coordenada coor, Set<ItemMenu> lista) {
         this.id = id;
         this.nombre = nombre;
         this.direccion = direc;
         this.coordenadas = coor;
+        this.listaProductos = (lista != null) ? lista : new HashSet<>();
         this.pedidos = new ArrayList<>(); // Inicializar la lista de pedidos
     }
 
-    
-    public Vendedor(){
-
+    public Vendedor() {
+        this.listaProductos = new HashSet<>();
+        this.pedidos = new ArrayList<>(); // Inicializar la lista de pedidos
     }
 
-    public void setCoordenada(Coordenada coor){
+    public void setCoordenada(Coordenada coor) {
         this.coordenadas = coor;
     }
 
     // Método para agregar un pedido a la lista
     public void agregarPedido(Pedido pedido) {
+        if (pedidos == null) {
+            pedidos = new ArrayList<>();
+        }
         pedidos.add(pedido);
-        System.out.println("Pedido agregado id: " + pedido.getId() + " ,al vendedor: " + this.nombre);
+        System.out.println("Pedido agregado id: " + pedido.getId() + " al vendedor: " + this.nombre);
+    }
+
+    public void agregarItemMenu(ItemMenu item) {
+        if (listaProductos == null) {
+            listaProductos = new HashSet<>();
+        }
+        listaProductos.add(item);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public Coordenada getCoor() {
+        return coordenadas;
+    }
+
+    public Set<ItemMenu> getList() {
+        return listaProductos;
+    }
+    public void setListaProductos(Set<ItemMenu> lista){
+        this.listaProductos = lista;
+    }
+
+    public List<Pedido> getPedidos() {
+        return pedidos;
     }
 
     public Set<Long> getIdsPedidos() {
@@ -74,16 +108,8 @@ public class Vendedor {
             System.out.println("El pedido no pertenece a este vendedor.");
         }
     }
- 
-     // Método para obtener todos los pedidos
-     public List<Pedido> getPedidos() {
-        return pedidos;
-    }
-    
-    public long getId(){
-        return id;
-    }
 
+    
      public void setNombre(String n){
         this.nombre = n;
     }
@@ -93,22 +119,6 @@ public class Vendedor {
       public void setDireccion(String Direc){
         this.direccion = Direc;
     }
-    public String getNombre(){
-        return nombre;
-    }
-    
-    public String getDireccion(){
-        return direccion;
-    }
-    
-    public Coordenada getCoor(){
-        return coordenadas;
-    }
-    
-    public Set<ItemMenu> getList(){
-        return listaProductos;
-    }
-
     
     public double distancia(Cliente cliente){
         Coordenada coordVend = this.coordenadas; //ESTAS SON COORDENADAS EN GRADOS
