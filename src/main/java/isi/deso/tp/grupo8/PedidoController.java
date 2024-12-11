@@ -29,10 +29,8 @@ public class PedidoController {
             }
         }
 
-        // Crear el pedido con los datos proporcionados
-        Pedido pedido = new Pedido(idPedido, cliente, itemsPedido, vendedor, metodoPago);
-        // Open the payment window with the correct amount
-        new GestionPago(pedido);
+        // Remove or comment out code that prematurely creates and saves the Pedido
+        // The Pedido should be created and saved after the payment details are fully provided
     }
 
     public Pedido buscarPedido(long id) {

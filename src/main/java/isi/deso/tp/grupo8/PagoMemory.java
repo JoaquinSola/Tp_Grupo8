@@ -15,7 +15,6 @@ public class PagoMemory implements PagoDAO {
         this.connection = ConexionDB.getConnection();
     }
 
-
     @Override
     public void crearPago(Pago pago) {
         String sqlPago = "INSERT INTO pago (monto, fecha) VALUES (?, ?)";
@@ -31,25 +30,27 @@ public class PagoMemory implements PagoDAO {
 
                     if (pago instanceof PagoPorMP) {
                         PagoPorMP pagoMP = (PagoPorMP) pago;
-                        String sqlMP = "INSERT INTO pagopormp (monto, fecha, recargo, alias, id_pago) VALUES (?, ?, ?, ?, ?)";
+                        // Insert alias, recargo, monto, and fecha
+                        String sqlMP = "INSERT INTO pagopormp (id_pago, alias, recargo, monto, fecha) VALUES (?, ?, ?, ?, ?)";
                         try (PreparedStatement stmtMP = connection.prepareStatement(sqlMP)) {
-                            stmtMP.setDouble(1, pagoMP.getMonto());
-                            stmtMP.setDate(2, Date.valueOf(pagoMP.getFecha()));
+                            stmtMP.setLong(1, idPago);
+                            stmtMP.setString(2, pagoMP.getAlias());
                             stmtMP.setDouble(3, pagoMP.getRecargo());
-                            stmtMP.setString(4, pagoMP.getAlias());
-                            stmtMP.setLong(5, idPago);
+                            stmtMP.setDouble(4, pagoMP.getMonto());
+                            stmtMP.setDate(5, Date.valueOf(pagoMP.getFecha()));
                             stmtMP.executeUpdate();
                         }
                     } else if (pago instanceof PagoPorTransferencia) {
                         PagoPorTransferencia pagoTrans = (PagoPorTransferencia) pago;
-                        String sqlTrans = "INSERT INTO pagoportransferencia (monto, fecha, recargo, cbu, cuit, id_pago) VALUES (?, ?, ?, ?, ?, ?)";
+                        // Insert cbu, cuit, recargo, monto, and fecha
+                        String sqlTrans = "INSERT INTO pagoportransferencia (id_pago, cbu, cuit, recargo, monto, fecha) VALUES (?, ?, ?, ?, ?, ?)";
                         try (PreparedStatement stmtTrans = connection.prepareStatement(sqlTrans)) {
-                            stmtTrans.setDouble(1, pagoTrans.getMonto());
-                            stmtTrans.setDate(2, Date.valueOf(pagoTrans.getFecha()));
-                            stmtTrans.setDouble(3, pagoTrans.getRecargo());
-                            stmtTrans.setString(4, pagoTrans.getCbu());
-                            stmtTrans.setString(5, pagoTrans.getCuit());
-                            stmtTrans.setLong(6, idPago);
+                            stmtTrans.setLong(1, idPago);
+                            stmtTrans.setString(2, pagoTrans.getCbu());
+                            stmtTrans.setString(3, pagoTrans.getCuit());
+                            stmtTrans.setDouble(4, pagoTrans.getRecargo());
+                            stmtTrans.setDouble(5, pagoTrans.getMonto());
+                            stmtTrans.setDate(6, Date.valueOf(pagoTrans.getFecha()));
                             stmtTrans.executeUpdate();
                         }
                     }

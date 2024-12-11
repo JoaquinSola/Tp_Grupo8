@@ -7,10 +7,11 @@ public class PagoPorTransferencia extends Pago {
     private String cuit;
     private double recargo;
 
-    public PagoPorTransferencia(long id, double monto, LocalDate fecha, String cbu, String cuit, double descuento) {
+    public PagoPorTransferencia(long id, double monto, LocalDate fecha, String cbu, String cuit, double recargo) {
         super(id, monto, fecha);
         this.cbu = cbu;
         this.cuit = cuit;
+        this.recargo = recargo; // Initialize recargo
     }
 
     public String getCbu() {

@@ -17,6 +17,7 @@ public class GestionPago extends JFrame {
     private JButton btnGuardarPago;
     private JComboBox<String> comboMetodoPago;
     private Pedido pedido;
+    private JLabel lblRecargo;
 
     public GestionPago(Pedido pedido) {
         this.pedido = pedido;
@@ -32,6 +33,7 @@ public class GestionPago extends JFrame {
         txtCuit = new JTextField(10);
         btnGuardarPago = new JButton("Guardar Pago");
         comboMetodoPago = new JComboBox<>(new String[]{"MP", "Por Transferencia"});
+        lblRecargo = new JLabel("Recargo: $0.00");
 
         add(new JLabel("Monto:"));
         txtMonto.setText(String.valueOf(calcularMontoTotal()));
@@ -50,6 +52,7 @@ public class GestionPago extends JFrame {
         add(new JLabel("CUIT:"));
         add(txtCuit);
 
+        add(lblRecargo);
         add(btnGuardarPago);
 
         comboMetodoPago.addActionListener(this::cambiarMetodoPago);
@@ -75,15 +78,22 @@ public class GestionPago extends JFrame {
 
     private void cambiarMetodoPago(ActionEvent e) {
         String metodoPago = (String) comboMetodoPago.getSelectedItem();
+        double monto = Double.parseDouble(txtMonto.getText());
+        double recargo = 0.0;
+
         if ("MP".equals(metodoPago)) {
             txtAlias.setVisible(true);
             txtCbu.setVisible(false);
             txtCuit.setVisible(false);
+            recargo = monto * 0.04; // Set recargo to 0.04 for MP
         } else if ("Por Transferencia".equals(metodoPago)) {
             txtAlias.setVisible(false);
             txtCbu.setVisible(true);
             txtCuit.setVisible(true);
+            recargo = monto * 0.02; // Set recargo to 0.02 for Transferencia
         }
+
+        lblRecargo.setText("Recargo: $" + String.format("%.2f", recargo));
     }
 
     private void guardarPago(ActionEvent e) throws SQLException {
@@ -92,28 +102,40 @@ public class GestionPago extends JFrame {
 
         double monto = Double.parseDouble(txtMonto.getText());
         Pago pago;
+        double recargo = 0.0;
 
         if ("MP".equals(metodoPago)) {
-            pago = new PagoPorMP(0, monto, fechaActual, txtAlias.getText(), monto * 0.05);
+            String alias = txtAlias.getText();
+            if (alias == null || alias.isEmpty()) {
+                throw new IllegalArgumentException("Alias cannot be null or empty for MP payment.");
+            }
+            recargo = monto * 0.04; // Set recargo to 0.04 for MP
+            pago = new PagoPorMP(0, monto, fechaActual, alias, recargo);
         } else if ("Por Transferencia".equals(metodoPago)) {
-            pago = new PagoPorTransferencia(0, monto, fechaActual, txtCbu.getText(), txtCuit.getText(), 0.0);
+            String cbu = txtCbu.getText();
+            String cuit = txtCuit.getText();
+            if (cbu == null || cbu.isEmpty() || cuit == null || cuit.isEmpty()) {
+                throw new IllegalArgumentException("CBU and CUIT cannot be null or empty for Transferencia payment.");
+            }
+            recargo = monto * 0.02; // Set recargo to 0.02 for Transferencia
+            pago = new PagoPorTransferencia(0, monto, fechaActual, cbu, cuit, recargo);
         } else {
             throw new IllegalArgumentException("Método de pago desconocido: " + metodoPago);
         }
 
-        // Save the payment in the database
-        PagoDAO pagoDAO = new PagoMemory();
-        pagoDAO.crearPago(pago);
+        // Update the recargo label
+        lblRecargo.setText("Recargo: $" + String.format("%.2f", recargo));
 
         // Associate the payment with the order
         if (pedido != null) {
             pedido.setPago(pago);
             pedido.setMetodoDePago(metodoPago);
+
             // Save the order with the payment
             PedidoDAO pedidoDAO = new PedidoMemory();
             pedidoDAO.crearPedido(pedido);
+
         } else {
-            // Handle the case where there is no current order
             System.err.println("No current order found.");
         }
         dispose();

@@ -3,5 +3,5 @@ package isi.deso.tp.grupo8;
 
 
 public enum EstadoPedido {
-    PENDIENTE, RECIBIDO, EN_ENVIO
+    PENDIENTE, RECIBIDO, EN_ENVIO, PAGADO
 }

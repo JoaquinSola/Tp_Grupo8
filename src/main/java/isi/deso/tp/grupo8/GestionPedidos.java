@@ -3,7 +3,6 @@ package isi.deso.tp.grupo8;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,7 +23,7 @@ public class GestionPedidos extends JFrame {
     private ItemsMenuController itemsMenuController;
     private JTextField txtIdPedido, txtIdCliente, txtIdVendedor;
     private JTextArea areaResultados;
-    private JButton btnCrearPedido, btnModificarPedido, btnEliminarPedido, btnListarPedidos, btnMostrarItems;
+    private JButton btnCrearPedido, btnModificarPedido, btnEliminarPedido, btnListarPedidos, btnMostrarItems, btnPagarPedido;
     private JComboBox<String> comboMetodoPago;
     private JList<ItemMenu> listItemsMenu;
     private Set<ItemMenu> itemsSeleccionados;
@@ -58,6 +57,7 @@ public class GestionPedidos extends JFrame {
         btnEliminarPedido = new JButton("Eliminar Pedido");
         btnListarPedidos = new JButton("Listar Pedidos");
         btnMostrarItems = new JButton("Mostrar Items");
+        btnPagarPedido = new JButton("Pagar Pedido");
 
         add(new JLabel("ID Pedido:"));
         add(txtIdPedido);
@@ -75,6 +75,7 @@ public class GestionPedidos extends JFrame {
         add(btnModificarPedido);
         add(btnEliminarPedido);
         add(btnListarPedidos);
+        add(btnPagarPedido);
         add(new JScrollPane(areaResultados));
 
         btnMostrarItems.addActionListener(this::mostrarItemsVendedor);
@@ -82,6 +83,7 @@ public class GestionPedidos extends JFrame {
         btnModificarPedido.addActionListener(this::modificarPedido);
         btnEliminarPedido.addActionListener(this::eliminarPedido);
         btnListarPedidos.addActionListener(e -> listarPedidos());
+        btnPagarPedido.addActionListener(this::pagarPedido);
 
         setVisible(true);
     }
@@ -105,31 +107,33 @@ public class GestionPedidos extends JFrame {
             long idVendedor = Long.parseLong(txtIdVendedor.getText());
             String metodoPago = (String) comboMetodoPago.getSelectedItem();
 
-            double montoTotal = 0.0;
             itemsSeleccionados.clear();
             for (ItemMenu item : listItemsMenu.getSelectedValuesList()) {
-                montoTotal += item.getPrecio();
                 itemsSeleccionados.add(item);
             }
 
-            LocalDate fechaActual = LocalDate.now();
-            Pago pago;
-            if (metodoPago.equals("MP")) {
-                pago = new PagoPorMP(0, montoTotal, fechaActual, "", montoTotal * 0.05); // ID autogenerado
-            } else {
-                pago = new PagoPorTransferencia(0, montoTotal, fechaActual, "", "", 0.0); // ID autogenerado
+            // Calculate recargo based on the selected payment method
+            double recargoPercentage = 0.0;
+            if ("MP".equals(metodoPago)) {
+                recargoPercentage = 0.04;
+            } else if ("Por Transferencia".equals(metodoPago)) {
+                recargoPercentage = 0.02;
             }
 
-            
-
+            // Prepare the pedido without setting the Pago
             Pedido pedido = new Pedido(0, clienteController.buscarCliente(idCliente), new ItemsPedidoMemory(), vendedorController.buscarVendedor(idVendedor), metodoPago);
-            pedido.setPago(pago);
             for (ItemMenu item : itemsSeleccionados) {
                 pedido.getItemsPedidoMemory().agregarItem(item);
             }
 
-            controlador.crearPedido(pedido.getId(), pedido.getCliente().getId(), pedido.getVendedor().getId(), metodoPago, getIdsItemsSeleccionados());
-            areaResultados.setText("Pedido creado exitosamente.");
+            // Show the recargo percentage
+            areaResultados.setText("Método de Pago: " + metodoPago + "\nRecargo: " + (recargoPercentage * 100) + "%");
+
+            // Open the payment window and pass the pedido
+            new GestionPago(pedido);
+
+            // Do not call controlador.crearPedido here
+
         } catch (NumberFormatException ex) {
             areaResultados.setText("Error: Por favor, ingresa valores numéricos válidos.");
         } catch (Exception ex) {
@@ -183,14 +187,56 @@ public class GestionPedidos extends JFrame {
             } else {
                 StringBuilder sb = new StringBuilder("Lista de Pedidos:\n");
                 for (Pedido p : pedidos) {
-                    sb.append("ID: ").append(p.getId()).append(", Cliente: ").append(p.getCliente().getId())
-                      .append(", Vendedor: ").append(p.getVendedor().getId()).append(", Estado: ").append(p.getEstado())
-                      .append(", Método de Pago: ").append(p.getMetodoDePago()).append("\n");
+                    sb.append("ID: ").append(p.getId())
+                      .append(", Cliente: ").append(p.getCliente().getId())
+                      .append(", Vendedor: ").append(p.getVendedor().getId())
+                      .append(", Estado: ").append(p.getEstado())
+                      .append(", Método de Pago: ").append(p.getMetodoDePago())
+                      .append("\n");
+
+                    // Add Pago information
+                    Pago pago = p.getPago();
+                    if (pago != null) {
+                        sb.append("  Pago ID: ").append(pago.getId())
+                          .append(", Monto: ").append(pago.getMonto())
+                          .append(", Fecha: ").append(pago.getFecha())
+                          .append(", Tipo: ").append(pago.getTipoPago());
+
+                        if (pago instanceof PagoPorMP) {
+                            PagoPorMP pagoMP = (PagoPorMP) pago;
+                            sb.append(", Alias: ").append(pagoMP.getAlias())
+                              .append(", Recargo: ").append(pagoMP.getRecargo());
+                        } else if (pago instanceof PagoPorTransferencia) {
+                            PagoPorTransferencia pagoTrans = (PagoPorTransferencia) pago;
+                            sb.append(", CBU: ").append(pagoTrans.getCbu())
+                              .append(", CUIT: ").append(pagoTrans.getCuit())
+                              .append(", Recargo: ").append(pagoTrans.getRecargo());
+                        }
+                        sb.append("\n");
+                    }
                 }
                 areaResultados.setText(sb.toString());
             }
         } catch (Exception ex) {
             areaResultados.setText("Error al listar los pedidos: " + ex.getMessage());
+        }
+    }
+
+    private void pagarPedido(ActionEvent e) {
+        try {
+            long idPedido = Long.parseLong(txtIdPedido.getText());
+            Pedido pedido = controlador.buscarPedido(idPedido);
+            if (pedido != null) {
+                pedido.setEstado(EstadoPedido.PAGADO);
+                controlador.actualizarPedido(pedido);
+                areaResultados.setText("Pedido pagado exitosamente.");
+            } else {
+                areaResultados.setText("Pedido no encontrado.");
+            }
+        } catch (NumberFormatException ex) {
+            areaResultados.setText("Error: Por favor, ingresa un ID de pedido válido.");
+        } catch (Exception ex) {
+            areaResultados.setText("Error al pagar el pedido: " + ex.getMessage());
         }
     }
 
