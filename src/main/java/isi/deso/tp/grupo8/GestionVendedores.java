@@ -153,7 +153,18 @@ public class GestionVendedores extends JFrame {
             double latitud = Double.parseDouble(txtLatitud.getText());
             double longitud = Double.parseDouble(txtLongitud.getText());
 
-            Vendedor vendedor = new Vendedor(id, nombre, direccion, new Coordenada(latitud, longitud), new HashSet<>());
+            // Fetch the existing Vendedor to get the Coordenada ID
+            Vendedor existingVendedor = controlador.buscarVendedor(id);
+            if (existingVendedor == null) {
+                areaResultados.setText("Vendedor no encontrado.");
+                return;
+            }
+
+            Coordenada coordenada = existingVendedor.getCoor();
+            coordenada.setLatitud(latitud);
+            coordenada.setLongitud(longitud);
+
+            Vendedor vendedor = new Vendedor(id, nombre, direccion, coordenada, new HashSet<>());
             boolean exito = controlador.modificarVendedor(vendedor);
             if (exito) {
                 areaResultados.setText("Vendedor modificado exitosamente: " + nombre);
