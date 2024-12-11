@@ -136,11 +136,27 @@ public class VendedorMemory implements VendedorDAO {
 
     @Override
     public void eliminarVendedor(long id) {
-        String sql = "DELETE FROM vendedor WHERE id_vendedor = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setLong(1, id);
-            stmt.executeUpdate();
+        String deleteRelacionSQL = "DELETE FROM vendedor_itemmenu WHERE id_vendedor = ?";
+        String deleteVendedorSQL = "DELETE FROM vendedor WHERE id_vendedor = ?";
+        
+        try (PreparedStatement stmtRelacion = connection.prepareStatement(deleteRelacionSQL);
+             PreparedStatement stmtVendedor = connection.prepareStatement(deleteVendedorSQL)) {
+            
+            // Borrar relaciones en vendedor_itemmenu
+            stmtRelacion.setLong(1, id);
+            stmtRelacion.executeUpdate();
+            
+            // Borrar el vendedor
+            stmtVendedor.setLong(1, id);
+            int rowsAffected = stmtVendedor.executeUpdate();
+            
+            if (rowsAffected > 0) {
+                System.out.println("Vendedor eliminado correctamente.");
+            } else {
+                System.out.println("No se encontró un vendedor con el ID especificado.");
+            }
         } catch (SQLException e) {
+            System.err.println("Error al eliminar vendedor: " + e.getMessage());
             e.printStackTrace();
         }
     }
