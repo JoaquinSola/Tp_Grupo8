@@ -101,7 +101,6 @@ public class GestionPedidos extends JFrame {
 
     private void abrirVentanaPago(ActionEvent e) {
         try {
-            long idPedido = Long.parseLong(txtIdPedido.getText());
             long idCliente = Long.parseLong(txtIdCliente.getText());
             long idVendedor = Long.parseLong(txtIdVendedor.getText());
             String metodoPago = (String) comboMetodoPago.getSelectedItem();
@@ -123,7 +122,7 @@ public class GestionPedidos extends JFrame {
 
             
 
-            Pedido pedido = new Pedido(idPedido, clienteController.buscarCliente(idCliente), new ItemsPedidoMemory(), vendedorController.buscarVendedor(idVendedor), metodoPago);
+            Pedido pedido = new Pedido(0, clienteController.buscarCliente(idCliente), new ItemsPedidoMemory(), vendedorController.buscarVendedor(idVendedor), metodoPago);
             pedido.setPago(pago);
             for (ItemMenu item : itemsSeleccionados) {
                 pedido.getItemsPedidoMemory().agregarItem(item);

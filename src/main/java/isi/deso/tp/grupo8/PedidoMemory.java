@@ -66,25 +66,128 @@ public class PedidoMemory implements PedidoDAO {
 
     @Override
     public void actualizarPedido(Pedido pedido) {
-        String sql = "UPDATE pedido SET estado = ?, metodo_pago = ? WHERE id_pedido = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, pedido.getEstado().toString());
-            stmt.setString(2, pedido.getMetodoDePago());
-            stmt.setLong(3, pedido.getId());
-            stmt.executeUpdate();
+        try {
+            connection.setAutoCommit(false);
+
+            // Update the payment first
+            actualizarPago(pedido.getPago());
+
+            // Update the order
+            String sql = "UPDATE pedido SET estado = ?, metodo_pago = ?, id_cliente = ?, id_vendedor = ? WHERE id_pedido = ?";
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setString(1, pedido.getEstado().toString());
+                stmt.setString(2, pedido.getMetodoDePago());
+                stmt.setLong(3, pedido.getCliente().getId());
+                stmt.setLong(4, pedido.getVendedor().getId());
+                stmt.setLong(5, pedido.getId());
+                stmt.executeUpdate();
+            }
+
+            // Update the items in the order
+            String sqlDeleteItems = "DELETE FROM pedido_itemmenu WHERE id_pedido = ?";
+            try (PreparedStatement stmtDeleteItems = connection.prepareStatement(sqlDeleteItems)) {
+                stmtDeleteItems.setLong(1, pedido.getId());
+                stmtDeleteItems.executeUpdate();
+            }
+
+            for (ItemPedido itemPedido : pedido.getItemsPedidoMemory().getLista()) {
+                ItemMenu itemMenu = itemPedido.getItemPedido();
+                agregarItemAPedido(pedido.getId(), itemMenu.getId());
+            }
+
+            connection.commit();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException rollbackEx) {
+                rollbackEx.printStackTrace();
+            }
             e.printStackTrace();
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private void actualizarPago(Pago pago) throws SQLException {
+        String sqlPago = "UPDATE pago SET monto = ?, fecha = ?, tipo_pago = ? WHERE id_pago = ?";
+        try (PreparedStatement stmtPago = connection.prepareStatement(sqlPago)) {
+            stmtPago.setDouble(1, pago.getMonto());
+            stmtPago.setDate(2, java.sql.Date.valueOf(pago.getFecha()));
+            stmtPago.setString(3, pago.getTipoPago());
+            stmtPago.setLong(4, pago.getId());
+            stmtPago.executeUpdate();
+        }
+
+        if (pago instanceof PagoPorMP) {
+            String sqlMP = "UPDATE pagopormp SET alias = ?, recargo = ? WHERE id_pago = ?";
+            try (PreparedStatement stmtMP = connection.prepareStatement(sqlMP)) {
+                stmtMP.setString(1, ((PagoPorMP) pago).getAlias());
+                stmtMP.setDouble(2, ((PagoPorMP) pago).getRecargo());
+                stmtMP.setLong(3, pago.getId());
+                stmtMP.executeUpdate();
+            }
+        } else if (pago instanceof PagoPorTransferencia) {
+            String sqlTransf = "UPDATE pagoportransferencia SET cbu = ?, cuit = ? WHERE id_pago = ?";
+            try (PreparedStatement stmtTransf = connection.prepareStatement(sqlTransf)) {
+                stmtTransf.setString(1, ((PagoPorTransferencia) pago).getCbu());
+                stmtTransf.setString(2, ((PagoPorTransferencia) pago).getCuit());
+                stmtTransf.setLong(3, pago.getId());
+                stmtTransf.executeUpdate();
+            }
         }
     }
 
     @Override
     public void eliminarPedido(long id) {
-        String sql = "DELETE FROM pedido WHERE id_pedido = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setLong(1, id);
-            stmt.executeUpdate();
+        try {
+            connection.setAutoCommit(false);
+
+            // Delete related records from pedido_itemmenu
+            String sqlDeleteItems = "DELETE FROM pedido_itemmenu WHERE id_pedido = ?";
+            try (PreparedStatement stmtDeleteItems = connection.prepareStatement(sqlDeleteItems)) {
+                stmtDeleteItems.setLong(1, id);
+                stmtDeleteItems.executeUpdate();
+            }
+
+            // Delete related records from pedido_pago
+            String sqlDeletePedidoPago = "DELETE FROM pedido_pago WHERE id_pedido = ?";
+            try (PreparedStatement stmtDeletePedidoPago = connection.prepareStatement(sqlDeletePedidoPago)) {
+                stmtDeletePedidoPago.setLong(1, id);
+                stmtDeletePedidoPago.executeUpdate();
+            }
+
+            // Delete the payment record
+            String sqlDeletePago = "DELETE FROM pago WHERE id_pago = (SELECT id_pago FROM pedido_pago WHERE id_pedido = ?)";
+            try (PreparedStatement stmtDeletePago = connection.prepareStatement(sqlDeletePago)) {
+                stmtDeletePago.setLong(1, id);
+                stmtDeletePago.executeUpdate();
+            }
+
+            // Delete the order record
+            String sqlDeletePedido = "DELETE FROM pedido WHERE id_pedido = ?";
+            try (PreparedStatement stmtDeletePedido = connection.prepareStatement(sqlDeletePedido)) {
+                stmtDeletePedido.setLong(1, id);
+                stmtDeletePedido.executeUpdate();
+            }
+
+            connection.commit();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException rollbackEx) {
+                rollbackEx.printStackTrace();
+            }
             e.printStackTrace();
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
