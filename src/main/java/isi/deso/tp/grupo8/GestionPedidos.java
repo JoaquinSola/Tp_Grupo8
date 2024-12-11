@@ -217,4 +217,6 @@ public class GestionPedidos extends JFrame {
 
         new GestionPedidos(pedidoController, clienteController, vendedorController, itemsMenuController);
     }
+    }
 }
+

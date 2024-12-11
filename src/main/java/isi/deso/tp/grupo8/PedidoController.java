@@ -18,15 +18,18 @@ public class PedidoController {
     public void crearPedido(long idPedido, long idCliente, long idVendedor, String metodoPago, Set<Long> idsItems) {
         Cliente cliente = clienteDAO.buscarCliente(idCliente);
         Vendedor vendedor = vendedorDAO.buscarVendedor(idVendedor);
+
+        // Inicializar una instancia de ItemsPedidoMemory
         ItemsPedidoMemory itemsPedido = new ItemsPedidoMemory();
 
         for (Long itemId : idsItems) {
             ItemMenu item = itemMenuDAO.buscarItem(itemId);
             if (item != null) {
-                itemsPedido.agregarItem(item);
+                itemsPedido.agregarItem(item); // Añadir ítem al pedido
             }
         }
 
+        // Crear el pedido con los datos proporcionados
         Pedido pedido = new Pedido(idPedido, cliente, itemsPedido, vendedor, metodoPago);
         if (metodoPago.equalsIgnoreCase("MP")) {
             // Aquí podrías agregar lógica para crear el PagoPorMP y asociarlo al pedido
@@ -52,3 +55,4 @@ public class PedidoController {
         return pedidoDAO.listarPedidos();
     }
 }
+
