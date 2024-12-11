@@ -136,21 +136,53 @@ public class GestionPedidos extends JFrame {
 
     private void modificarPedido(ActionEvent e) {
         try {
-            long idPedido = Long.parseLong(txtIdPedido.getText());
+            // Verificar y parsear el ID del pedido
+            String idPedidoTexto = txtIdPedido.getText();
+            if (idPedidoTexto == null || idPedidoTexto.isEmpty()) {
+                areaResultados.setText("Error: El ID del pedido no puede estar vacío.");
+                return;
+            }
+    
+            long idPedido = Long.parseLong(idPedidoTexto);
+    
+            // Buscar el pedido
             Pedido pedido = controlador.buscarPedido(idPedido);
             if (pedido != null) {
+                System.out.println("Pedido encontrado con ID: " + idPedido);
+                System.out.println("Estado actual del pedido: " + pedido.getEstado());
+    
+                // Modificar el estado del pedido
                 pedido.setEstado(EstadoPedido.RECIBIDO);
+                System.out.println("Nuevo estado del pedido: " + pedido.getEstado());
+    
+                // Actualizar en la base de datos
                 controlador.actualizarPedido(pedido);
+    
+                // Confirmación
                 areaResultados.setText("Pedido modificado exitosamente.");
+                System.out.println("Pedido con ID " + idPedido + " modificado exitosamente.");
             } else {
                 areaResultados.setText("Pedido no encontrado.");
+                System.out.println("No se encontró un pedido con el ID " + idPedido);
             }
         } catch (NumberFormatException ex) {
+            // Manejar error al parsear el ID
             areaResultados.setText("Error: Por favor, ingresa un ID de pedido válido.");
+            System.out.println("Error al parsear el ID: " + ex.getMessage());
+            ex.printStackTrace();
+        } catch (SQLException sqlEx) {
+            // Manejar errores SQL
+            areaResultados.setText("Error SQL: " + sqlEx.getMessage());
+            System.out.println("Error SQL al modificar el pedido: " + sqlEx.getMessage());
+            sqlEx.printStackTrace();
         } catch (Exception ex) {
+            // Manejar otros errores
             areaResultados.setText("Error al modificar el pedido: " + ex.getMessage());
+            System.out.println("Error inesperado al modificar el pedido: " + ex.getMessage());
+            ex.printStackTrace();
         }
     }
+    
 
     private void eliminarPedido(ActionEvent e) {
         try {

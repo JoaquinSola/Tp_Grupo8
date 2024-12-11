@@ -89,6 +89,7 @@ public class PedidoMemory implements PedidoDAO {
 
     @Override
     public void actualizarPedido(Pedido pedido) {
+        
         try {
             connection.setAutoCommit(false);
 
@@ -133,6 +134,7 @@ public class PedidoMemory implements PedidoDAO {
                 ex.printStackTrace();
             }
         }
+        
     }
 
     private void actualizarPago(Pago pago) throws SQLException {
