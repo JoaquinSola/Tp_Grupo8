@@ -31,12 +31,8 @@ public class PedidoController {
 
         // Crear el pedido con los datos proporcionados
         Pedido pedido = new Pedido(idPedido, cliente, itemsPedido, vendedor, metodoPago);
-        if (metodoPago.equalsIgnoreCase("MP")) {
-            // Aquí podrías agregar lógica para crear el PagoPorMP y asociarlo al pedido
-        } else if (metodoPago.equalsIgnoreCase("Por Transferencia")) {
-            // Aquí podrías agregar lógica para crear el PagoPorTransferencia y asociarlo al pedido
-        }
-        pedidoDAO.crearPedido(pedido);
+        // Open the payment window with the correct amount
+        new GestionPago(pedido);
     }
 
     public Pedido buscarPedido(long id) {

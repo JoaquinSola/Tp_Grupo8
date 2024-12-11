@@ -121,7 +121,7 @@ public class GestionPedidos extends JFrame {
                 pago = new PagoPorTransferencia(0, montoTotal, fechaActual, "", "", 0.0); // ID autogenerado
             }
 
-            new GestionPago(pago, this);
+            
 
             Pedido pedido = new Pedido(idPedido, clienteController.buscarCliente(idCliente), new ItemsPedidoMemory(), vendedorController.buscarVendedor(idVendedor), metodoPago);
             pedido.setPago(pago);
@@ -217,6 +217,6 @@ public class GestionPedidos extends JFrame {
 
         new GestionPedidos(pedidoController, clienteController, vendedorController, itemsMenuController);
     }
-    }
+}
 
 

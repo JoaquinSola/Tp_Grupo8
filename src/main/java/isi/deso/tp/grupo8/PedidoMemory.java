@@ -17,12 +17,14 @@ public class PedidoMemory implements PedidoDAO {
 
     @Override
     public void crearPedido(Pedido pedido) {
-        String sql = "INSERT INTO pedido (id_cliente, id_vendedor, metodo_pago, estado) VALUES (?, ?, ?, ?)";
+        crearPago(pedido.getPago(), pedido.getId()); // Create and save the payment first
+        String sql = "INSERT INTO pedido (id_cliente, id_vendedor, metodo_pago, estado, id_pago) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setLong(1, pedido.getCliente().getId());
             stmt.setLong(2, pedido.getVendedor().getId());
             stmt.setString(3, pedido.getMetodoDePago());
             stmt.setString(4, pedido.getEstado().toString());
+            stmt.setLong(5, pedido.getPago().getId());
             stmt.executeUpdate();
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
@@ -33,7 +35,6 @@ public class PedidoMemory implements PedidoDAO {
                 ItemMenu itemMenu = itemPedido.getItemPedido();
                 agregarItemAPedido(pedido.getId(), itemMenu.getId());
             }
-            crearPago(pedido.getPago(), pedido.getId());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -141,10 +142,11 @@ public class PedidoMemory implements PedidoDAO {
     }
 
     private void crearPago(Pago pago, long idPedido) {
-        String sqlPago = "INSERT INTO pago (monto, fecha) VALUES (?, ?)";
+        String sqlPago = "INSERT INTO pago (monto, fecha, tipo_pago) VALUES (?, ?, ?)";
         try (PreparedStatement stmtPago = connection.prepareStatement(sqlPago, Statement.RETURN_GENERATED_KEYS)) {
             stmtPago.setDouble(1, pago.getMonto());
             stmtPago.setDate(2, java.sql.Date.valueOf(pago.getFecha()));
+            stmtPago.setString(3, pago.getTipoPago());
             stmtPago.executeUpdate();
             try (ResultSet generatedKeys = stmtPago.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
@@ -153,7 +155,7 @@ public class PedidoMemory implements PedidoDAO {
             }
 
             if (pago instanceof PagoPorMP) {
-                String sqlMP = "INSERT INTO pagomp (id_pago, alias, recargo) VALUES (?, ?, ?)";
+                String sqlMP = "INSERT INTO pagopormp (id_pago, alias, recargo) VALUES (?, ?, ?)";
                 try (PreparedStatement stmtMP = connection.prepareStatement(sqlMP)) {
                     stmtMP.setLong(1, pago.getId());
                     stmtMP.setString(2, ((PagoPorMP) pago).getAlias());
@@ -161,7 +163,7 @@ public class PedidoMemory implements PedidoDAO {
                     stmtMP.executeUpdate();
                 }
             } else if (pago instanceof PagoPorTransferencia) {
-                String sqlTransf = "INSERT INTO pagotransferencia (id_pago, cbu, cuit) VALUES (?, ?, ?)";
+                String sqlTransf = "INSERT INTO pagoportransferencia (id_pago, cbu, cuit) VALUES (?, ?, ?)";
                 try (PreparedStatement stmtTransf = connection.prepareStatement(sqlTransf)) {
                     stmtTransf.setLong(1, pago.getId());
                     stmtTransf.setString(2, ((PagoPorTransferencia) pago).getCbu());
@@ -170,6 +172,7 @@ public class PedidoMemory implements PedidoDAO {
                 }
             }
 
+            // Associate the payment with the order
             String sqlPedidoPago = "INSERT INTO pedido_pago (id_pedido, id_pago) VALUES (?, ?)";
             try (PreparedStatement stmtPedidoPago = connection.prepareStatement(sqlPedidoPago)) {
                 stmtPedidoPago.setLong(1, idPedido);

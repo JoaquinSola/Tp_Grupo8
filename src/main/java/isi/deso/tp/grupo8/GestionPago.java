@@ -2,6 +2,7 @@ package isi.deso.tp.grupo8;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 import javax.swing.JButton;
@@ -15,12 +16,10 @@ public class GestionPago extends JFrame {
     private JTextField txtAlias, txtCbu, txtCuit;
     private JButton btnGuardarPago;
     private JComboBox<String> comboMetodoPago;
-    private Pago pago;
-    private GestionPedidos gestionPedidos;
+    private Pedido pedido;
 
-    public GestionPago(Pago pago, GestionPedidos gestionPedidos) {
-        this.pago = pago;
-        this.gestionPedidos = gestionPedidos;
+    public GestionPago(Pedido pedido) {
+        this.pedido = pedido;
 
         setTitle("Gestión de Pago");
         setSize(400, 300);
@@ -35,7 +34,7 @@ public class GestionPago extends JFrame {
         comboMetodoPago = new JComboBox<>(new String[]{"MP", "Por Transferencia"});
 
         add(new JLabel("Monto:"));
-        txtMonto.setText(String.valueOf(pago.getMonto()));
+        txtMonto.setText(String.valueOf(calcularMontoTotal()));
         txtMonto.setEditable(false);
         add(txtMonto);
 
@@ -54,11 +53,24 @@ public class GestionPago extends JFrame {
         add(btnGuardarPago);
 
         comboMetodoPago.addActionListener(this::cambiarMetodoPago);
-        btnGuardarPago.addActionListener(this::guardarPago);
+        btnGuardarPago.addActionListener(e -> {
+            try {
+                guardarPago(e);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                // Handle the exception appropriately
+            }
+        });
 
         cambiarMetodoPago(null); // Inicializar campos para el método de pago seleccionado
 
         setVisible(true);
+    }
+
+    private double calcularMontoTotal() {
+        return pedido.getItemsPedidoMemory().getLista().stream()
+                .mapToDouble(itemPedido -> itemPedido.getItemPedido().getPrecio())
+                .sum();
     }
 
     private void cambiarMetodoPago(ActionEvent e) {
@@ -74,21 +86,36 @@ public class GestionPago extends JFrame {
         }
     }
 
-    private void guardarPago(ActionEvent e) {
+    private void guardarPago(ActionEvent e) throws SQLException {
         String metodoPago = (String) comboMetodoPago.getSelectedItem();
         LocalDate fechaActual = LocalDate.now();
 
+        double monto = Double.parseDouble(txtMonto.getText());
+        Pago pago;
+
         if ("MP".equals(metodoPago)) {
-            pago = new PagoPorMP(0, Double.parseDouble(txtMonto.getText()), fechaActual, txtAlias.getText(), Double.parseDouble(txtMonto.getText()) * 0.05);
+            pago = new PagoPorMP(0, monto, fechaActual, txtAlias.getText(), monto * 0.05);
         } else if ("Por Transferencia".equals(metodoPago)) {
-            pago = new PagoPorTransferencia(0, Double.parseDouble(txtMonto.getText()), fechaActual, txtCbu.getText(), txtCuit.getText(), 0.0);
+            pago = new PagoPorTransferencia(0, monto, fechaActual, txtCbu.getText(), txtCuit.getText(), 0.0);
+        } else {
+            throw new IllegalArgumentException("Método de pago desconocido: " + metodoPago);
         }
 
-        // Crear el pedido y asociar el pago
-        Pedido pedido = new Pedido();
-        pedido.setPago(pago);
+        // Save the payment in the database
+        PagoDAO pagoDAO = new PagoMemory();
+        pagoDAO.crearPago(pago);
 
-        gestionPedidos.guardarPedidoConPago(pedido);
+        // Associate the payment with the order
+        if (pedido != null) {
+            pedido.setPago(pago);
+            pedido.setMetodoDePago(metodoPago);
+            // Save the order with the payment
+            PedidoDAO pedidoDAO = new PedidoMemory();
+            pedidoDAO.crearPedido(pedido);
+        } else {
+            // Handle the case where there is no current order
+            System.err.println("No current order found.");
+        }
         dispose();
     }
 }
