@@ -13,7 +13,6 @@ import javax.swing.JTextField;
 
 public class GestionPago extends JFrame {
     private JTextField txtMonto;
-    private JTextField txtAlias, txtCbu, txtCuit;
     private JButton btnGuardarPago;
     private JComboBox<String> comboMetodoPago;
     private Pedido pedido;
@@ -28,9 +27,6 @@ public class GestionPago extends JFrame {
         setLayout(new FlowLayout());
 
         txtMonto = new JTextField(10);
-        txtAlias = new JTextField(10);
-        txtCbu = new JTextField(10);
-        txtCuit = new JTextField(10);
         btnGuardarPago = new JButton("Guardar Pago");
         comboMetodoPago = new JComboBox<>(new String[]{"MP", "Por Transferencia"});
         lblRecargo = new JLabel("Recargo: $0.00");
@@ -42,15 +38,6 @@ public class GestionPago extends JFrame {
 
         add(new JLabel("Método de Pago:"));
         add(comboMetodoPago);
-
-        add(new JLabel("Alias:"));
-        add(txtAlias);
-
-        add(new JLabel("CBU:"));
-        add(txtCbu);
-
-        add(new JLabel("CUIT:"));
-        add(txtCuit);
 
         add(lblRecargo);
         add(btnGuardarPago);
@@ -82,14 +69,8 @@ public class GestionPago extends JFrame {
         double recargo = 0.0;
 
         if ("MP".equals(metodoPago)) {
-            txtAlias.setVisible(true);
-            txtCbu.setVisible(false);
-            txtCuit.setVisible(false);
             recargo = monto * 0.04; // Set recargo to 0.04 for MP
         } else if ("Por Transferencia".equals(metodoPago)) {
-            txtAlias.setVisible(false);
-            txtCbu.setVisible(true);
-            txtCuit.setVisible(true);
             recargo = monto * 0.02; // Set recargo to 0.02 for Transferencia
         }
 
@@ -104,16 +85,18 @@ public class GestionPago extends JFrame {
         Pago pago;
         double recargo = 0.0;
 
+        Cliente cliente = pedido.getCliente();
+
         if ("MP".equals(metodoPago)) {
-            String alias = txtAlias.getText();
+            String alias = cliente.getAlias();
             if (alias == null || alias.isEmpty()) {
                 throw new IllegalArgumentException("Alias cannot be null or empty for MP payment.");
             }
             recargo = monto * 0.04; // Set recargo to 0.04 for MP
             pago = new PagoPorMP(0, monto, fechaActual, alias, recargo);
         } else if ("Por Transferencia".equals(metodoPago)) {
-            String cbu = txtCbu.getText();
-            String cuit = txtCuit.getText();
+            String cbu = cliente.getCbu();
+            String cuit = cliente.getCuit();
             if (cbu == null || cbu.isEmpty() || cuit == null || cuit.isEmpty()) {
                 throw new IllegalArgumentException("CBU and CUIT cannot be null or empty for Transferencia payment.");
             }

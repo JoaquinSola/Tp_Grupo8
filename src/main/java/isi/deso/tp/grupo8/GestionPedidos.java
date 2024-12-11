@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -24,7 +23,6 @@ public class GestionPedidos extends JFrame {
     private JTextField txtIdPedido, txtIdCliente, txtIdVendedor;
     private JTextArea areaResultados;
     private JButton btnCrearPedido, btnModificarPedido, btnEliminarPedido, btnListarPedidos, btnMostrarItems, btnPagarPedido;
-    private JComboBox<String> comboMetodoPago;
     private JList<ItemMenu> listItemsMenu;
     private Set<ItemMenu> itemsSeleccionados;
 
@@ -46,7 +44,6 @@ public class GestionPedidos extends JFrame {
         txtIdPedido = new JTextField(10);
         txtIdCliente = new JTextField(10);
         txtIdVendedor = new JTextField(10);
-        comboMetodoPago = new JComboBox<>(new String[]{"MP", "Por Transferencia"});
         listItemsMenu = new JList<>(); // JList para seleccionar múltiples items del menú
         listItemsMenu.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         areaResultados = new JTextArea(20, 40);
@@ -65,8 +62,6 @@ public class GestionPedidos extends JFrame {
         add(txtIdCliente);
         add(new JLabel("ID Vendedor:"));
         add(txtIdVendedor);
-        add(new JLabel("Método de Pago:"));
-        add(comboMetodoPago);
         add(new JLabel("Items del Menú:"));
         add(new JScrollPane(listItemsMenu));
 
@@ -105,29 +100,19 @@ public class GestionPedidos extends JFrame {
         try {
             long idCliente = Long.parseLong(txtIdCliente.getText());
             long idVendedor = Long.parseLong(txtIdVendedor.getText());
-            String metodoPago = (String) comboMetodoPago.getSelectedItem();
 
             itemsSeleccionados.clear();
             for (ItemMenu item : listItemsMenu.getSelectedValuesList()) {
                 itemsSeleccionados.add(item);
             }
 
-            // Calculate recargo based on the selected payment method
-            double recargoPercentage = 0.0;
-            if ("MP".equals(metodoPago)) {
-                recargoPercentage = 0.04;
-            } else if ("Por Transferencia".equals(metodoPago)) {
-                recargoPercentage = 0.02;
-            }
-
             // Prepare the pedido without setting the Pago
-            Pedido pedido = new Pedido(0, clienteController.buscarCliente(idCliente), new ItemsPedidoMemory(), vendedorController.buscarVendedor(idVendedor), metodoPago);
+            Pedido pedido = new Pedido(0, clienteController.buscarCliente(idCliente), new ItemsPedidoMemory(), vendedorController.buscarVendedor(idVendedor), null);
             for (ItemMenu item : itemsSeleccionados) {
                 pedido.getItemsPedidoMemory().agregarItem(item);
             }
 
-            // Show the recargo percentage
-            areaResultados.setText("Método de Pago: " + metodoPago + "\nRecargo: " + (recargoPercentage * 100) + "%");
+            areaResultados.setText("Seleccione el método de pago en la siguiente ventana.");
 
             // Open the payment window and pass the pedido
             new GestionPago(pedido);
