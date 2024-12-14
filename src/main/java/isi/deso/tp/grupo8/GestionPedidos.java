@@ -165,17 +165,14 @@ public class GestionPedidos extends JFrame {
                 areaResultados.setText("Pedido no encontrado.");
                 System.out.println("No se encontró un pedido con el ID " + idPedido);
             }
-        } catch (NumberFormatException ex) {
+        }catch (NumberFormatException ex) {
             // Manejar error al parsear el ID
             areaResultados.setText("Error: Por favor, ingresa un ID de pedido válido.");
             System.out.println("Error al parsear el ID: " + ex.getMessage());
             ex.printStackTrace();
-        } catch (SQLException sqlEx) {
-            // Manejar errores SQL
-            areaResultados.setText("Error SQL: " + sqlEx.getMessage());
-            System.out.println("Error SQL al modificar el pedido: " + sqlEx.getMessage());
-            sqlEx.printStackTrace();
-        } catch (Exception ex) {
+        }
+        // Manejar errores SQL
+         catch (Exception ex) {
             // Manejar otros errores
             areaResultados.setText("Error al modificar el pedido: " + ex.getMessage());
             System.out.println("Error inesperado al modificar el pedido: " + ex.getMessage());

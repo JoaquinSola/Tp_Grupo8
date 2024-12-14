@@ -30,6 +30,7 @@ public class ItemsMenuMemory implements ItemMenuDAO {
                 if (generatedKeys.next()) {
                     long itemId = generatedKeys.getLong(1);
                     item.setId(itemId);
+                    item.setCategoria(categoria); // Set the category
 
                     if (item instanceof Bebida) {
                         Bebida bebida = (Bebida) item;
@@ -93,6 +94,10 @@ public class ItemsMenuMemory implements ItemMenuDAO {
                     String nombre = rsItemMenu.getString("nombre");
                     String descripcion = rsItemMenu.getString("descripcion");
                     double precio = rsItemMenu.getDouble("precio");
+                    long idCategoria = rsItemMenu.getLong("id_categoria");
+
+                    Categoria categoria = new Categoria(); // Assuming Categoria has a default constructor
+                    categoria.setId_categoria(idCategoria);
 
                     String sqlBebida = "SELECT * FROM bebida WHERE id_itemMenu = ?";
                     try (PreparedStatement stmtBebida = connection.prepareStatement(sqlBebida)) {
@@ -101,6 +106,7 @@ public class ItemsMenuMemory implements ItemMenuDAO {
                             if (rsBebida.next()) {
                                 Bebida bebida = new Bebida(rsBebida.getDouble("graduacionAlcoholica"), rsBebida.getDouble("volumen"), nombre, precio, descripcion);
                                 bebida.setId(id);
+                                bebida.setCategoria(categoria); // Set the category
                                 return bebida;
                             }
                         }
@@ -113,6 +119,7 @@ public class ItemsMenuMemory implements ItemMenuDAO {
                             if (rsPlato.next()) {
                                 Plato plato = new Plato(rsPlato.getDouble("calorias"), rsPlato.getBoolean("aptoCeliaco"), rsPlato.getBoolean("aptoVegetariano"), nombre, precio, descripcion, rsPlato.getDouble("peso"));
                                 plato.setId(id);
+                                plato.setCategoria(categoria); // Set the category
                                 return plato;
                             }
                         }
@@ -188,13 +195,25 @@ public class ItemsMenuMemory implements ItemMenuDAO {
             
     @Override
 public void eliminarItem(long id) {
+    String sqlDeleteVendedorItemMenu = "DELETE FROM vendedor_itemmenu WHERE id_itemMenu = ?";
+    String sqlDeletePedidoItemMenu = "DELETE FROM pedido_itemmenu WHERE id_itemMenu = ?";
     String sqlDeleteBebida = "DELETE FROM bebida WHERE id_itemMenu = ?";
     String sqlDeletePlato = "DELETE FROM plato WHERE id_itemMenu = ?";
     String sqlDeleteItemMenu = "DELETE FROM itemmenu WHERE id_itemMenu = ?";
-    try (PreparedStatement stmtDeleteBebida = connection.prepareStatement(sqlDeleteBebida);
+    try (PreparedStatement stmtDeleteVendedorItemMenu = connection.prepareStatement(sqlDeleteVendedorItemMenu);
+         PreparedStatement stmtDeletePedidoItemMenu = connection.prepareStatement(sqlDeletePedidoItemMenu);
+         PreparedStatement stmtDeleteBebida = connection.prepareStatement(sqlDeleteBebida);
          PreparedStatement stmtDeletePlato = connection.prepareStatement(sqlDeletePlato);
          PreparedStatement stmtDeleteItemMenu = connection.prepareStatement(sqlDeleteItemMenu)) {
         connection.setAutoCommit(false); // Start transaction
+
+        // Delete from vendedor_itemmenu
+        stmtDeleteVendedorItemMenu.setLong(1, id);
+        stmtDeleteVendedorItemMenu.executeUpdate();
+
+        // Delete from pedido_itemmenu
+        stmtDeletePedidoItemMenu.setLong(1, id);
+        stmtDeletePedidoItemMenu.executeUpdate();
 
         // Delete from bebida
         stmtDeleteBebida.setLong(1, id);
@@ -236,6 +255,21 @@ public Set<ItemMenu> listarItems() {
             String nombre = rsItemMenu.getString("nombre");
             String descripcion = rsItemMenu.getString("descripcion");
             double precio = rsItemMenu.getDouble("precio");
+            long idCategoria = rsItemMenu.getLong("id_categoria");
+
+            Categoria categoria = new Categoria(); // Assuming Categoria has a default constructor
+            categoria.setId_categoria(idCategoria);
+
+            // Fetch the description of the Categoria
+            String sqlCategoria = "SELECT descripcion FROM categoria WHERE id_categoria = ?";
+            try (PreparedStatement stmtCategoria = connection.prepareStatement(sqlCategoria)) {
+                stmtCategoria.setLong(1, idCategoria);
+                try (ResultSet rsCategoria = stmtCategoria.executeQuery()) {
+                    if (rsCategoria.next()) {
+                        categoria.setDescripcion(rsCategoria.getString("descripcion"));
+                    }
+                }
+            }
 
             String sqlBebida = "SELECT * FROM bebida WHERE id_itemMenu = ?";
             try (PreparedStatement stmtBebida = connection.prepareStatement(sqlBebida)) {
@@ -244,6 +278,7 @@ public Set<ItemMenu> listarItems() {
                     if (rsBebida.next()) {
                         Bebida bebida = new Bebida(rsBebida.getDouble("graduacionAlcoholica"), rsBebida.getDouble("volumen"), nombre, precio, descripcion);
                         bebida.setId(id);
+                        bebida.setCategoria(categoria); // Set the category
                         items.add(bebida);
                         continue;
                     }
@@ -257,6 +292,7 @@ public Set<ItemMenu> listarItems() {
                     if (rsPlato.next()) {
                         Plato plato = new Plato(rsPlato.getDouble("calorias"), rsPlato.getBoolean("aptoCeliaco"), rsPlato.getBoolean("aptoVegetariano"), nombre, precio, descripcion, rsPlato.getDouble("peso"));
                         plato.setId(id);
+                        plato.setCategoria(categoria); // Set the category
                         items.add(plato);
                         continue;
                     }

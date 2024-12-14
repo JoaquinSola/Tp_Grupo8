@@ -8,7 +8,9 @@ public class Categoria {
     public Categoria(long id_categoria) {
         this.id_categoria = id_categoria;
     }
-
+    public Categoria() {
+        
+    }
     public long getId_categoria() {
         return id_categoria;
     }
@@ -31,5 +33,10 @@ public class Categoria {
 
     public void setItem(TipoItem item) {
         this.item = item;
+    }
+
+    @Override
+    public String toString() {
+        return descripcion;
     }
 }
